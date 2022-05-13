@@ -43,7 +43,13 @@ def deploy_test_tokens():
 def test_add_nft(get_account_and_deploy, deploy_test_tokens):
     test_tokens[0].approve(marketplace.address, 0)
     marketplace.addNft(test_tokens[0], 0, Wei("0.0001 ether"))
-    assert marketplace.getNftToOwner(0) == account.address
+    assert marketplace.getNftToOwner(test_tokens[0], 0) == account.address
+
+
+def test_add_nft_not_from_owner(get_account_and_deploy, deploy_test_tokens):
+    with pytest.raises(exceptions.VirtualMachineError):
+        marketplace.addNft(test_tokens[1], 0, Wei("0.0001 ether"))
+    print(f"nft owner = {marketplace.getNftToOwner(test_tokens[1], 0)}")
 
 
 def test_buy_nft(get_account_and_deploy, deploy_test_tokens):
@@ -53,5 +59,5 @@ def test_buy_nft(get_account_and_deploy, deploy_test_tokens):
     marketplace.buyNft(
         test_tokens[0], 0, account, new_owner, {"value": Wei("0.0001 ether")}
     )
-    print(f"New owner = {marketplace.getNftToOwner(0)}")
-    assert marketplace.getNftToOwner(0) == new_owner
+    print(f"New owner = {marketplace.getNftToOwner(test_tokens[0], 0)}")
+    assert marketplace.getNftToOwner(test_tokens[0], 0) == new_owner

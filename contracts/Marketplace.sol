@@ -10,7 +10,7 @@ contract Marketplace {
         address owner;
         uint256 price;
     }
-    mapping(uint256 => address) nftToOwner;
+    mapping(IERC721 => mapping(uint256 => address)) nftToOwner;
     mapping(address => mapping(uint256 => nftData)) ownerToNfts;
     event newToken(uint256 tokenId, address owner, uint256 price);
     event purchasedToken(uint256 tokenId, address buyer, uint256 price);
@@ -24,8 +24,9 @@ contract Marketplace {
         uint256 _tokenId,
         uint256 _price
     ) public {
+        require(_nft.balanceOf(msg.sender) > 0);
         // Let's users add nft to the marketplace
-        nftToOwner[_tokenId] = msg.sender;
+        nftToOwner[_nft][_tokenId] = msg.sender;
         ownerToNfts[msg.sender][_tokenId] = nftData(msg.sender, _price);
         _nft.transferFrom(msg.sender, address(this), _tokenId);
         emit newToken(_tokenId, msg.sender, _price);
@@ -42,12 +43,16 @@ contract Marketplace {
         require(_nft.balanceOf(address(this)) > 0);
         _nft.transferFrom(address(this), _to, _tokenId);
         delete ownerToNfts[_owner][_tokenId];
-        nftToOwner[0] = _to;
+        nftToOwner[_nft][0] = _to;
         _owner.transfer(price);
         emit purchasedToken(_tokenId, _to, price);
     }
 
-    function getNftToOwner(uint256 _tokenId) public view returns (address) {
-        return nftToOwner[_tokenId];
+    function getNftToOwner(IERC721 _nft, uint256 _tokenId)
+        public
+        view
+        returns (address)
+    {
+        return nftToOwner[_nft][_tokenId];
     }
 }
