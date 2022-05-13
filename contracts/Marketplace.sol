@@ -42,6 +42,7 @@ contract Marketplace {
         require(_nft.balanceOf(address(this)) > 0);
         _nft.transferFrom(address(this), _to, _tokenId);
         delete ownerToNfts[_owner][_tokenId];
+        nftToOwner[0] = _to;
         _owner.transfer(price);
         emit purchasedToken(_tokenId, _to, price);
     }
