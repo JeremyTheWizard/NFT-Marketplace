@@ -16,13 +16,12 @@ function Navbar() {
           />
           <span class="text-xl font-semibold text-white">NFT PALACE</span>
         </div>
-        <div class="flex md:order-2">
-          <MainButton text="CONNECT WALLTET" />
+        <div class="flex items-center md:order-2 md:hidden">
           <button
             onClick={() => {
               isMenuHidden ? setIsMenuHidden("") : setIsMenuHidden("hidden");
             }}
-            class="p-2 text-sm rounded-lg md:hidden text-white"
+            class="p-2 text-sm rounded-lg text-white"
           >
             <svg
               class="w-9 h-9"
@@ -42,7 +41,10 @@ function Navbar() {
           class={`${isMenuHidden} justify-between items-center w-full md:flex md:w-auto md:order-1`}
           id="mobile-menu-4"
         >
-          <ul class="flex flex-col mt-4 text-white md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+          <div class="md:hidden mt-3 ">
+            <MainButton text="Connect Wallet" />
+          </div>
+          <ul class="flex flex-col mt-3 text-white md:flex-row md:space-x-8 md:mt-0 md:text-md md:font-medium">
             <li>
               <a
                 href="#"
@@ -68,6 +70,9 @@ function Navbar() {
               </a>
             </li>
           </ul>
+        </div>
+        <div class="hidden md:inline md:order-3 ">
+          <MainButton text="Connect Wallet" />
         </div>
       </div>
     </nav>
