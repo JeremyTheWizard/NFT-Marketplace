@@ -10,11 +10,11 @@ module.exports = {
       keyframes: {
         slider: {
           "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(calc(-160px*9))" },
+          "100%": { transform: "translateX(calc(-180px*10))" },
         },
       },
       animation: {
-        "auto-slide": "slider 25s linear infinite",
+        "auto-slide": "slider 20s linear infinite",
       },
     },
     backdropFilter: {
