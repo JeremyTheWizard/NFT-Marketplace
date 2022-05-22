@@ -19,7 +19,6 @@ function TopCollections() {
       if (i == 11) {
         imageIndex = 0;
       }
-      console.log(`i = ${i}\n imageIndex = ${imageIndex}`);
       imagesHtml.push(
         <div className="relative flex">
           <div
@@ -75,10 +74,10 @@ function TopCollections() {
 
   return (
     <>
-      <h1 className="mx-auto mt-9 mb-3 md:mt-20 text-onPrimary text-2xl md:text-3xl font-semibold">
+      <h1 className="mx-auto mt-12 mb-3 text-onPrimary text-2xl md:text-3xl font-bold">
         Top Collections
       </h1>
-      <div className="overflow-hidden md:w-11/12 mx-auto flex">
+      <div className="overflow-hidden mx-auto flex">
         <div className="flex animate-auto-slide hover:pause overflow-visible relative">
           {renderTopCollectionsImages()}
         </div>
