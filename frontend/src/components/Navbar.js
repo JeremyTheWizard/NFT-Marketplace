@@ -14,14 +14,14 @@ function Navbar() {
             class="rounded-full h-8 w-8 mr-3 sm:h-9"
             alt="Marketplace Logo"
           />
-          <span class="text-xl font-semibold text-white">NFT PALACE</span>
+          <span class="text-xl font-semibold text-onPrimary">NFT PALACE</span>
         </div>
         <div class="flex items-center md:order-2 md:hidden">
           <button
             onClick={() => {
               isMenuHidden ? setIsMenuHidden("") : setIsMenuHidden("hidden");
             }}
-            class="p-2 text-sm rounded-lg text-white"
+            class="p-2 text-sm rounded-lg text-onPrimary"
           >
             <svg
               class="w-9 h-9"

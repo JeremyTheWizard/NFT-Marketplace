@@ -4,8 +4,9 @@ module.exports = {
     extend: {
       colors: {
         primary: "#0F1D2B",
-        "button-primary": "#37EF97",
-        "button-secondary": "1D9DF9",
+        buttonPrimary: "#37EF97",
+        buttonSecondary: "1D9DF9",
+        onPrimary: "#F5F6EE",
       },
       keyframes: {
         slider: {

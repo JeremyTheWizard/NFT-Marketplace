@@ -2,7 +2,7 @@ import React from "react";
 
 function MainButton(props) {
   return (
-    <button class="text-button-primary bg-transparent border-2 border-button-primary hover:bg-button-primary hover:text-black font-medium rounded-lg  text-sm px-3 py-2 md:px-5 md:py-2.5 text-center md:mr-0">
+    <button class="text-buttonPrimary bg-transparent border-2 border-buttonPrimary hover:bg-buttonPrimary hover:text-black font-medium rounded-lg  text-sm px-3 py-2 md:px-5 md:py-2.5 text-center md:mr-0">
       {props.text}
     </button>
   );
