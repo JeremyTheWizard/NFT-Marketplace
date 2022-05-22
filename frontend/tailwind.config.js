@@ -11,7 +11,7 @@ module.exports = {
       keyframes: {
         slider: {
           "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(calc(-180px*10))" },
+          "100%": { transform: "translateX(calc(-240px*10))" },
         },
       },
       animation: {

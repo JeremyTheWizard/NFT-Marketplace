@@ -1,247 +1,86 @@
-import React, { useState } from "react";
+import { BsFillArrowRightCircleFill } from "react-icons/bs";
 
 function TopCollections() {
-  function importAll(r) {
-    let images = {};
-    r.keys().map((item) => {
-      images[item.replace("./", "")] = r(item);
-    });
-    return images;
+  function importAllImages(r) {
+    return r.keys().map(r);
   }
-
-  const images = importAll(
+  const images = importAllImages(
     require.context("../photos/TopCollecionts", false, /\.(png|jpe?g|svg)$/)
   );
 
-  const [topColletionSelected, setTopCollectionSelected] = useState("hidden");
+  function renderTopCollectionsImages() {
+    const imagesHtml = [];
+    let imageIndex = 0;
 
-  return (
-    <>
-      <div className="mx-auto mt-9">
-        <h1 className="mb-2 text-2xl md:text-3xl font-semibold">
-          Top Collections
-        </h1>
-      </div>
-      <div className="overflow-hidden md:w-11/12 mx-auto flex">
-        <div className="flex .nimate-auto-slide hover:pause overflow-visible relative">
+    /* We loop through the images twice because if not there wourld be an empty
+    space while the slide animation repeats.
+    */
+    for (let i = 1; i < (images.length + 1) * 2; i++) {
+      if (i == 11) {
+        imageIndex = 0;
+      }
+      console.log(`i = ${i}\n imageIndex = ${imageIndex}`);
+      imagesHtml.push(
+        <div className="relative flex">
           <div
-            className="h-60 w-60 pl-4 py-4 z-20"
+            className="h-60 w-60 pl-4 py-4"
             onMouseEnter={(e) => {
-              setTopCollectionSelected("visible");
-            }}
-            onMouseLeave={(e) => {
-              setTopCollectionSelected("hidden");
+              document.getElementById(i).classList.remove("hidden");
+              document.getElementById(i).classList.add("flex");
             }}
           >
             <img
-              src={images["nft1.jpeg"]}
+              src={images[imageIndex]}
               alt=""
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover rounded-xl"
             />
           </div>
           <div
-            className={`${topColletionSelected} flex w-[545px] h-60 bg-slate-300 absolute z-10`}
+            id={i}
+            className="hidden w-[545px] h-60 rounded-xl bg-onPrimary absolute z-10"
+            onMouseLeave={(e) => {
+              document.getElementById(i).classList.remove("flex");
+              document.getElementById(i).classList.add("hidden");
+            }}
           >
-            <div className="h-60 w-60 shrink-0 pl-4 py-4"></div>
-            <div className="flex flex-col m-4">
-              <h1 className="text-xl font-semibold mb-3">NFT Name</h1>
-              <p className="text-left">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Deserunt, deleniti repellendus
+            <div className="h-60 w-60 shrink-0 pl-4 py-4">
+              <img
+                src={images[imageIndex]}
+                alt=""
+                className="h-full w-full object-cover rounded-xl"
+              />
+            </div>
+            <div className="m-4 ml-6 flex flex-col">
+              <h1 className="text-left text-xl font-semibold mb-2">
+                NFT Collection Name
+              </h1>
+              <p className="text-left break-word">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Hic
+                debitis aliquid sapiente tempore iusto delectus maxime quos
+                perspiciatis eveniet nemo!
               </p>
+              <BsFillArrowRightCircleFill
+                className="mt-4 place-self-end"
+                size="2.5em"
+                color="primary"
+              />
             </div>
           </div>
+        </div>
+      );
+      imageIndex++;
+    }
+    return imagesHtml;
+  }
 
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft2.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)] "
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft3.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft4.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft5.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft6.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft7.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft8.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft9.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft10.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft1.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft2.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)] "
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft3.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft4.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft5.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft6.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft7.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft8.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft9.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
-          <div className="md:hover:w-[545px] md:hover:bg-slate-300 flex pl-4 py-4">
-            <h1 className="hidden text-xl font-semibold">NFT Name</h1>
-            <div className="h-52 w-52">
-              <img
-                src={images["nft10.jpeg"]}
-                alt=""
-                className="h-full w-full object-cover [transform:translateZ(20px)]"
-              />
-            </div>
-          </div>
+  return (
+    <>
+      <h1 className="mx-auto mt-9 mb-3 md:mt-20 text-onPrimary text-2xl md:text-3xl font-semibold">
+        Top Collections
+      </h1>
+      <div className="overflow-hidden md:w-11/12 mx-auto flex">
+        <div className="flex animate-auto-slide hover:pause overflow-visible relative">
+          {renderTopCollectionsImages()}
         </div>
       </div>
     </>
