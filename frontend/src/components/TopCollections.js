@@ -20,7 +20,7 @@ function TopCollections() {
         imageIndex = 0;
       }
       imagesHtml.push(
-        <div className="relative flex">
+        <div className="relative flex cursor-pointer">
           <div
             className="h-60 w-60 pl-4 py-4"
             onMouseEnter={(e) => {
