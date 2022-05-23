@@ -77,7 +77,10 @@ function TopCollections() {
       <h1 className="mx-auto mt-12 mb-3 text-onPrimary text-2xl md:text-3xl font-bold">
         Top Collections
       </h1>
-      <div className="overflow-hidden mx-auto flex">
+      {/* Since the app.js has a with of 90vw, when we give this component
+      100vw it will set a negative margin just on the right side. This the need
+      to set the left margin with the calc function.*/}
+      <div className="overflow-hidden mx-auto flex w-[100vw] md:w-full relative md:static left-[calc(-50vw+50%)]">
         <div className="flex animate-auto-slide hover:pause overflow-visible relative">
           {renderTopCollectionsImages()}
         </div>

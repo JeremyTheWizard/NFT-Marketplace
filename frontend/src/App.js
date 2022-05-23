@@ -5,7 +5,7 @@ import NftsCards from "./components/NftsCards";
 
 function App() {
   return (
-    <div className="App max-w-[1200px] mx-auto">
+    <div className="App w-[90vw] max-w-[1200px] mx-auto">
       <Navbar />
       <TopCollections />
       <NftsCards />

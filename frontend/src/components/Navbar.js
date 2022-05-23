@@ -6,7 +6,7 @@ function Navbar() {
   const [isMenuHidden, setIsMenuHidden] = useState("hidden");
 
   return (
-    <nav class="px-2 md:px-0 py-4 bg-primary">
+    <nav class="py-4 bg-primary">
       <div class="w-full flex flex-wrap justify-between items-center">
         <div class="flex items-center">
           <img
@@ -16,12 +16,12 @@ function Navbar() {
           />
           <span class="text-xl font-semibold text-white">NFT PALACE</span>
         </div>
-        <div class="flex items-center md:order-2 md:hidden">
+        <div class="flex md:order-2 md:hidden">
           <button
             onClick={() => {
               isMenuHidden ? setIsMenuHidden("") : setIsMenuHidden("hidden");
             }}
-            class="p-2 text-sm rounded-lg text-white"
+            class="text-sm rounded-lg text-white"
           >
             <svg
               class="w-9 h-9"
