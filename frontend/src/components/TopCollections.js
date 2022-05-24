@@ -1,4 +1,5 @@
 import TopCollectionsCollection from "./TopCollectionsCollection";
+import { useNavigate, useParams } from "react-router-dom";
 
 function TopCollections() {
   function importAllImages(r) {
@@ -7,8 +8,6 @@ function TopCollections() {
   const allImages = importAllImages(
     require.context("../photos/TopCollecionts", false, /\.(png|jpe?g|svg)$/)
   );
-
-  console.log("lenght(allImages) =", allImages.length);
 
   function renderTopCollectionsImages() {
     const imagesHtml = [];
@@ -21,7 +20,6 @@ function TopCollections() {
       if (ii === 10) {
         ii = 0;
       }
-      console.log("ii = ", ii);
       imagesHtml.push(<TopCollectionsCollection imagePath={allImages[ii]} />);
       ii++;
     }
