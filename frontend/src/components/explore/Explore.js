@@ -1,5 +1,5 @@
-import { shuffleArray } from "../helpfulScripts";
-import randomPerson from "../photos/random-person.jpeg";
+import { shuffleArray } from "../../helpfulScripts";
+import randomPerson from "../../photos/random-person.jpeg";
 import ExploreCard from "./ExploreCard";
 
 function NftsCards() {
@@ -8,7 +8,7 @@ function NftsCards() {
   }
   const allNfts = shuffleArray(
     importAllImages(
-      require.context("../photos/Collections/", true, /\.(png|jpe?g|svg)$/)
+      require.context("../../photos/Collections/", true, /\.(png|jpe?g|svg)$/)
     )
   );
 

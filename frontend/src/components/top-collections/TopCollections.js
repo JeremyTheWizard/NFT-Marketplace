@@ -6,7 +6,7 @@ function TopCollections() {
     return r.keys().map(r);
   }
   const allImages = importAllImages(
-    require.context("../photos/TopCollecionts", false, /\.(png|jpe?g|svg)$/)
+    require.context("../../photos/TopCollecionts", false, /\.(png|jpe?g|svg)$/)
   );
 
   function renderTopCollectionsImages() {

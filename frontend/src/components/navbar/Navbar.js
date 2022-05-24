@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
-import Logo from "../photos/Logo.jpeg";
-import MainButton from "./MainButton";
+import Logo from "../../photos/Logo.jpeg";
+import MainButton from "../MainButton";
 
 function Navbar() {
   const [isMenuHidden, setIsMenuHidden] = useState("hidden");

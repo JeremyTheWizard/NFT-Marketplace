@@ -1,5 +1,5 @@
-import TopCollections from "../components/TopCollections";
-import Explore from "../components/Explore";
+import TopCollections from "../components/top-collections/TopCollections";
+import Explore from "../components/explore/Explore";
 
 function Home() {
   return (
