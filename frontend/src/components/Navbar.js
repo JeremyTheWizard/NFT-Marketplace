@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink, Link } from "react-router-dom";
 import Logo from "../photos/Logo.jpeg";
 import MainButton from "./MainButton";
 
@@ -6,7 +7,7 @@ function Navbar() {
   const [isMenuHidden, setIsMenuHidden] = useState("hidden");
 
   return (
-    <nav class="py-4 bg-primary">
+    <nav class="w-[90vw] max-w-[1200px] mx-auto py-4 bg-primary">
       <div class="w-full flex flex-wrap justify-between items-center">
         <div class="flex items-center">
           <img
@@ -46,32 +47,38 @@ function Navbar() {
           </div>
           <ul class="flex flex-col mt-3 text-white md:flex-row md:space-x-8 md:mt-0 md:text-md md:font-medium">
             <li>
-              <a
-                href="#"
-                class="block py-2 pr-4 pl-3 hover:text-button-primary transition duration-200 ease-in-out md:bg-transparent md:p-0"
+              <NavLink
+                to="/marketplace"
+                className={({ isActive }) => {
+                  return isActive && "text-buttonSecondary";
+                }}
               >
                 Marketplace
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a
-                href="#"
-                class="block py-2 pr-4 pl-3 hover:text-button-primary transition duration-200 ease-in-out md:bg-transparent md:p-0"
+              <NavLink
+                to="/collections"
+                className={({ isActive }) => {
+                  return isActive && "text-buttonSecondary";
+                }}
               >
                 Collections
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a
-                href="#"
-                class="block py-2 pr-4 pl-3 hover:text-button-primary transition duration-200 ease-in-out md:bg-transparent md:p-0"
+              <NavLink
+                to="/profile"
+                className={({ isActive }) => {
+                  return isActive && "text-buttonSecondary";
+                }}
               >
                 Profile
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>
-        <div class="hidden md:inline md:order-3 ">
+        <div className="hidden md:inline md:order-3 ">
           <MainButton text="Connect Wallet" />
         </div>
       </div>

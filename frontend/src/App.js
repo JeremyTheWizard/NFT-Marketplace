@@ -1,15 +1,18 @@
-import "./App.css";
 import Navbar from "./components/Navbar.js";
-import TopCollections from "./components/TopCollections";
-import Explore from "./components/Explore";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home.js";
+import ErrorPage from "./pages/ErrorPage.js";
 
 function App() {
   return (
-    <div className="App w-[90vw] max-w-[1200px] mx-auto">
+    <Router>
       <Navbar />
-      <TopCollections />
-      <Explore />
-    </div>
+      <Routes>
+        <Route path="/marketplace" element={<Home />} />
+        <Route path="/profile/:username" element={<profile />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
+    </Router>
   );
 }
 
