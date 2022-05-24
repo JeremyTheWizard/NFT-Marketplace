@@ -5,7 +5,7 @@ module.exports = {
       colors: {
         primary: "#0F1D2B",
         buttonPrimary: "#37EF97",
-        buttonSecondary: "1D9DF9",
+        buttonSecondary: "#1D9DF9",
         onPrimary: "#F5F6EE",
       },
       keyframes: {
