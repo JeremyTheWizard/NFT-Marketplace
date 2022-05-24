@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function TopCollectionsCollection(props) {
   let navigate = useNavigate();
   function routeChange(path) {
-    navigate(path);
+    navigate(path, { state: { imagePath: props.imagePath } });
   }
 
   const [display, setDisplay] = useState("hidden");
@@ -35,7 +35,7 @@ function TopCollectionsCollection(props) {
               //The collection path is given by the image name.
               /*From the imagePath get the info after the last slash and then
               get the name up to the first dot*/
-              `/collection/${props.imagePath.match(/[^/]*$/)[0].split(".")[0]}`
+              `/collections/${props.imagePath.match(/[^/]*$/)[0].split(".")[0]}`
             )
           }
         >

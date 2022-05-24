@@ -1,5 +1,4 @@
 import TopCollectionsCollection from "./TopCollectionsCollection";
-import { useNavigate, useParams } from "react-router-dom";
 
 function TopCollections() {
   function importAllImages(r) {

@@ -2,6 +2,7 @@ import Navbar from "./components/navbar/Navbar.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.js";
 import ErrorPage from "./pages/ErrorPage.js";
+import Collection from "./pages/Collection.js";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/marketplace" element={<Home />} />
         <Route path="/profile/:username" element={<profile />} />
+        <Route path="/collections/:collectionname" element={<Collection />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
