@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Logo from "../../photos/Logo.jpeg";
 import MainButton from "../MainButton";
 
