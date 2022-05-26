@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BsSuitHeart } from "react-icons/bs";
 import { BsSuitHeartFill } from "react-icons/bs";
 
-function ExploreCard(props) {
+function CollectionCard(props) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
 
@@ -41,13 +41,8 @@ function ExploreCard(props) {
       </div>
       <div className="p-6 flex flex-col">
         <h3 className="text-xl font-semibold text-left mb-3">NFT Name</h3>
-        <p className="text-left text-xl font-semibold mb-3">$337</p>
-        <p className="text-left mb-12">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi eius
-          inventore mollitia ipsum. Autem voluptatum ducimus quisquam cupiditate
-          eius eum!
-        </p>
-        <div className="flex justify-between">
+        <p className="text-left text-lg font-semibold mb-3">$337</p>
+        <div className="flex justify-between mt-8">
           <div className="flex items-center gap-2">
             <img
               src={props.owner}
@@ -66,4 +61,4 @@ function ExploreCard(props) {
   );
 }
 
-export default ExploreCard;
+export default CollectionCard;

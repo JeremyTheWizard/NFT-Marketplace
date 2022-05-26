@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import ExploreCard from "../explore/ExploreCard";
+import CollectionCard from "./CollectionCard";
 import randomPerson from "../../photos/random-person.jpeg";
 import ActivityTab from "./ActivityTab";
 
@@ -15,7 +15,7 @@ function ItemsActivity() {
     const nftsCardsHtml = [];
     for (let i = 0; i < allNfts.length; i++) {
       nftsCardsHtml.push(
-        <ExploreCard imagePath={allNfts[i]} owner={randomPerson} />
+        <CollectionCard imagePath={allNfts[i]} owner={randomPerson} />
       );
     }
     return nftsCardsHtml;

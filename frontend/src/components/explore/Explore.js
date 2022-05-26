@@ -1,6 +1,6 @@
 import { shuffleArray } from "../../helpfulScripts";
 import randomPerson from "../../photos/random-person.jpeg";
-import ExploreCard from "./ExploreCard";
+import CollectionCard from "../items-activity/CollectionCard";
 
 function NftsCards() {
   function importAllImages(r) {
@@ -16,7 +16,7 @@ function NftsCards() {
     const nftsCardsHtml = [];
     for (let i = 0; i < allNfts.length; i++) {
       nftsCardsHtml.push(
-        <ExploreCard imagePath={allNfts[i]} owner={randomPerson} />
+        <CollectionCard imagePath={allNfts[i]} owner={randomPerson} />
       );
     }
     return nftsCardsHtml;
