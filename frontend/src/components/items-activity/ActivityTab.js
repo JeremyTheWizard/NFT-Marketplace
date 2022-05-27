@@ -12,7 +12,7 @@ function ActivityTab() {
         <p>To</p>
         <p>Time</p>
       </div>
-      <div className="flex flex-col gap-16 mt-3">
+      <div className="flex flex-col gap-16 mt-10">
         <ActivityTabItem />
         <ActivityTabItem />
         <ActivityTabItem />

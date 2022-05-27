@@ -27,13 +27,15 @@ function ItemsActivity() {
         <button
           className={`${
             itemsDisplay === "flex" && "text-buttonSecondary"
-          } font-semibold md:text-xl`}
+          } font-semibold :text-xl`}
           onClick={() => setItemsDisplay("flex")}
         >
           Items
         </button>
         <button
-          className={`${itemsDisplay === "hidden" && "text-buttonSecondary"}`}
+          className={`${
+            itemsDisplay === "hidden" && "text-buttonSecondary"
+          } font-semibold`}
           onClick={() => setItemsDisplay("hidden")}
         >
           Activity
