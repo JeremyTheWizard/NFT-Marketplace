@@ -1,31 +1,36 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useEthers } from "@usedapp/core";
 import Logo from "../../photos/Logo.jpeg";
 import MainButton from "../MainButton";
+import { FaWallet } from "react-icons/fa";
 
 function Navbar() {
   const [isMenuHidden, setIsMenuHidden] = useState("hidden");
+  const { account } = useEthers();
 
   return (
-    <nav class="w-[90vw] max-w-[1200px] mx-auto py-4 bg-primary">
-      <div class="w-full flex flex-wrap justify-between items-center">
-        <div class="flex items-center">
+    <nav className="w-[90vw] max-w-[1200px] mx-auto py-4 bg-primary">
+      <div className="w-full flex flex-wrap justify-between items-center">
+        <div className="flex items-center">
           <img
             src={Logo}
-            class="rounded-full h-8 w-8 mr-3 sm:h-9"
+            className="rounded-full h-8 w-8 mr-3 sm:h-9"
             alt="Marketplace Logo"
           />
-          <span class="text-xl font-semibold text-white">NFT PALACE</span>
+          <span className="text-xl font-semibold text-white">NFT PALACE</span>
         </div>
-        <div class="flex md:order-2 md:hidden">
+        <div className="flex md:order-2 md:hidden">
           <button
             onClick={() => {
-              isMenuHidden ? setIsMenuHidden("") : setIsMenuHidden("hidden");
+              isMenuHidden === "hidden"
+                ? setIsMenuHidden("flex")
+                : setIsMenuHidden("hidden");
             }}
-            class="text-sm rounded-lg text-white"
+            className="text-sm rounded-lg text-white"
           >
             <svg
-              class="w-9 h-9"
+              className="w-9 h-9"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
@@ -39,48 +44,69 @@ function Navbar() {
           </button>
         </div>
         <div
-          class={`${isMenuHidden} justify-between items-center w-full md:flex md:w-auto md:order-1`}
-          id="mobile-menu-4"
+          className={`${isMenuHidden} flex-col md:flex mt-6 md:mt-0 items-center w-full md:w-auto `}
         >
-          <div class="md:hidden mt-3 ">
-            <MainButton text="Connect Wallet" />
+          <div className="">
+            {account ? (
+              <div className="flex md:hidden gap-3 items-center">
+                <FaWallet color="#F5F6EE" />
+                <p className="text-onPrimary">{`${account.slice(
+                  0,
+                  4
+                )}...${account.slice(-4)}`}</p>
+              </div>
+            ) : (
+              <div className="md:hidden mt-3">
+                {account || <MainButton text="Connect Wallet" />}
+              </div>
+            )}
+            <ul className="flex flex-col mt-3 text-white md:flex-row gap-3 md:space-x-8 md:mt-0 md:text-md md:font-medium">
+              <li>
+                <NavLink
+                  to="/marketplace"
+                  className={({ isActive }) => {
+                    return isActive && "text-buttonSecondary";
+                  }}
+                >
+                  Marketplace
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/collections"
+                  className={({ isActive }) => {
+                    return isActive && "text-buttonSecondary";
+                  }}
+                >
+                  Collections
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) => {
+                    return isActive && "text-buttonSecondary";
+                  }}
+                >
+                  Profile
+                </NavLink>
+              </li>
+            </ul>
           </div>
-          <ul class="flex flex-col mt-3 text-white md:flex-row md:space-x-8 md:mt-0 md:text-md md:font-medium">
-            <li>
-              <NavLink
-                to="/marketplace"
-                className={({ isActive }) => {
-                  return isActive && "text-buttonSecondary";
-                }}
-              >
-                Marketplace
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/collections"
-                className={({ isActive }) => {
-                  return isActive && "text-buttonSecondary";
-                }}
-              >
-                Collections
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/profile"
-                className={({ isActive }) => {
-                  return isActive && "text-buttonSecondary";
-                }}
-              >
-                Profile
-              </NavLink>
-            </li>
-          </ul>
         </div>
-        <div className="hidden md:inline md:order-3 ">
-          <MainButton text="Connect Wallet" />
-        </div>
+        {account ? (
+          <div className="hidden md:flex gap-3 items-center md:order-3">
+            <FaWallet color="#F5F6EE" />
+            <p className="text-onPrimary">{`${account.slice(
+              0,
+              4
+            )}...${account.slice(-4)}`}</p>
+          </div>
+        ) : (
+          <div className="hidden md:inline md:order-3 text-onPrimary">
+            {account || <MainButton text="Connect Wallet" />}
+          </div>
+        )}
       </div>
     </nav>
   );
