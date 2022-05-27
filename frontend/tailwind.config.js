@@ -6,6 +6,7 @@ module.exports = {
         primary: "#0F1D2B",
         buttonPrimary: "#37EF97",
         buttonSecondary: "#1D9DF9",
+        hoverButtonSecondary: "#1676BA",
         onPrimary: "#F5F6EE",
       },
       keyframes: {
