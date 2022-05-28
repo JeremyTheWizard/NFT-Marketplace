@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useEthers } from "@usedapp/core";
 import Logo from "../../photos/Logo.jpeg";
@@ -52,12 +52,12 @@ function Navbar() {
                 <FaWallet color="#F5F6EE" />
                 <p className="text-onPrimary">{`${account.slice(
                   0,
-                  4
+                  2
                 )}...${account.slice(-4)}`}</p>
               </div>
             ) : (
               <div className="md:hidden mt-3">
-                {account || <MainButton text="Connect Wallet" />}
+                <MainButton text="Connect Wallet" />
               </div>
             )}
             <ul className="flex flex-col mt-3 text-white md:flex-row gap-3 md:space-x-8 md:mt-0 md:text-md md:font-medium">
@@ -99,12 +99,12 @@ function Navbar() {
             <FaWallet color="#F5F6EE" />
             <p className="text-onPrimary">{`${account.slice(
               0,
-              4
+              2
             )}...${account.slice(-4)}`}</p>
           </div>
         ) : (
           <div className="hidden md:inline md:order-3 text-onPrimary">
-            {account || <MainButton text="Connect Wallet" />}
+            <MainButton text="Connect Wallet" />
           </div>
         )}
       </div>

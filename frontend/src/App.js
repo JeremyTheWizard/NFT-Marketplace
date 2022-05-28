@@ -5,10 +5,19 @@ import Home from "./pages/Home.js";
 import ErrorPage from "./pages/ErrorPage.js";
 import Collection from "./pages/Collection.js";
 import Asset from "./pages/Asset";
+import WEB3_INFURA_PROJECT_ID from "./.env";
 
 function App() {
+  const config = {
+    networks: [Rinkeby, Kovan],
+    readOnlyChainId: Rinkeby.chainId,
+    readOnlyUrls: {
+      [Rinkeby.chainId]: `{https://mainnet.infura.io/v3/${WEB3_INFURA_PROJECT_ID}}`,
+    },
+  };
+
   return (
-    <DAppProvider config={{ networks: [Rinkeby, Kovan] }}>
+    <DAppProvider config={config}>
       <Router>
         <Navbar />
         <Routes>
