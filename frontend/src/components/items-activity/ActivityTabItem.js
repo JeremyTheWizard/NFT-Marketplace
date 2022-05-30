@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoCart } from "react-icons/io5";
 import { FaEthereum } from "react-icons/fa";
-import testImage from "../../photos/Collections/AlmostHuman/erick-butler-PShT83NPRFE-unsplash.jpeg";
+import testImage from "../../photos/Collections/AlmostHuman/Damaged.jpeg";
 <p></p>;
 
 function ActivityTabItem() {
