@@ -5,6 +5,7 @@ import Home from "./pages/Home.js";
 import ErrorPage from "./pages/ErrorPage.js";
 import Collection from "./pages/Collection.js";
 import Asset from "./pages/Asset";
+import Profile from "./pages/Profile";
 import WEB3_INFURA_PROJECT_ID from "./.env";
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/marketplace" element={<Home />} />
-          <Route path="/profile/:username" element={<profile />} />
+          <Route path="/profile/:username" element={<Profile />} />
           <Route path="/collections/:collectionname" element={<Collection />} />
           <Route
             path="/collections/:collectionname/:asset"
