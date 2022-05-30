@@ -5,14 +5,15 @@ import Home from "./pages/Home.js";
 import ErrorPage from "./pages/ErrorPage.js";
 import Collection from "./pages/Collection.js";
 import Asset from "./pages/Asset";
-import WEB3_INFURA_PROJECT_ID from "./.env";
+import Profile from "./pages/Profile";
+import { web3InfuraProjectId } from "./config";
 
 function App() {
   const config = {
     networks: [Rinkeby, Kovan],
     readOnlyChainId: Rinkeby.chainId,
     readOnlyUrls: {
-      [Rinkeby.chainId]: `{https://mainnet.infura.io/v3/${WEB3_INFURA_PROJECT_ID}}`,
+      [Rinkeby.chainId]: `{https://mainnet.infura.io/v3/${web3InfuraProjectId}}`,
     },
   };
 
@@ -22,7 +23,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/marketplace" element={<Home />} />
-          <Route path="/profile/:username" element={<profile />} />
+          <Route path="/profile/:username" element={<Profile />} />
           <Route path="/collections/:collectionname" element={<Collection />} />
           <Route
             path="/collections/:collectionname/:asset"
