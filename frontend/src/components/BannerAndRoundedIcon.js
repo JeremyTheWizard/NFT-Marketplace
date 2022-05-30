@@ -2,11 +2,11 @@ import React from "react";
 
 function BannerAndRoundedIcon(props) {
   return (
-    <div>
+    <div className="w-full">
       <img
         src={props.bannerImage}
         alt=""
-        className="w-full h-32 md:h-48 lg:h-64 object-cover"
+        className="w-full h-32 md:h-48 lg:h-64 object-cover bg-gray-500"
       />
       <img
         src={props.profileImage}
