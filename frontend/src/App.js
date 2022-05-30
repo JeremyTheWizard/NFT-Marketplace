@@ -6,7 +6,8 @@ import ErrorPage from "./pages/ErrorPage.js";
 import Collection from "./pages/Collection.js";
 import Asset from "./pages/Asset";
 import Profile from "./pages/Profile";
-import { web3InfuraProjectId } from "./config";
+import { MoralisProvider } from "react-moralis";
+import { web3InfuraProjectId, appId, serverURL } from "./config";
 
 function App() {
   const config = {
@@ -18,21 +19,26 @@ function App() {
   };
 
   return (
-    <DAppProvider config={config}>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/marketplace" element={<Home />} />
-          <Route path="/profile/:username" element={<Profile />} />
-          <Route path="/collections/:collectionname" element={<Collection />} />
-          <Route
-            path="/collections/:collectionname/:asset"
-            element={<Asset />}
-          />
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
-      </Router>
-    </DAppProvider>
+    <MoralisProvider appId={appId} serverUrl={serverURL}>
+      <DAppProvider config={config}>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/marketplace" element={<Home />} />
+            <Route path="/profile/:username" element={<Profile />} />
+            <Route
+              path="/collections/:collectionname"
+              element={<Collection />}
+            />
+            <Route
+              path="/collections/:collectionname/:asset"
+              element={<Asset />}
+            />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </Router>
+      </DAppProvider>
+    </MoralisProvider>
   );
 }
 
