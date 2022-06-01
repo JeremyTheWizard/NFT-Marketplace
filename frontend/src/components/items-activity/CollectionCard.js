@@ -16,7 +16,17 @@ function CollectionCard({
   let navigate = useNavigate();
 
   function routeChange(path) {
-    navigate(path, { state: { imagePath: imagePath } });
+    navigate(path, {
+      state: {
+        imagePath: imagePath,
+        collectionName: collectionName,
+        nftName: nftName,
+        price: price,
+        creatorImagePath: creatorImagePath,
+        creatorName: creatorName,
+        sell: false,
+      },
+    });
   }
 
   function likeIcon() {

@@ -3,7 +3,7 @@ import { BsSuitHeart } from "react-icons/bs";
 import { BsSuitHeartFill } from "react-icons/bs";
 import SecondaryButton from "../SecondaryButton";
 import { useLocation } from "react-router-dom";
-import testImage from "../../photos/random-person.jpeg";
+import { FaEthereum } from "react-icons/fa";
 
 function AssetCard(props) {
   const [isLike, setIsLike] = useState(false);
@@ -44,24 +44,45 @@ function AssetCard(props) {
         />
       </div>
       <div className="bg-onPrimary p-6 flex flex-col gap-6">
-        <h3 className="text-2xl font-bold text-left">NFT Name</h3>
-        <p className="text-left text-xl font-semibold">$337</p>
+        <h4>{location.state.collectionName}</h4>
+        <h3 className="text-2xl font-bold text-left">
+          {location.state.nftName}
+        </h3>
+        {location.state.price && (
+          <div className="flex gap-3">
+            <div className="flex items-center">
+              <FaEthereum />
+              <p className="text-left text-xl font-semibold">
+                {location.state.price}
+              </p>
+            </div>
+            <p>($555)</p>
+          </div>
+        )}
         <p className="text-left">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi eius
           inventore mollitia ipsum. Autem voluptatum ducimus quisquam cupiditate
           eius eum!
         </p>
         <div className="w-full md:w-56 mt-4 mb-6 md:mb-0">
-          <SecondaryButton text="Buy" />
+          {location.state.sell ? (
+            <SecondaryButton text="Buy" />
+          ) : (
+            <SecondaryButton text="Sell" />
+          )}
         </div>
         <div className="flex justify-between mt-auto">
           <div className="flex items-center gap-2 ">
-            <img
-              src={testImage}
-              alt=""
-              className="w-8 h-8 bg-gray-500 object-cover rounded-full"
-            />
-            <h4 className="text-base">Creator Name</h4>
+            {location.state.creatorImagePath && (
+              <img
+                src={location.state.creatorImagePath}
+                alt=""
+                className="w-8 h-8 bg-gray-500 object-cover rounded-full"
+              />
+            )}
+            {location.state.creatorName && (
+              <h4 className="text-base">{location.state.creatorName}</h4>
+            )}
           </div>
           <div className="flex gap-2 items-center">
             {likeIcon()}
