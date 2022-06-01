@@ -16,7 +16,14 @@ function NftsCards() {
     const nftsCardsHtml = [];
     for (let i = 0; i < allNfts.length; i++) {
       nftsCardsHtml.push(
-        <CollectionCard imagePath={allNfts[i]} owner={randomPerson} />
+        <CollectionCard
+          imagePath={allNfts[i]}
+          collectionName={"test collection name"}
+          nftName={"Test nft name"}
+          price={0.03}
+          creatorImagePath={randomPerson}
+          creatorName={"Test creator name"}
+        />
       );
     }
     return nftsCardsHtml;

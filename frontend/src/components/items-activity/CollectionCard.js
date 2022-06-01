@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { BsSuitHeart } from "react-icons/bs";
 import { BsSuitHeartFill } from "react-icons/bs";
+import { FaEthereum } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-function CollectionCard(props) {
+function CollectionCard({
+  imagePath,
+  collectionName,
+  nftName,
+  price,
+  creatorImagePath,
+  creatorName,
+}) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   let navigate = useNavigate();
 
   function routeChange(path) {
-    navigate(path, { state: { imagePath: props.imagePath } });
+    navigate(path, { state: { imagePath: imagePath } });
   }
 
   function likeIcon() {
@@ -41,28 +48,35 @@ function CollectionCard(props) {
       className="bg-onPrimary overflow-hidden rounded-xl flex flex-col cursor-pointer"
       onClick={() =>
         routeChange(
-          `/collections/${props.collection ? props.collection : "test"}/nft`
+          `/collections/${collectionName ? collectionName : "test"}/nft`
         )
       }
     >
       <div className="w-full">
         <img
-          src={props.imagePath}
+          src={imagePath}
           alt=""
           className="w-full h-full object-cover aspect-square"
         />
       </div>
-      <div className="p-6 flex flex-col">
-        <h3 className="text-xl font-semibold text-left mb-3">NFT Name</h3>
-        <p className="text-left text-lg font-semibold mb-3">$337</p>
+      <div className="p-6 flex flex-col gap-3">
+        <h4>{collectionName}</h4>
+        <h3 className="text-xl font-semibold">{nftName}</h3>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center">
+            <FaEthereum />
+            <p className="text-lg font-semibold">{price}</p>
+          </div>
+          <p>($63.00)</p>
+        </div>
         <div className="flex justify-between mt-8">
           <div className="flex items-center gap-2">
             <img
-              src={props.owner}
+              src={creatorImagePath}
               alt=""
-              className="w-8 h-8 bg-gray-500 object-cover rounded-full"
+              className="w-8 h-8 bg-gray-400 object-cover rounded-full"
             />
-            <h4 className="text-base">Creator Name</h4>
+            <h4 className="text-base">{creatorName}</h4>
           </div>
           <div className="flex gap-2 items-center">
             {likeIcon()}
