@@ -21,12 +21,15 @@ const Items = () => {
   async function renderExploreCards() {
     const nftsCardsHtml = [];
     const requests = userNFTs.result.map(async (nft) => {
+      console.log("nft = ", nft);
       let response = await fetch(fixMoralisUrl(nft.token_uri));
       response = await response.json();
       const image = response.image;
       nftsCardsHtml.push(
         <CollectionCard
           imagePath={image.startsWith("ipfs") ? fixUrl(image) : image}
+          collectionName={nft.name}
+          nftName={nft.token_id}
           owner={""}
         />
       );
