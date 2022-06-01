@@ -25,7 +25,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/marketplace" element={<Home />} />
-            <Route path="/profile/:username" element={<Profile />} />
+            <Route path="/profile" element={<Profile />} />
             <Route
               path="/collections/:collectionname"
               element={<Collection />}
