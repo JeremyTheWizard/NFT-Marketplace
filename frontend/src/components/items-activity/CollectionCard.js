@@ -62,21 +62,25 @@ function CollectionCard({
       <div className="p-6 flex flex-col gap-3">
         <h4>{collectionName}</h4>
         <h3 className="text-xl font-semibold">{nftName}</h3>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center">
-            <FaEthereum />
-            <p className="text-lg font-semibold">{price}</p>
+        {price && (
+          <div className="flex items-center gap-3">
+            <div className="flex items-center">
+              <FaEthereum />
+              <p className="text-lg font-semibold">{price}</p>
+            </div>
+            <p>($63.00)</p>
           </div>
-          <p>($63.00)</p>
-        </div>
+        )}
         <div className="flex justify-between mt-8">
           <div className="flex items-center gap-2">
-            <img
-              src={creatorImagePath}
-              alt=""
-              className="w-8 h-8 bg-gray-400 object-cover rounded-full"
-            />
-            <h4 className="text-base">{creatorName}</h4>
+            {creatorName && (
+              <img
+                src={creatorImagePath}
+                alt=""
+                className="w-8 h-8 bg-gray-400 object-cover rounded-full"
+              />
+            )}
+            {creatorName && <h4 className="text-base">{creatorName}</h4>}
           </div>
           <div className="flex gap-2 items-center">
             {likeIcon()}
