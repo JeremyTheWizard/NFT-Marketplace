@@ -59,7 +59,7 @@ const Items = () => {
   }, [userNFTs]);
 
   return (
-    <div className="mt-12 grid justify-center sm:grid-cols-2 lg:grid-cols-3 gap-12">
+    <div className="my-12 grid justify-center sm:grid-cols-2 lg:grid-cols-3 gap-12">
       {nftsCardsHtml}
     </div>
   );
