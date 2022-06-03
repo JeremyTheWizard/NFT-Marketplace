@@ -2,6 +2,7 @@ import express from "express";
 import { MongoClient } from "mongodb";
 import axios from "axios";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
@@ -9,10 +10,7 @@ const uri = `mongodb+srv://Mijail:${process.env.MONGODB_PASSWORD}@cluster0.zdqhj
 
 const PORT = 3000;
 const app = express();
-
-// app.get("/marketplace", (req, res) => {
-//   res.json("Hello to my app!");
-// });
+app.use(cors);
 
 app.get("/marketplace", async (req, res) => {
   const client = new MongoClient(uri);
@@ -23,10 +21,7 @@ app.get("/marketplace", async (req, res) => {
     const itemsOnSale = database.collection("Items-on-sale");
 
     const returnedItemsOnSale = await itemsOnSale.find().toArray();
-    console.log(returnedItemsOnSale);
     res.send(returnedItemsOnSale);
-  } catch {
-    console.log("error");
   } finally {
     await client.close();
   }
