@@ -4,3 +4,5 @@ __pycache__
 .hypothesis/
 build/
 reports/
+images/example.png
+interfaces/ExampleInterface.sol
