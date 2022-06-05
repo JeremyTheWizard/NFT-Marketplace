@@ -10,6 +10,7 @@ from scripts.helpful_scripts import (
 
 def deploy():
     account = get_account()
+    print("account = ", account)
     marketplace = Marketplace.deploy({"from": account})
     print(f"marketplace address = {marketplace.address}")
     return marketplace
@@ -19,4 +20,4 @@ def main(update_front_end=True):
     deploy()
     if update_front_end:
         copy_brownie_config_to_frontend()
-        copy_folders_to_frontend("../build", "../../frontend/src/build")
+        copy_folders_to_frontend("../build", "../../../frontend/src/build")

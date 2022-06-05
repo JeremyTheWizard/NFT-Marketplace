@@ -10,6 +10,7 @@ dotenv: .env
 
 networks:
   default: development
+  rinkeby: ""
 
 wallets:
   from_key: ${PRIVATE_KEY}

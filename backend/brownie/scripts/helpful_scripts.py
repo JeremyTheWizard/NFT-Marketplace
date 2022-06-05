@@ -24,13 +24,14 @@ def get_account(index=None, id=None):
     If you want to work with a test net, add it to brownie-config.yaml under 'networks'"""
     if index:
         return accounts[index]
-    if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+    elif network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         return accounts[0]
-    if id:
+    elif id:
         return accounts.load(id)
-    if network.show_active() in config["networks"]:
+    elif network.show_active() in config["networks"]:
         return accounts.add(config["wallets"]["from_key"])
-    return None
+    else:
+        return None
 
 
 def get_contract(contract_name):
