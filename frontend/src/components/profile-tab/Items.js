@@ -21,30 +21,23 @@ const Items = () => {
   async function renderExploreCards() {
     const nftsCardsHtml = [];
     const requests = userNFTs.result.map(async (nft) => {
-      console.log("nft = ", nft);
-      let response = await fetch(fixMoralisUrl(nft.token_uri));
-      response = await response.json();
-      const image = response.image;
+      const metadata = JSON.parse(nft.metadata);
+
+      const image = metadata["image"];
       nftsCardsHtml.push(
         <CollectionCard
           imagePath={image.startsWith("ipfs") ? fixUrl(image) : image}
           collectionName={nft.name}
-          nftName={nft.token_id}
+          tokenId={nft.token_id}
           owner={""}
+          contractAddress={nft.token_address}
+          sell={true}
         />
       );
     });
     await Promise.all(requests);
     setNftsCardsHtml(nftsCardsHtml);
   }
-
-  const fixMoralisUrl = (url) => {
-    if (url.startsWith("ipfs")) {
-      return "https://ipfs:moralis.io:2053/ipfs/" + url.split("ipfs://ipfs/");
-    } else {
-      return url + "?format=json";
-    }
-  };
 
   const fixUrl = (url) => {
     return "https://ipfs.io/ipfs/" + url.split("ipfs://")[1];

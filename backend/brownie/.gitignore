@@ -6,3 +6,4 @@ build/
 reports/
 images/example.png
 interfaces/ExampleInterface.sol
+tests/integration/test_example2.py

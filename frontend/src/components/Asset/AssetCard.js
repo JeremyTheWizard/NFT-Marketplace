@@ -4,11 +4,15 @@ import { BsSuitHeartFill } from "react-icons/bs";
 import SecondaryButton from "../SecondaryButton";
 import { useLocation } from "react-router-dom";
 import { FaEthereum } from "react-icons/fa";
+import useSellToken from "../../hooks/useSellToken";
+import { utils } from "ethers";
 
 function AssetCard(props) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   const location = useLocation();
+
+  const { addNft, state } = useSellToken();
 
   function likeIcon() {
     if (isLike) {
@@ -46,7 +50,7 @@ function AssetCard(props) {
       <div className="bg-onPrimary p-6 flex flex-col gap-6">
         <h4>{location.state.collectionName}</h4>
         <h3 className="text-2xl font-bold text-left">
-          {location.state.nftName}
+          {location.state.tokenId}
         </h3>
         {location.state.price && (
           <div className="flex gap-3">
@@ -66,9 +70,18 @@ function AssetCard(props) {
         </p>
         <div className="w-full md:w-56 mt-4 mb-6 md:mb-0">
           {location.state.sell ? (
-            <SecondaryButton text="Buy" />
+            <SecondaryButton
+              text="Sell"
+              onClick={() => {
+                addNft(
+                  location.state.contractAddress,
+                  location.state.tokenId,
+                  utils.parseEther("0.00001").toString()
+                );
+              }}
+            />
           ) : (
-            <SecondaryButton text="Sell" />
+            <SecondaryButton text="Buy" />
           )}
         </div>
         <div className="flex justify-between mt-auto">

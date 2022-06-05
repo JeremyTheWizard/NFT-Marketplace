@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useEthers, useContractFunction } from "@usedapp/core";
 import Marketplace from "../build/contracts/Marketplace.json";
-import { networkMapping } from "../src/build/deployments/map.json";
+import ERC721 from "../build/contracts/MockERC721.json";
+import networkMapping from "../build/deployments/map.json";
 import { constants, utils } from "ethers";
 import { Contract } from "@ethersproject/contracts";
 
@@ -16,8 +17,26 @@ const useSellToken = () => {
     marketplaceAddress,
     marketplaceInterface
   );
+  console.log(marketplaceInterface);
 
-  const { state: addNftSend, send: addNftState } = useContractFunction(
+  const [tokenContractAddress, setTokenContractAddress] = useState(null);
+  const [tokenId, setTokenId] = useState(null);
+  const [price, setPrice] = useState(null);
+
+  const erc721ABI = ERC721.abi;
+  const erc721Interface = new utils.Interface(erc721ABI);
+  const erc721Contract = tokenContractAddress
+    ? new Contract(tokenContractAddress, erc721Interface)
+    : null;
+  const { send: approveToken, state: approveTokenState } = useContractFunction(
+    erc721Contract,
+    "approve",
+    {
+      transactionName: "Approve ERC721 token",
+    }
+  );
+
+  const { send: addNftSend, state: addNftState } = useContractFunction(
     marketplaceContract,
     "addNft",
     {
@@ -25,12 +44,31 @@ const useSellToken = () => {
     }
   );
 
-  const [state, setState] = useState(addNftState);
-  const addNft = () => {
-    return addNftSend(nft, tokenId, price);
+  const addNft = async (_tokenContractAddress, _tokenId, _price) => {
+    setTokenContractAddress(_tokenContractAddress);
+    setTokenId(_tokenId);
+    setPrice(_price);
   };
 
-  return addNft, addNftState;
+  useEffect(() => {
+    console.log(`marketplaceAddress = ${marketplaceAddress}`);
+    tokenId && marketplaceAddress && approveToken(marketplaceAddress, tokenId);
+  }, [tokenId]);
+
+  useEffect(() => {
+    console.log(`approveTokenState.status= ${approveTokenState.status}`);
+    if (
+      tokenId &&
+      tokenContractAddress &&
+      price &&
+      approveTokenState.status === "Success"
+    ) {
+      addNftSend(tokenContractAddress, tokenId, price);
+    }
+    console.log(`approveTokenState.status= ${approveTokenState.status}`);
+  }, [approveTokenState]);
+
+  return { addNft, addNftState };
 };
 
 export default useSellToken;

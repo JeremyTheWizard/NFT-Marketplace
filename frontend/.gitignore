@@ -2,7 +2,7 @@
 .env
 config.js
 
-brownie-config.json
+brownieConfig.json
 build
 
 package-lock.json

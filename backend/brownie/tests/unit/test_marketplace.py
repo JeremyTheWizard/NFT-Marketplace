@@ -41,7 +41,7 @@ def deploy_test_tokens():
 
 
 def test_add_nft(get_account_and_deploy, deploy_test_tokens):
-    test_tokens[0].approve(marketplace.address, 0)
+    # test_tokens[0].approve(marketplace.address, 0)
     marketplace.addNft(test_tokens[0], 0, Wei("0.0001 ether"))
     assert marketplace.getNftToOwner(test_tokens[0], 0) == account.address
 

@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 function CollectionCard({
   imagePath,
   collectionName,
-  nftName,
+  tokenId,
   price,
   creatorImagePath,
   creatorName,
+  contractAddress,
+  sell,
 }) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
@@ -20,11 +22,12 @@ function CollectionCard({
       state: {
         imagePath: imagePath,
         collectionName: collectionName,
-        nftName: nftName,
+        tokenId: tokenId,
         price: price,
         creatorImagePath: creatorImagePath,
         creatorName: creatorName,
-        sell: false,
+        sell: sell,
+        contractAddress,
       },
     });
   }
@@ -71,7 +74,7 @@ function CollectionCard({
       </div>
       <div className="p-6 flex flex-col gap-3">
         <h4>{collectionName}</h4>
-        <h3 className="text-xl font-semibold">{nftName}</h3>
+        <h3 className="text-xl font-semibold">{tokenId}</h3>
         {price && (
           <div className="flex items-center gap-3">
             <div className="flex items-center">

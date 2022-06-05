@@ -1,4 +1,4 @@
-from brownie import ERC721, network, accounts, config, web3, Contract
+from brownie import network, accounts, config, web3, Contract
 import os
 import time
 import yaml
@@ -16,7 +16,7 @@ LOCAL_BLOCKCHAIN_ENVIRONMENTS = NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS + [
 ]
 
 # Import contract to mock and set a dictionary: {"name": contract}
-contract_to_mock = {"ERC721": ERC721}
+contract_to_mock = {"": ""}
 
 
 def get_account(index=None, id=None):
@@ -143,25 +143,3 @@ def listen_for_event(brownie_contract, event, timeout=200, poll_interval=2):
         current_time = time.time()
     print("Timeout reached, no event found.")
     return {"event": None}
-
-
-def copy_brownie_config_to_frontend():
-    print("Updating frontend...")
-    with open("../brownie-config.yaml") as brownie_config:
-        config_dict = yaml.load(brownie_config, Loader=yaml.FullLoader)
-        with open(
-            "../../../frontend/src/brownieConfig.json", "w"
-        ) as brownie_config_json:
-            json.dump(config_dict, brownie_config_json)
-    print("Frontend updated!")
-
-
-def copy_folders_to_frontend(src, dest):
-    if os.path.exists(dest):
-        shutil.rmtree(dest)
-    shutil.copytree(src, dest)
-
-
-def main():
-    copy_brownie_config_to_frontend()
-    copy_folders_to_frontend("../build", "../../../frontend/src/build")
