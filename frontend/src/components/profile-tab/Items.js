@@ -21,6 +21,7 @@ const Items = () => {
   async function renderExploreCards() {
     const nftsCardsHtml = [];
     const requests = userNFTs.result.map(async (nft) => {
+      //console.log(nft);
       const metadata = JSON.parse(nft.metadata);
 
       const image = metadata["image"];
@@ -32,6 +33,7 @@ const Items = () => {
           owner={""}
           contractAddress={nft.token_address}
           sell={true}
+          attributes={metadata.attributes}
         />
       );
     });

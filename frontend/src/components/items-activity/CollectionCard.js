@@ -12,6 +12,7 @@ function CollectionCard({
   creatorName,
   contractAddress,
   sell,
+  attributes,
 }) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
@@ -28,6 +29,7 @@ function CollectionCard({
         creatorName: creatorName,
         sell: sell,
         contractAddress,
+        attributes,
       },
     });
   }
