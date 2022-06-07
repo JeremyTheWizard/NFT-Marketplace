@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TabNavItem from "./TabNavItem";
 import TabContent from "./TabContent";
-import Offers from "./Offers";
-import AssetActivityTab from "./AssetActivityTab";
+import ActivityTab from "./ActivityTab";
 import Attributes from "./Attributes";
 import { useLocation } from "react-router-dom";
 
@@ -32,11 +31,12 @@ function Tabs() {
         <TabContent id="tab1" activeTab={activeTab}>
           <Attributes attributes={location.state.attributes} />
         </TabContent>
-        <TabContent id="tab2" activeTab={activeTab}>
-          <Offers />
-        </TabContent>
+        <TabContent id="tab2" activeTab={activeTab}></TabContent>
         <TabContent id="tab3" activeTab={activeTab}>
-          <AssetActivityTab />
+          <ActivityTab
+            contractAddress={location.state.contractAddress}
+            tokenId={location.state.tokenId}
+          />
         </TabContent>
       </div>
     </>

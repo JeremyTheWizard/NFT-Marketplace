@@ -17,7 +17,6 @@ const useSellToken = () => {
     marketplaceAddress,
     marketplaceInterface
   );
-  console.log(marketplaceInterface);
 
   const [tokenContractAddress, setTokenContractAddress] = useState(null);
   const [tokenId, setTokenId] = useState(null);

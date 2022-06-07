@@ -1,7 +1,7 @@
 import React from "react";
 
 const TabContent = ({ id, activeTab, children }) => {
-  return activeTab === id ? <div className="">{children}</div> : null;
+  return activeTab === id ? <div>{children}</div> : null;
 };
 
 export default TabContent;
