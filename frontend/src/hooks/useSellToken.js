@@ -27,13 +27,10 @@ const useSellToken = () => {
   const erc721Contract = tokenContractAddress
     ? new Contract(tokenContractAddress, erc721Interface)
     : null;
-  const { send: approveToken, state: approveTokenState } = useContractFunction(
-    erc721Contract,
-    "approve",
-    {
-      transactionName: "Approve ERC721 token",
-    }
-  );
+  const { send: approveCollection, state: approveCollectionStatus } =
+    useContractFunction(erc721Contract, "setApprovalForAll", {
+      transactionName: "Approve ERC721 Collection",
+    });
 
   const { send: addNftSend, state: addNftState } = useContractFunction(
     marketplaceContract,
@@ -50,22 +47,21 @@ const useSellToken = () => {
   };
 
   useEffect(() => {
-    console.log(`marketplaceAddress = ${marketplaceAddress}`);
-    tokenId && marketplaceAddress && approveToken(marketplaceAddress, tokenId);
+    tokenId &&
+      marketplaceAddress &&
+      approveCollection(marketplaceAddress, tokenId);
   }, [tokenId]);
 
   useEffect(() => {
-    console.log(`approveTokenState.status= ${approveTokenState.status}`);
     if (
       tokenId &&
       tokenContractAddress &&
       price &&
-      approveTokenState.status === "Success"
+      approveCollectionStatus.status === "Success"
     ) {
       addNftSend(tokenContractAddress, tokenId, price);
     }
-    console.log(`approveTokenState.status= ${approveTokenState.status}`);
-  }, [approveTokenState]);
+  }, [approveCollectionStatus]);
 
   return { addNft, addNftState };
 };
