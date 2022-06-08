@@ -43,7 +43,7 @@ function AssetCard(props) {
       <div className="w-full">
         <img
           src={location.state.imagePath}
-          alt=""
+          alt="NFT image"
           className="w-full h-full object-cover aspect-square"
         />
       </div>

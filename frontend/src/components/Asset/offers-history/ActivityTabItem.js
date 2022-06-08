@@ -46,7 +46,38 @@ function ActivityTabItem({ transfer, ethUsd }) {
   return (
     <div>
       <div className="grid grid-cols-2 md:grid-cols-5 justify-items-between px-3 md:px-0 md:justify-items-center gap-6 text-onPrimary">
-        {transfer.value !== "0" ? (
+        {fromAddress === "NullAddress" ? (
+          <>
+            <div className="flex flex-col gap-1">
+              <div className="grid grid-cols-4">
+                <div className="flex gap-3 items-center col-span-4">
+                  <FaBabyCarriage size="32px" />
+                  <p>Minted</p>
+                </div>
+              </div>
+              <p
+                className="md:hidden text-xs text-gray-300"
+                onClick={() => {
+                  setIsMoreInfo(!isMoreInfo);
+                  setIsMore(!isMore);
+                }}
+              >
+                {isMore ? "+ More" : "- Less"}
+              </p>
+            </div>
+            {price ? (
+              <div className="hidden md:flex flex-col">
+                <div className="flex gap-1 items-center">
+                  <FaEthereum size="17px" />
+                  <p>{parseFloat(price).toFixed(2)}</p>
+                </div>
+                <p>($ {usdPrice})</p>
+              </div>
+            ) : (
+              <p className="hidden md:flex">---</p>
+            )}
+          </>
+        ) : transfer.value !== "0" ? (
           <>
             <div className="flex flex-col gap-1">
               <div className="grid grid-cols-4">
@@ -74,7 +105,7 @@ function ActivityTabItem({ transfer, ethUsd }) {
               <p>($ {usdPrice})</p>
             </div>
           </>
-        ) : fromAddress !== "NullAddress" ? (
+        ) : (
           <>
             <div className="flex flex-col gap-1">
               <div className="grid grid-cols-4">
@@ -95,28 +126,8 @@ function ActivityTabItem({ transfer, ethUsd }) {
             </div>
             <p className="hidden md:flex">---</p>
           </>
-        ) : (
-          <>
-            <div className="flex flex-col gap-1">
-              <div className="grid grid-cols-4">
-                <div className="flex gap-3 items-center col-span-4">
-                  <FaBabyCarriage size="32px" />
-                  <p>Minted</p>
-                </div>
-              </div>
-              <p
-                className="md:hidden text-xs text-gray-300"
-                onClick={() => {
-                  setIsMoreInfo(!isMoreInfo);
-                  setIsMore(!isMore);
-                }}
-              >
-                {isMore ? "+ More" : "- Less"}
-              </p>
-            </div>
-            <p className="hidden md:flex">---</p>
-          </>
         )}
+
         <p className="hidden md:inline">
           {fromAddress && fromAddress === "NullAddress"
             ? fromAddress
@@ -161,7 +172,6 @@ function ActivityTabItem({ transfer, ethUsd }) {
           </a>
         </div>
       </div>
-
       <div className={`${!isMoreInfo || "hidden"} md:hidden`}>
         <hr className="mt-3 border-dashed scale-y-50" />
         <div className="flex justify-between mt-6 text-onPrimary text-sm">
