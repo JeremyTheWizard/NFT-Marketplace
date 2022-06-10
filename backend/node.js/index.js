@@ -1,26 +1,25 @@
 import express from "express";
-import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import axios from "axios";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import nftsRoutes from "./routes/nfts.js";
+import nftsForSaleRoutes from "./routes/nftsForSale-routes.js";
+import nftInformationRoutes from "./routes/nftInformation-routes.js";
 
 dotenv.config();
 
 const app = express();
 
-app.use("/nfts", nftsRoutes);
+app.use(express.json());
+app.use(cors());
 
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors);
+app.use("/api/nfts/nftsforsale", nftsForSaleRoutes);
+app.use("/api/nfts/nftinformation", nftInformationRoutes);
 
 const CONNECTION_URL = `mongodb+srv://Mijail:${encodeURIComponent(
   process.env.MONGODB_PASSWORD
 )}@cluster0.zdqhjld.mongodb.net/?retryWrites=true&w=majority`;
-const PORT = process.env.port || 3000;
+const PORT = process.env.port || 8000;
 
 mongoose
   .connect(CONNECTION_URL, {
