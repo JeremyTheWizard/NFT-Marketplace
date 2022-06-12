@@ -16,10 +16,6 @@ function AssetCard(props) {
     location.state.contractAddress
   );
 
-  const handleSell = (tokenContractAddress, tokenId, price) => {
-    sellCoordinator(tokenContractAddress, tokenId, price);
-  };
-
   function likeIcon() {
     if (isLike) {
       return (
@@ -49,8 +45,7 @@ function AssetCard(props) {
       axios.post("http://localhost:8000/api/nfts/nftsforsale/add", {
         contract: location.state.contractAddress,
         tokenId: location.state.tokenId,
-      }) &&
-      console.log("Post Request made");
+      });
   }, [sellStatus]);
 
   return (
@@ -88,7 +83,7 @@ function AssetCard(props) {
             <SecondaryButton
               text="Sell"
               onClick={() => {
-                handleSell(
+                sellCoordinator(
                   location.state.contractAddress,
                   location.state.tokenId,
                   utils.parseEther("0.00001").toString()
