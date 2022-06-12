@@ -4,6 +4,7 @@ config.js
 
 brownieConfig.json
 build
+jsconfig.json
 
 package-lock.json
 
