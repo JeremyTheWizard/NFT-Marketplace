@@ -4,7 +4,7 @@ import { BsSuitHeartFill } from "react-icons/bs";
 import SecondaryButton from "../SecondaryButton";
 import { useLocation } from "react-router-dom";
 import { FaEthereum } from "react-icons/fa";
-import useSellToken from "../../hooks/useSellToken";
+import useSellCoordinator from "../../hooks/useSellCoordinator";
 import { utils } from "ethers";
 
 function AssetCard(props) {
@@ -12,7 +12,9 @@ function AssetCard(props) {
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   const location = useLocation();
 
-  const { addNft, state } = useSellToken();
+  const { sellCoordinator } = useSellCoordinator(
+    location.state.contractAddress
+  );
 
   function likeIcon() {
     if (isLike) {
@@ -73,7 +75,8 @@ function AssetCard(props) {
             <SecondaryButton
               text="Sell"
               onClick={() => {
-                addNft(
+                console.log("Sell Called...");
+                sellCoordinator(
                   location.state.contractAddress,
                   location.state.tokenId,
                   utils.parseEther("0.00001").toString()
