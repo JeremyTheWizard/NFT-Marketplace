@@ -114,7 +114,6 @@ export const decreaseLikeCountByOne = async (req, res) => {
 export const deleteNftInformation = async (req, res, next) => {
   const contract = req.params.contract;
   const tokenId = req.params.tokenid;
-
   let nft;
   try {
     nft = await NftInformation.findOneAndRemove({
@@ -125,7 +124,7 @@ export const deleteNftInformation = async (req, res, next) => {
     console.log(error);
   }
   if (!nft) {
-    res.status(500).json({ message: "Unable to delete" });
+    return res.status(500).json({ message: "Unable to delete" });
   }
   return res.status(200).json({ message: "Successfully deleted" });
 };

@@ -10,21 +10,46 @@ export const getNftsForSale = async (req, res, next) => {
   return res.status(200).json({ nftsForSale });
 };
 
+export const getNftForSale = async (req, res, next) => {
+  const contract = req.params.contract;
+  const tokenId = req.params.tokenid;
+  let nftForSale;
+  try {
+    nftForSale = await NftsForSale.find({
+      contract: contract,
+      tokenId: tokenId,
+    });
+  } catch (error) {
+    return res.status(404).send(error.message);
+  }
+  return res.status(200).json({ nftForSale });
+};
+
 export const addNftForSale = async (req, res, next) => {
   const { contract, tokenId } = req.body;
-  console.log("done");
-  const nftForSale = new NftsForSale({
-    contract,
-    tokenId,
+  let nftForSale;
+
+  const exists = await NftsForSale.findOne({
+    contract: contract,
+    tokenId: tokenId,
   });
+
+  if (!exists) {
+    nftForSale = new NftsForSale({
+      contract,
+      tokenId,
+    });
+  } else {
+    return res.status(400).send("NFT already exists");
+  }
 
   try {
     await nftForSale.save();
+    return res.status(201).json({ nftForSale });
   } catch (error) {
     console.log(error);
     return res.status(404).send(error.message);
   }
-  return res.status(201).json({ nftForSale });
 };
 
 export const updateNftsForSale = async (req, res, next) => {
@@ -48,15 +73,19 @@ export const updateNftsForSale = async (req, res, next) => {
 };
 
 export const deleteNftForSale = async (req, res, next) => {
-  const id = req.params.id;
+  const contract = req.params.contract;
+  const tokenId = req.params.tokenid;
   let nft;
   try {
-    nft = await NftsForSale.findByIdAndRemove(id);
+    nft = await NftsForSale.findOneAndRemove({
+      contract: contract,
+      tokenId: tokenId,
+    });
   } catch (error) {
     console.log(error);
   }
   if (!nft) {
-    res.status(500).json({ message: "Unable to delete" });
+    return res.status(500).json({ message: "Unable to delete" });
   }
   return res.status(200).json({ message: "Successfully deleted" });
 };
