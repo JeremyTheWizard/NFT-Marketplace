@@ -1,20 +1,24 @@
-import React, { useState } from "react";
-import { BsSuitHeart } from "react-icons/bs";
-import { BsSuitHeartFill } from "react-icons/bs";
-import SecondaryButton from "../SecondaryButton";
-import { useLocation } from "react-router-dom";
-import { FaEthereum } from "react-icons/fa";
-import useSellCoordinator from "../../hooks/useSellCoordinator";
+import axios from "axios";
 import { utils } from "ethers";
+import { useEffect, useState } from "react";
+import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
+import { FaEthereum } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+import useSellCoordinator from "../../hooks/useSellCoordinator";
+import SecondaryButton from "../SecondaryButton";
 
 function AssetCard(props) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   const location = useLocation();
 
-  const { sellCoordinator } = useSellCoordinator(
+  const { sellCoordinator, sellStatus } = useSellCoordinator(
     location.state.contractAddress
   );
+
+  const handleSell = (tokenContractAddress, tokenId, price) => {
+    sellCoordinator(tokenContractAddress, tokenId, price);
+  };
 
   function likeIcon() {
     if (isLike) {
@@ -39,6 +43,15 @@ function AssetCard(props) {
       );
     }
   }
+
+  useEffect(() => {
+    sellStatus === "Success" &&
+      axios.post("http://localhost:8000/api/nfts/nftsforsale/add", {
+        contract: location.state.contractAddress,
+        tokenId: location.state.tokenId,
+      }) &&
+      console.log("Post Request made");
+  }, [sellStatus]);
 
   return (
     <div className="overflow-hidden rounded-xl flex flex-col md:grid md:grid-cols-2 cursor-pointer">
@@ -75,8 +88,7 @@ function AssetCard(props) {
             <SecondaryButton
               text="Sell"
               onClick={() => {
-                console.log("Sell Called...");
-                sellCoordinator(
+                handleSell(
                   location.state.contractAddress,
                   location.state.tokenId,
                   utils.parseEther("0.00001").toString()

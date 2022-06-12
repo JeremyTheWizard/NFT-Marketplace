@@ -15,7 +15,7 @@ const useSellCoordinator = (tokenContractAddress) => {
       method: "isApprovedForAll",
       args: [account, marketplace.address],
     }) ?? {};
-  const { addNft } = useSellToken();
+  const { addNft, addNftStatus: sellStatus } = useSellToken();
   const { approveCollection, approveCollectionStatus } =
     useApproveCollection(tokenContract);
 
@@ -38,7 +38,7 @@ const useSellCoordinator = (tokenContractAddress) => {
       addNft(tokenContractAddress, tokenId, price);
   }, [approveCollectionStatus]);
 
-  return { sellCoordinator };
+  return { sellCoordinator, sellStatus };
 };
 
 export default useSellCoordinator;
