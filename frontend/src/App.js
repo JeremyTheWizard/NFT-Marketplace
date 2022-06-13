@@ -1,20 +1,20 @@
-import Navbar from "./components/navbar/Navbar.js";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { DAppProvider, Rinkeby, Kovan } from "@usedapp/core";
-import Home from "./pages/Home.js";
-import ErrorPage from "./pages/ErrorPage.js";
-import Collection from "./pages/Collection.js";
-import Asset from "./pages/Asset";
-import Profile from "./pages/Profile";
+import { DAppProvider, Kovan, Rinkeby } from "@usedapp/core";
 import { MoralisProvider } from "react-moralis";
-import { web3InfuraProjectId, appId, serverURL } from "./config";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Navbar from "./components/navbar/Navbar.js";
+import { alchemyApiKey, appId, serverURL } from "./config";
+import Asset from "./pages/Asset";
+import Collection from "./pages/Collection.js";
+import ErrorPage from "./pages/ErrorPage.js";
+import Home from "./pages/Home.js";
+import Profile from "./pages/Profile";
 
 function App() {
   const config = {
     networks: [Rinkeby, Kovan],
     readOnlyChainId: Rinkeby.chainId,
     readOnlyUrls: {
-      [Rinkeby.chainId]: `{https://mainnet.infura.io/v3/${web3InfuraProjectId}}`,
+      [Rinkeby.chainId]: `https://eth-rinkeby.alchemyapi.io/v2/${alchemyApiKey}`,
     },
   };
 
