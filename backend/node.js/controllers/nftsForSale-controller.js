@@ -26,18 +26,30 @@ export const getNftForSale = async (req, res, next) => {
 };
 
 export const addNftForSale = async (req, res, next) => {
-  const { contract, tokenId } = req.body;
-  let nftForSale;
+  const {
+    tokenContractAddress,
+    tokenId,
+    price,
+    seller,
+    saleParametersHash,
+    sellerSignature,
+  } = req.body;
 
+  let nftForSale;
   const exists = await NftsForSale.findOne({
-    contract: contract,
-    tokenId: tokenId,
+    tokenContractAddress,
+    tokenId,
+    seller,
   });
 
   if (!exists) {
     nftForSale = new NftsForSale({
-      contract,
+      tokenContractAddress,
       tokenId,
+      price,
+      seller,
+      saleParametersHash,
+      sellerSignature,
     });
   } else {
     return res.status(400).send("NFT already exists");
