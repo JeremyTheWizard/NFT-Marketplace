@@ -1,33 +1,32 @@
-import { shuffleArray } from "../../helpfulScripts";
-import randomPerson from "../../photos/random-person.jpeg";
-import CollectionCard from "../items-activity/CollectionCard";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import ExploreCard from "./ExploreCard";
 
-function NftsCards() {
-  function importAllImages(r) {
-    return r.keys().map(r);
-  }
-  const allNfts = shuffleArray(
-    importAllImages(
-      require.context("../../photos/Collections/", true, /\.(png|jpe?g|svg)$/)
-    )
-  );
+const NftsCards = () => {
+  const [exploreCards, setExploreCards] = useState([]);
 
-  function renderExploreCards() {
-    const nftsCardsHtml = [];
-    for (let i = 0; i < allNfts.length; i++) {
-      nftsCardsHtml.push(
-        <CollectionCard
-          imagePath={allNfts[i]}
-          collectionName={"test collection name"}
-          nftName={"Test nft name"}
-          price={0.03}
-          creatorImagePath={randomPerson}
-          creatorName={"Test creator name"}
+  const renderExploreCards = async () => {
+    const nftsForSale = await axios
+      .get("http://localhost:8000/api/nfts/nftsforsale/getall")
+      .then((res) => res.data.nftsForSale);
+
+    const exploreCards = [];
+    nftsForSale.map((nft, key) => {
+      exploreCards.push(
+        <ExploreCard
+          tokenContractAddress={nft.tokenContractAddress}
+          tokenId={nft.tokenId}
+          seller={nft.seller}
+          key={key}
         />
       );
-    }
-    return nftsCardsHtml;
-  }
+    });
+    setExploreCards(exploreCards);
+  };
+
+  useEffect(() => {
+    renderExploreCards();
+  }, []);
 
   return (
     <div className="mt-12">
@@ -35,10 +34,10 @@ function NftsCards() {
         Explore
       </h1>
       <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        {renderExploreCards()};
+        {exploreCards && exploreCards}
       </div>
     </div>
   );
-}
+};
 
 export default NftsCards;
