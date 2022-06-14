@@ -16,6 +16,7 @@ function ExploreCard({ tokenContractAddress, tokenId, seller }) {
   const [price, setPrice] = useState(undefined);
   const [creatorName, setCreatorName] = useState(undefined);
   const [creatorImagePath, setCreatorImagePath] = useState(undefined);
+  const [attributes, setAttributes] = useState();
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   let navigate = useNavigate();
@@ -27,9 +28,10 @@ function ExploreCard({ tokenContractAddress, tokenId, seller }) {
       chain: "rinkeby",
     };
     const tokenInfo = await Web3Api.token.getTokenIdMetadata(options);
-    setCollectionName(tokenInfo.name);
     const tokenMetadata = JSON.parse(tokenInfo.metadata);
+    setCollectionName(tokenInfo.name);
     setImagePath(tokenMetadata.image);
+    setAttributes(tokenMetadata.attributes);
   };
 
   useEffect(() => {
@@ -39,15 +41,15 @@ function ExploreCard({ tokenContractAddress, tokenId, seller }) {
   function routeChange(path) {
     navigate(path, {
       state: {
-        imagePath: imagePath,
+        imagePath: imagePath.startsWith("ipfs") ? fixUrl(imagePath) : imagePath,
         collectionName: collectionName,
         tokenId: tokenId,
         price: price,
         creatorImagePath: creatorImagePath,
         creatorName: creatorName,
-        sell: "sell",
+        sell: false,
         contractAddress: tokenContractAddress,
-        attributes: {},
+        attributes,
       },
     });
   }
