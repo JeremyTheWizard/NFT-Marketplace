@@ -5,6 +5,8 @@ const nftsForSaleSchema = mongoose.Schema({
   tokenId: { type: String, required: true },
   price: { type: String, required: true },
   seller: { type: String, required: true },
+  nonce: { type: Number, required: true, unique: true },
+  marketplaceAddress: { type: String, required: true },
   saleParametersHash: { type: String, required: true },
   sellerSignature: { type: String, required: true },
 });

@@ -25,27 +25,39 @@ const useSellCoordinator = (tokenContractAddress) => {
   const [price, setPrice] = useState();
 
   const sellCoordinator = async (tokenContractAddress, _tokenId, _price) => {
-    if (value[0] === true) {
-      const { saleParametersHash, sellerSignature } = await GetSignatureForSale(
-        library,
-        tokenContractAddress,
-        _tokenId,
-        _price
-      );
-      console.log("🚀 ~ sellerSignature ", sellerSignature);
-      axios.post("http://localhost:8000/api/nfts/nftsforsale/add", {
-        tokenContractAddress,
-        tokenId: _tokenId,
-        price: _price,
-        seller: account,
-        saleParametersHash,
-        sellerSignature,
-      });
-    }
-    if (value[0] === false) {
-      approveCollection(marketplace.address);
-      setTokenId(_tokenId);
-      setPrice(_price);
+    if (value) {
+      if (value[0] === true) {
+        const { saleParametersHash, sellerSignature } =
+          await GetSignatureForSale(
+            library,
+            tokenContractAddress,
+            _tokenId,
+            _price
+          );
+        const nonce = await axios
+          .get("http://localhost:8000/api/nfts/nftsForSale/getnewnonce")
+          .then((res) => {
+            return res.data.newNonce;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        axios.post("http://localhost:8000/api/nfts/nftsforsale/add", {
+          tokenContractAddress,
+          tokenId: _tokenId,
+          price: _price,
+          seller: account,
+          nonce,
+          marketplaceAddress: marketplace.address,
+          saleParametersHash,
+          sellerSignature,
+        });
+      }
+      if (value[0] === false) {
+        approveCollection(marketplace.address);
+        setTokenId(_tokenId);
+        setPrice(_price);
+      }
     }
   };
 
