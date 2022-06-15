@@ -69,17 +69,27 @@ export const addNftForSale = async (req, res, next) => {
   }
 };
 
-export const getNewNonce = async (req, res, nex) => {
+export const getNonce = async (req, res, nex) => {
   try {
-    const findNonceByIdAndIncrementOne =
-      await NftsForSaleNonce.findByIdAndUpdate("62a9d582678306d97373b637", {
-        $inc: { nonce: 1 },
-      });
-    return res
-      .status(200)
-      .json({ newNonce: findNonceByIdAndIncrementOne.nonce });
+    const nonce = await NftsForSaleNonce.findOne();
+    return res.status(200).json({ nonce: nonce.nonce });
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ success: false });
+  }
+};
+
+export const incrementNonce = async (req, res, nex) => {
+  try {
+    await NftsForSaleNonce.findOneAndUpdate(
+      {},
+      {
+        $inc: { nonce: 1 },
+      }
+    );
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false });
   }
 };
 

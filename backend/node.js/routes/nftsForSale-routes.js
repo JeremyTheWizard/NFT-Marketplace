@@ -2,9 +2,10 @@ import express from "express";
 import {
   addNftForSale,
   deleteNftForSale,
-  getNewNonce,
   getNftForSale,
   getNftsForSale,
+  getNonce,
+  incrementNonce,
   updateNftsForSale,
 } from "../controllers/nftsForSale-controller.js";
 
@@ -13,7 +14,8 @@ const router = express.Router();
 router.get("/getall", getNftsForSale);
 router.get("/getnft/:contract/:tokenid", getNftForSale);
 router.post("/add", addNftForSale);
-router.get("/getnewnonce", getNewNonce);
+router.get("/getnonce", getNonce);
+router.post("/incrementnonce", incrementNonce);
 router.put("/update/:id", updateNftsForSale);
 router.delete("/delete/:contract/:tokenid", deleteNftForSale);
 
