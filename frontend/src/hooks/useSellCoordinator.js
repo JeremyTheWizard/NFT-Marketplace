@@ -32,22 +32,15 @@ const useSellCoordinator = (tokenContractAddress) => {
             library,
             tokenContractAddress,
             _tokenId,
-            _price
+            _price,
+            account,
+            marketplace.address
           );
-        const nonce = await axios
-          .get("http://localhost:8000/api/nfts/nftsForSale/getnewnonce")
-          .then((res) => {
-            return res.data.newNonce;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
         axios.post("http://localhost:8000/api/nfts/nftsforsale/add", {
           tokenContractAddress,
           tokenId: _tokenId,
           price: _price,
           seller: account,
-          nonce,
           marketplaceAddress: marketplace.address,
           saleParametersHash,
           sellerSignature,
