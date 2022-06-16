@@ -6,10 +6,10 @@ import useApproveCollection from "./useApproveCollection";
 import useGetMarketplaceContract from "./useGetMarketplaceContract";
 import useSellToken from "./useSellToken";
 
-const useSellCoordinator = (tokenContractAddress) => {
+const useSellCoordinator = (_tokenContractAddress) => {
   const marketplace = useGetMarketplaceContract();
   const { library, account } = useEthers();
-  const tokenContract = getTokenContract(tokenContractAddress);
+  const tokenContract = getTokenContract(_tokenContractAddress);
   const { value } =
     useCall({
       contract: tokenContract,
@@ -23,12 +23,12 @@ const useSellCoordinator = (tokenContractAddress) => {
   const [tokenId, setTokenId] = useState();
   const [price, setPrice] = useState();
 
-  const sellCoordinator = async (tokenContractAddress, _tokenId, _price) => {
+  const sellCoordinator = async (_tokenContractAddress, _tokenId, _price) => {
     if (value) {
       if (value[0] === true) {
         addSaleToDb(
           library,
-          tokenContractAddress,
+          _tokenContractAddress,
           _tokenId,
           _price,
           account,
@@ -45,7 +45,14 @@ const useSellCoordinator = (tokenContractAddress) => {
 
   useEffect(() => {
     approveCollectionStatus === "Success" &&
-      addNft(tokenContractAddress, tokenId, price);
+      addSaleToDb(
+        library,
+        _tokenContractAddress,
+        tokenId,
+        price,
+        account,
+        marketplace.address
+      );
   }, [approveCollectionStatus]);
 
   return { sellCoordinator, sellStatus };
