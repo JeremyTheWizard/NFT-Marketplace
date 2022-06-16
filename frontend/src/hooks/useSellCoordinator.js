@@ -4,7 +4,6 @@ import addSaleToDb from "../useful-scripts/addSaleToDB";
 import getTokenContract from "../useful-scripts/getTokenContract";
 import useApproveCollection from "./useApproveCollection";
 import useGetMarketplaceContract from "./useGetMarketplaceContract";
-import useSellToken from "./useSellToken";
 
 const useSellCoordinator = (_tokenContractAddress) => {
   const marketplace = useGetMarketplaceContract();
@@ -16,7 +15,6 @@ const useSellCoordinator = (_tokenContractAddress) => {
       method: "isApprovedForAll",
       args: [account, marketplace.address],
     }) ?? {};
-  const { addNft, addNftStatus: sellStatus } = useSellToken();
   const { approveCollection, approveCollectionStatus } =
     useApproveCollection(tokenContract);
 
