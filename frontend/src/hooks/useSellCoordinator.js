@@ -53,7 +53,7 @@ const useSellCoordinator = (_tokenContractAddress) => {
       );
   }, [approveCollectionStatus]);
 
-  return { sellCoordinator, sellStatus };
+  return sellCoordinator;
 };
 
 export default useSellCoordinator;
