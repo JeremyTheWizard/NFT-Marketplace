@@ -1,9 +1,9 @@
-import axios from "axios";
 import { utils } from "ethers";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { FaEthereum } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
+import useBuyCoordinator from "../../hooks/useBuyCoordinator";
 import useSellCoordinator from "../../hooks/useSellCoordinator";
 import SecondaryButton from "../SecondaryButton";
 
@@ -12,8 +12,11 @@ function AssetCard(props) {
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   const location = useLocation();
 
-  const { sellCoordinator, sellStatus } = useSellCoordinator(
-    location.state.contractAddress
+  const sellCoordinator = useSellCoordinator(location.state.contractAddress);
+
+  const { buyCoordinator, buyStatus } = useBuyCoordinator(
+    location.state.contractAddress,
+    location.state.tokenId
   );
 
   function likeIcon() {
@@ -39,14 +42,6 @@ function AssetCard(props) {
       );
     }
   }
-
-  useEffect(() => {
-    sellStatus === "Success" &&
-      axios.post("http://localhost:8000/api/nfts/nftsforsale/add", {
-        contract: location.state.contractAddress,
-        tokenId: location.state.tokenId,
-      });
-  }, [sellStatus]);
 
   return (
     <div className="overflow-hidden rounded-xl flex flex-col md:grid md:grid-cols-2 cursor-pointer">
@@ -91,7 +86,12 @@ function AssetCard(props) {
               }}
             />
           ) : (
-            <SecondaryButton text="Buy" />
+            <SecondaryButton
+              text="Buy"
+              onClick={() => {
+                buyCoordinator();
+              }}
+            />
           )}
         </div>
         <div className="flex justify-between mt-auto">
