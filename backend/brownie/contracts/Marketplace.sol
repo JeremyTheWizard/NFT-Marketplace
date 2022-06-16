@@ -3,56 +3,53 @@ pragma solidity ^0.8.0;
 
 // Imports
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "./EIP712SignatureVerifier.sol";
 
-contract Marketplace {
-    // Variables
-    struct nftData {
-        address owner;
-        uint256 price;
-    }
-    mapping(IERC721 => mapping(uint256 => address)) nftToOwner;
-    mapping(address => mapping(uint256 => nftData)) ownerToNfts;
-    event newToken(uint256 tokenId, address owner, uint256 price);
-    event purchasedToken(uint256 tokenId, address buyer, uint256 price);
-
-    constructor() {}
-
-    // Logic
-
-    function addNft(
-        IERC721 _nft,
-        uint256 _tokenId,
-        uint256 _price
-    ) public {
-        require(_nft.balanceOf(msg.sender) > 0);
-        // Let's users add nft to the marketplace
-        nftToOwner[_nft][_tokenId] = msg.sender;
-        ownerToNfts[msg.sender][_tokenId] = nftData(msg.sender, _price);
-        _nft.transferFrom(msg.sender, address(this), _tokenId);
-        emit newToken(_tokenId, msg.sender, _price);
-    }
+contract Marketplace is EIP712SignatureVerifier {
+    event purchasedToken(
+        address tokenContractAddress,
+        uint256 tokenId,
+        address seller,
+        address buyer,
+        uint256 price
+    );
 
     function buyNft(
-        IERC721 _nft,
+        address payable _signer,
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s,
+        uint256 _price,
+        address _tokenContractAddress,
         uint256 _tokenId,
-        address payable _owner,
-        address _to
+        uint256 _nonce
     ) public payable {
-        uint256 price = ownerToNfts[_owner][_tokenId].price;
-        require(msg.value == price);
-        require(_nft.balanceOf(address(this)) > 0);
-        _nft.transferFrom(address(this), _to, _tokenId);
-        delete ownerToNfts[_owner][_tokenId];
-        nftToOwner[_nft][0] = _to;
-        _owner.transfer(price);
-        emit purchasedToken(_tokenId, _to, price);
-    }
-
-    function getNftToOwner(IERC721 _nft, uint256 _tokenId)
-        public
-        view
-        returns (address)
-    {
-        return nftToOwner[_nft][_tokenId];
+        require(
+            verifySignature(
+                _signer,
+                _v,
+                _r,
+                _s,
+                _price,
+                _tokenContractAddress,
+                _tokenId,
+                _nonce
+            ),
+            "Signature is incorrect!"
+        );
+        require(msg.value == _price, "Payment is not enough!");
+        IERC721(_tokenContractAddress).transferFrom(
+            _signer,
+            msg.sender,
+            _tokenId
+        );
+        _signer.transfer(_price);
+        emit purchasedToken(
+            _tokenContractAddress,
+            _tokenId,
+            _signer,
+            msg.sender,
+            _price
+        );
     }
 }
