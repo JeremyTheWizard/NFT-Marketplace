@@ -1,18 +1,15 @@
-import { utils } from "ethers";
 import { useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { FaEthereum } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import useBuyCoordinator from "../../hooks/useBuyCoordinator";
-import useSellCoordinator from "../../hooks/useSellCoordinator";
 import SecondaryButton from "../SecondaryButton";
+import Sell from "./Sell";
 
 function AssetCard() {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   const location = useLocation();
-
-  const sellCoordinator = useSellCoordinator(location.state.contractAddress);
 
   const { buyCoordinator, buyStatus } = useBuyCoordinator(
     location.state.contractAddress,
@@ -73,27 +70,21 @@ function AssetCard() {
           inventore mollitia ipsum. Autem voluptatum ducimus quisquam cupiditate
           eius eum!
         </p>
-        <div className="w-full md:w-56 mt-4 mb-6 md:mb-0">
-          {location.state.sell ? (
-            <SecondaryButton
-              text="Sell"
-              onClick={() => {
-                sellCoordinator(
-                  location.state.contractAddress,
-                  location.state.tokenId,
-                  utils.parseEther("0.00001").toString()
-                );
-              }}
-            />
-          ) : (
+        {location.state.sell ? (
+          <Sell
+            tokenContractAddress={location.state.contractAddress}
+            tokenId={location.state.tokenId}
+          />
+        ) : (
+          <div className="w-full md:w-56 mt-4 mb-6 md:mb-0 flex flex-col gap-3">
             <SecondaryButton
               text="Buy"
               onClick={() => {
                 buyCoordinator();
               }}
             />
-          )}
-        </div>
+          </div>
+        )}
         <div className="flex justify-between mt-auto">
           <div className="flex items-center gap-2 ">
             {location.state.creatorImagePath && (
