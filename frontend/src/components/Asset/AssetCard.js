@@ -7,7 +7,7 @@ import useBuyCoordinator from "../../hooks/useBuyCoordinator";
 import useSellCoordinator from "../../hooks/useSellCoordinator";
 import SecondaryButton from "../SecondaryButton";
 
-function AssetCard(props) {
+function AssetCard() {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   const location = useLocation();
