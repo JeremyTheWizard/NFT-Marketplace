@@ -34,7 +34,6 @@ export const addNftForSale = async (req, res, next) => {
     seller,
     nonce,
     marketplaceAddress,
-    saleParametersHash,
     sellerSignature,
   } = req.body;
 
