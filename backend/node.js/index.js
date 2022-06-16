@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 
-import addressNonceRoutes from "./routes/addressNonce-routes.js";
 import nftInformationRoutes from "./routes/nftInformation-routes.js";
 import nftsForSaleRoutes from "./routes/nftsForSale-routes.js";
 
@@ -16,7 +15,6 @@ app.use(cors());
 
 app.use("/api/nfts/nftsforsale", nftsForSaleRoutes);
 app.use("/api/nfts/nftinformation", nftInformationRoutes);
-app.use("/api/nfts/addressnonce", addressNonceRoutes);
 
 const CONNECTION_URL = `mongodb+srv://Mijail:${encodeURIComponent(
   process.env.MONGODB_PASSWORD

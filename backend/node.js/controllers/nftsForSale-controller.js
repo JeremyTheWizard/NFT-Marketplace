@@ -1,4 +1,5 @@
 import NftsForSale from "../models/NftsForSale";
+import NftsForSaleNonce from "../models/NftsForSaleNonce";
 
 export const getNftsForSale = async (req, res, next) => {
   let nftsForSale = [];
@@ -65,6 +66,30 @@ export const addNftForSale = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(404).send(error.message);
+  }
+};
+
+export const getNonce = async (req, res, nex) => {
+  try {
+    const nonce = await NftsForSaleNonce.findOne();
+    return res.status(200).json({ nonce: nonce.nonce });
+  } catch (error) {
+    return res.status(400).json({ success: false });
+  }
+};
+
+export const incrementNonce = async (req, res, nex) => {
+  try {
+    await NftsForSaleNonce.findOneAndUpdate(
+      {},
+      {
+        $inc: { nonce: 1 },
+      }
+    );
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false });
   }
 };
 
