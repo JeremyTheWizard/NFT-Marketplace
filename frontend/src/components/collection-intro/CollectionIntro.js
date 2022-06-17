@@ -1,18 +1,14 @@
 import React from "react";
-import { useParams, useLocation } from "react-router-dom";
-import testImage from "../../photos/testImage.jpeg";
+import { useLocation, useParams } from "react-router-dom";
 import BannerAndRoundedIcon from "../BannerAndRoundedIcon";
 
-function CollectionIntro() {
+const CollectionIntro = () => {
   const { collectionname } = useParams();
   const location = useLocation();
 
   return (
     <div className="w-full">
-      <BannerAndRoundedIcon
-        bannerImage={testImage}
-        profileImage={location.state.imagePath}
-      />
+      <BannerAndRoundedIcon bannerImage="" profileImage="" />
       <div className="flex flex-col gap-8">
         <h2 className="text-onPrimary text-2xl md:text-3xl font-bold">
           {collectionname.charAt(0).toUpperCase() + collectionname.slice(1)}
@@ -45,6 +41,6 @@ function CollectionIntro() {
       </div>
     </div>
   );
-}
+};
 
 export default CollectionIntro;
