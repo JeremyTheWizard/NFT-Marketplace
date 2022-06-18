@@ -1,12 +1,19 @@
 import React from "react";
 import BannerAndRoundedIcon from "../BannerAndRoundedIcon";
 
-const CollectionIntro = ({ stats, collectionName }) => {
+const CollectionIntro = ({
+  collectionName,
+  bannerImageUrl,
+  profileImage,
+  description,
+  stats,
+}) => {
   return (
     <div className="w-full">
-      {console.log("stats", stats)}
-      {console.log("collectionName", collectionName)}
-      <BannerAndRoundedIcon bannerImage="" profileImage="" />
+      <BannerAndRoundedIcon
+        bannerImage={bannerImageUrl ? bannerImageUrl : ""}
+        profileImage={profileImage ? profileImage : ""}
+      />
 
       <div className="grid lg:grid-cols-2 gap-12 items-center ">
         <div className="flex flex-col gap-8">
@@ -14,8 +21,10 @@ const CollectionIntro = ({ stats, collectionName }) => {
             {collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}
           </h2>
           <p className="text-onPrimary">
-            Welcome to the home of {collectionName} on NFT Palace. Discover the
-            best items in this collection.
+            {description
+              ? description
+              : `Welcome to the home of {collectionName} on NFT Palace. Discover the
+            best items in this collection.`}
           </p>
         </div>
 
