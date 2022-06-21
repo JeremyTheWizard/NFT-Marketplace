@@ -5,10 +5,14 @@ function BannerAndRoundedIcon({ bannerImage, profileImage }) {
     <div className="w-full">
       <div className="w-full h-32 md:h-48 lg:h-64 bg-gray-500">
         {bannerImage && (
-          <img src={bannerImage} alt="" className="object-cover" />
+          <img
+            src={bannerImage}
+            alt=""
+            className="w-full h-32 md:h-48 lg:h-64 object-cover"
+          />
         )}
       </div>
-      <div className="w-24 h-24 md:w-36 md:h-36 rounded-full border-[1px] bg-gray-500 mb-12">
+      <div className="w-24 h-24 md:w-36 md:h-36 rounded-full border-[1px] relative -top-12 bg-gray-500 ">
         {profileImage && (
           <img
             src={profileImage}
