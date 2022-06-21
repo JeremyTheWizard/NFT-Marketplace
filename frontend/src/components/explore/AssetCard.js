@@ -21,7 +21,7 @@ function AssetCard({ collectionName, seller, assetInfo }) {
         price: assetInfo.price && assetInfo.price,
         creatorImageUrl: assetInfo.creatorImageUrl,
         creator: assetInfo.creator,
-        sell: seller ? true : false,
+        sell: seller && true,
         contractAddress: assetInfo.assetContractAddress,
         attributes: assetInfo.attributes,
       },

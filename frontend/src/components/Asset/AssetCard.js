@@ -70,12 +70,12 @@ function AssetCard() {
           inventore mollitia ipsum. Autem voluptatum ducimus quisquam cupiditate
           eius eum!
         </p>
-        {location.state.sell ? (
+        {location.state.status === "Sell" ? (
           <Sell
             tokenContractAddress={location.state.contractAddress}
             tokenId={location.state.tokenId}
           />
-        ) : (
+        ) : location.state.status === "Buy" ? (
           <div className="w-full md:w-56 mt-4 mb-6 md:mb-0 flex flex-col gap-3">
             <SecondaryButton
               text="Buy"
@@ -84,7 +84,7 @@ function AssetCard() {
               }}
             />
           </div>
-        )}
+        ) : null}
         <div className="flex justify-between mt-auto">
           <div className="flex items-center gap-2 ">
             {location.state.creatorImagePath && (
