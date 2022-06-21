@@ -28,7 +28,7 @@ const CollectionIntro = ({
           </p>
         </div>
 
-        <div className="flex justify-around p-3 text-onPrimary border-2 border-buttonSecondary rounded-xl">
+        <div className="grid grid-cols-2 grid-rows-2 gap-y-6 md:flex justify-around p-3 text-onPrimary border-2 border-buttonSecondary rounded-xl">
           <div className="div flex flex-col gap-3 items-center">
             <p className="md:text-xl font-semibold">Items</p>
             <p className="md:text-xl">

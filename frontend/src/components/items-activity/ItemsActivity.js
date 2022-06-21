@@ -1,25 +1,79 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import CollectionCard from "./CollectionCard";
-import randomPerson from "../../photos/random-person.jpeg";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import AssetCard from "../explore/AssetCard";
 import ActivityTab from "./ActivityTab";
 
-function ItemsActivity() {
+function ItemsActivity({ assetContractAddress, collectionName }) {
   const [itemsDisplay, setItemsDisplay] = useState("flex");
-  const { collectionname } = useParams();
+  const [assetCards, setAssetCards] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [cursor, setCursor] = useState(undefined);
 
-  const allNfts =
-    require(`../../photos/Collections/${collectionname}/ImageList`).allNfts;
+  const nftsForSale = [];
+  const getNftsForSale = async () => {
+    nftsForSale = await axios
+      .get("http://localhost:8000/api/nfts/nftsforsale/getall")
+      .then((res) => res.data.nftsForSale);
+  };
 
-  function renderExploreCards() {
-    const nftsCardsHtml = [];
-    for (let i = 0; i < allNfts.length; i++) {
-      nftsCardsHtml.push(
-        <CollectionCard imagePath={allNfts[i]} owner={randomPerson} />
-      );
+  const createAssetCards = async () => {
+    const data = await axios
+      .get(
+        `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}&cursor=${
+          cursor ? cursor : ""
+        }`
+      )
+      .then((res) => res.data);
+    const collectionAssets = data.assets;
+    const next = data.next;
+
+    const assetCards = [];
+    collectionAssets.map((nft, key) => {
+      const relevantInfo = {
+        assetContactAddress: nft.asset_contract.address,
+        tokenId: nft.token_id,
+        imageUrl: nft.image_url,
+        name: nft.name,
+        description: nft.description,
+        price: undefined,
+        owner: nft.owner.address,
+        traits: nft.traits,
+      };
+
+      if (
+        relevantInfo.assetContactAddress === nftsForSale.tokenContractAddress &&
+        relevantInfo.tokenId === nftsForSale.tokenId
+      ) {
+        relevantInfo.price = nftsForSale.price;
+      }
+
+      relevantInfo.imageUrl &&
+        assetCards.push(
+          <AssetCard
+            collectionName={collectionName}
+            seller={nftsForSale.seller}
+            assetInfo={relevantInfo}
+          />
+        );
+    });
+
+    return [assetCards, next];
+  };
+
+  const fetchData = async () => {
+    const [newAssetCards, next] = await createAssetCards();
+    setAssetCards([...assetCards, ...newAssetCards]);
+
+    if (cursor === next) {
+      setHasMore(false);
     }
-    return nftsCardsHtml;
-  }
+    setCursor(next);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="w-full my-12">
@@ -42,10 +96,23 @@ function ItemsActivity() {
         </button>
       </div>
       <hr className="bg-onPrimary w-full border-1" />
-      <div
-        className={`${itemsDisplay} mt-12 grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12`}
-      >
-        {renderExploreCards()}
+
+      <div className={`${itemsDisplay} flex flex-col`}>
+        <InfiniteScroll
+          dataLength={assetCards.length}
+          next={fetchData}
+          hasMore={hasMore}
+          loader={<p className="text-onPrimary text-center">Loading...</p>}
+          endMessage={
+            <p style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all</b>
+            </p>
+          }
+        >
+          <div className="mt-12 grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {assetCards}
+          </div>
+        </InfiniteScroll>
       </div>
       <div
         className={`${
