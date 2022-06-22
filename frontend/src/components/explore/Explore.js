@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import ExploreCard from "./ExploreCard";
+import AssetCard from "./AssetCard";
 
 const NftsCards = () => {
   const [exploreCards, setExploreCards] = useState([]);
@@ -13,7 +13,7 @@ const NftsCards = () => {
     const exploreCards = [];
     nftsForSale.map((nft, key) => {
       exploreCards.push(
-        <ExploreCard
+        <AssetCard
           tokenContractAddress={nft.tokenContractAddress}
           tokenId={nft.tokenId}
           seller={nft.seller}
