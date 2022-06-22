@@ -38,7 +38,7 @@ function ItemsActivity({ assetContractAddress, collectionName }) {
           itemsDisplay === "flex" ? "hidden" : "flex"
         } flex-col my-6`}
       >
-        <ActivityTab />
+        <ActivityTab assetContractAddress={assetContractAddress} />
       </div>
     </div>
   );
