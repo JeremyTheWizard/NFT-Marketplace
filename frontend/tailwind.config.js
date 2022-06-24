@@ -1,5 +1,8 @@
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+  ],
   theme: {
     extend: {
       colors: {
@@ -24,5 +27,5 @@ module.exports = {
       blur: "blur(20px)",
     },
   },
-  plugins: [require("tailwindcss-filters")],
+  plugins: [require("tailwindcss-filters"), require("flowbite/plugin")],
 };
