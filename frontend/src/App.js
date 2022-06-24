@@ -5,6 +5,7 @@ import Navbar from "./components/navbar/Navbar.js";
 import { alchemyApiKey, appId, serverURL } from "./config";
 import Asset from "./pages/Asset";
 import Collection from "./pages/Collection.js";
+import Create from "./pages/Create.js";
 import ErrorPage from "./pages/ErrorPage.js";
 import Home from "./pages/Home.js";
 import Profile from "./pages/Profile";
@@ -34,6 +35,7 @@ function App() {
               path="/collections/:collectionname/:asset"
               element={<Asset />}
             />
+            <Route path="/create" element={<Create />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </Router>
