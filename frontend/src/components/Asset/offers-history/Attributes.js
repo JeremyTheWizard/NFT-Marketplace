@@ -13,7 +13,7 @@ const Attributes = ({ attributes }) => {
           );
         })
       ) : (
-        <li></li>
+        <li className="italic text-onPrimary">This NFT has no attributes</li>
       )}
     </ul>
   );
