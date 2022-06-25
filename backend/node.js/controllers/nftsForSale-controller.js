@@ -1,5 +1,10 @@
+import axios from "axios";
+import dotenv from "dotenv";
+import FormData from "form-data";
 import NftsForSale from "../models/NftsForSale";
 import NftsForSaleNonce from "../models/NftsForSaleNonce";
+
+dotenv.config();
 
 export const getNftsForSale = async (req, res, next) => {
   let nftsForSale = [];
@@ -74,6 +79,25 @@ export const getNonce = async (req, res, nex) => {
   } catch (error) {
     return res.status(400).json({ success: false });
   }
+};
+
+export const createTokenURI = async (req, res, next) => {
+  const file = req.files;
+  console.log(req.body);
+  const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+  const data = new FormData();
+  data.append("file", file.file.data, { filepath: "anyname" });
+  const result = await axios.post(url, data, {
+    maxContentLength: -1,
+    headers: {
+      "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+      pinata_api_key: process.env.PINATA_API_KEY,
+      pinata_secret_api_key: process.env.PINATA_API_SECRET,
+      path: "somename",
+    },
+  });
+
+  //const metadata = {"name": , "collection": , "description": ,image: response.data.IpfsHash }
 };
 
 export const incrementNonce = async (req, res, nex) => {

@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import fileUpload from "express-fileUpload";
 import mongoose from "mongoose";
 
 import nftInformationRoutes from "./routes/nftInformation-routes.js";
@@ -12,6 +13,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(fileUpload());
 
 app.use("/api/nfts/nftsforsale", nftsForSaleRoutes);
 app.use("/api/nfts/nftinformation", nftInformationRoutes);
