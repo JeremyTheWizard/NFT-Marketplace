@@ -83,21 +83,50 @@ export const getNonce = async (req, res, nex) => {
 
 export const createTokenURI = async (req, res, next) => {
   const file = req.files;
-  console.log(req.body);
+  console.log(`data = ${req.body}`);
   const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
   const data = new FormData();
-  data.append("file", file.file.data, { filepath: "anyname" });
-  const result = await axios.post(url, data, {
-    maxContentLength: -1,
-    headers: {
-      "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
-      pinata_api_key: process.env.PINATA_API_KEY,
-      pinata_secret_api_key: process.env.PINATA_API_SECRET,
-      path: "somename",
-    },
-  });
+  data.append("file", file.file.data, req.body.name);
 
-  //const metadata = {"name": , "collection": , "description": ,image: response.data.IpfsHash }
+  let response = null;
+  try {
+    response = await axios.post(url, data, {
+      maxContentLength: -1,
+      headers: {
+        "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+        pinata_api_key: process.env.PINATA_API_KEY,
+        pinata_secret_api_key: process.env.PINATA_API_SECRET,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false });
+  }
+  const IPFSHash = response.data.IpfsHash;
+
+  const metadata = {
+    name: req.body.name,
+    collection: req.body.collection,
+    description: req.body.description,
+    image: "ipfs://" + response.data.IpfsHash,
+    attributes: req.body.attributes,
+  };
+  const jsonUrl = "https://api.pinata.cloud/pinning/pinJSONToIPFS";
+  try {
+    const jsonResponse = await axios.post(jsonUrl, metadata, {
+      headers: {
+        "Content-Type": "application/json",
+        pinata_api_key: process.env.PINATA_API_KEY,
+        pinata_secret_api_key: process.env.PINATA_API_SECRET,
+      },
+    });
+    return res
+      .status(200)
+      .json({ tokenURI: "ipfs://" + jsonResponse.data.IpfsHash });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ success: false });
+  }
 };
 
 export const incrementNonce = async (req, res, nex) => {

@@ -18,22 +18,18 @@ const Create = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
-    const collection = e.target.collection.value;
-    const description =
-      e.target.description.value && e.target.description.value;
-
-    console.log("🚀 ~ Create file", file);
-
-    var formData = new FormData();
-    formData.append("file", file, "test.png");
-    formData.append("pinataOptions", '{"cidVersion": 1}');
+    var formData = new FormData(e.target);
+    formData.append("file", file);
     mintTokenCoordinator(formData);
   };
 
   return (
     <div className="w-[90vw] max-w-[1200px] mx-auto">
-      <section className="overflow-hidden flex flex-col md:grid md:grid-cols-2 rounded-lg mt-12">
+      <form
+        id="form"
+        onSubmit={handleSubmit}
+        className="overflow-hidden flex flex-col md:grid md:grid-cols-2 rounded-lg mt-12"
+      >
         <label
           for="dropzone-file"
           className="flex flex-col justify-center items-center w-full h-full aspect-square border-2 border-dashed cursor-pointer  bg-gray-700  border-gray-500 hover:border-gray-400 hover:bg-gray-600"
@@ -83,15 +79,13 @@ const Create = () => {
           </div>
           <input
             id="dropzone-file"
+            name="dropzone-file"
             type="file"
             className="hidden"
             onChange={changeImage}
           />
         </label>
-        <form
-          onSubmit={handleSubmit}
-          className="bg-onPrimary p-6 lg:p-12 flex flex-col gap-6"
-        >
+        <div className="bg-onPrimary p-6 lg:p-12 flex flex-col gap-6">
           <div>
             <label className="sr-only" for="name">
               Name
@@ -102,6 +96,7 @@ const Create = () => {
                 className="w-full p-3 text-sm border-[1px] border-b-2 border-black rounded-lg"
                 placeholder="Name"
                 type="text"
+                name="name"
                 id="name"
                 required
               />
@@ -123,6 +118,7 @@ const Create = () => {
                 className="w-full p-3 text-sm border-[1px] border-b-2 border-black rounded-lg"
                 placeholder="Description"
                 rows="2"
+                name="description"
                 id="description"
               ></textarea>
             </div>
@@ -143,8 +139,8 @@ const Create = () => {
               <span className="font-medium"> CREATE! </span>
             </button>
           </div>
-        </form>
-      </section>
+        </div>
+      </form>
       <div className="mb-3 mt-12">
         <div className="flex justify-center gap-12 text-onPrimary text-lg">
           <h5 className="flex items-center gap-3 cursor-pointer text-buttonSecondary font-bold">
