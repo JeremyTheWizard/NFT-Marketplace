@@ -1,17 +1,19 @@
+import FormData from "form-data";
 import React, { useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import Attributes from "../components/Asset/offers-history/Attributes";
 import AttributesModal from "../components/Create/AttributesModal";
 import ComboBox from "../components/Create/ComboBox";
+import useMintTokenCoordinator from "../hooks/useMintTokenCoordinator";
 
 const Create = () => {
   const [attributes, setAttributes] = useState();
-  const [selectedImage, setSelectedImage] = useState();
+  const [file, setFile] = useState();
+  const { mintTokenCoordinator, mintState } = useMintTokenCoordinator();
 
   const changeImage = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setSelectedImage(e.target.files[0]);
-    }
+    e.persist();
+    setFile(e.target.files[0]);
   };
 
   const handleSubmit = (e) => {
@@ -20,6 +22,13 @@ const Create = () => {
     const collection = e.target.collection.value;
     const description =
       e.target.description.value && e.target.description.value;
+
+    console.log("🚀 ~ Create file", file);
+
+    var formData = new FormData();
+    formData.append("file", file, "test.png");
+    formData.append("pinataOptions", '{"cidVersion": 1}');
+    mintTokenCoordinator(formData);
   };
 
   return (
@@ -30,21 +39,21 @@ const Create = () => {
           className="flex flex-col justify-center items-center w-full h-full aspect-square border-2 border-dashed cursor-pointer  bg-gray-700  border-gray-500 hover:border-gray-400 hover:bg-gray-600"
         >
           <div className="w-full flex flex-col justify-center items-center p-3">
-            {selectedImage ? (
+            {file ? (
               <div className="w-full relative">
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
 
-                    setSelectedImage(null);
+                    setFile(null);
                   }}
                   className="z-10 absolute top-3 right-3"
                 >
                   <AiOutlineCloseCircle size="32px" />
                 </div>
                 <img
-                  src={URL.createObjectURL(selectedImage)}
+                  src={URL.createObjectURL(file)}
                   className="w-full object-cover aspect-square"
                 ></img>
               </div>
