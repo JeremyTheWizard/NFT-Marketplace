@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract MinterYT is ERC721, ERC721Enumerable, ERC721URIStorage {
+contract NFTMinter is ERC721, ERC721Enumerable, ERC721URIStorage {
     using SafeMath for uint256;
     uint256 public constant mintPrice = 0;
 
