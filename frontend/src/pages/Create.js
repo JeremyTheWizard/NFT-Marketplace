@@ -1,3 +1,4 @@
+import CircularProgress from "@mui/material/CircularProgress";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import FormData from "form-data";
@@ -6,13 +7,24 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import Attributes from "../components/Asset/offers-history/Attributes";
 import AttributesModal from "../components/Create/AttributesModal";
 import CollectionComboBox from "../components/Create/CollectionComboBox";
+import ModifiedBackDrop from "../components/Create/ModifiedBackdrop";
 import ModifiedTextField from "../components/ModifiedTextField";
 import useMintTokenCoordinator from "../hooks/useMintTokenCoordinator";
 
 const Create = () => {
   const [attributes, setAttributes] = useState();
   const [file, setFile] = useState();
-  const { mintTokenCoordinator, mintState } = useMintTokenCoordinator();
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [backdropMessage, setBackdropMessage] = useState(
+    <p className="text-onPrimary text-lg font-bold">
+      Building the transaction...
+    </p>
+  );
+  const { mintTokenCoordinator, mintState } = useMintTokenCoordinator(
+    setOpenBackdrop,
+    setBackdropMessage
+  );
+
   const theme = useTheme();
 
   const changeImage = (e) => {
@@ -22,6 +34,7 @@ const Create = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setOpenBackdrop(true);
     var formData = new FormData(e.target);
     formData.append("file", file);
     mintTokenCoordinator(formData);
@@ -36,7 +49,7 @@ const Create = () => {
       >
         <label
           for="dropzone-file"
-          className="flex flex-col self-center justify-center items-center w-full lg:m-3 xl:m-0 aspect-square border-2 border-dashed cursor-pointer  bg-gray-700  border-gray-500 hover:border-gray-400 hover:bg-gray-600"
+          className="relative flex flex-col self-center justify-center items-center w-full lg:m-3 xl:m-0 aspect-square border-2 border-dashed cursor-pointer  bg-gray-700  border-gray-500 hover:border-gray-400 hover:bg-gray-600"
         >
           <div className="w-full flex flex-col justify-center items-center p-3">
             {file ? (
@@ -85,7 +98,8 @@ const Create = () => {
             id="dropzone-file"
             name="dropzone-file"
             type="file"
-            className="hidden"
+            className="opacity-0 pointer-events-none cursor-pointer absolute "
+            required
             onChange={changeImage}
           />
         </label>
@@ -136,6 +150,7 @@ const Create = () => {
               type="submit"
               className=" inline-flex items-center justify-center w-full px-5 py-3 text-white bg-[#1676BA] hover:bg-buttonSecondary  rounded-lg sm:w-auto"
             >
+              {" "}
               <span className="font-medium"> CREATE! </span>
             </button>
           </div>
@@ -152,6 +167,14 @@ const Create = () => {
       <div className="w-full mt-6 mb-12">
         {<Attributes attributes={attributes} />}
       </div>
+
+      <ModifiedBackDrop
+        open={openBackdrop}
+        sx={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+      >
+        <CircularProgress color="primary" size="3rem" thickness={6} />
+        {backdropMessage}
+      </ModifiedBackDrop>
     </div>
   );
 };

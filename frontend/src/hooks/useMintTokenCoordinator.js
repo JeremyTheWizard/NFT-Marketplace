@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import useMintToken from "./useMintToken";
 
-const useMintTokenCoordinator = () => {
+const useMintTokenCoordinator = (setOpenBackdrop, setBackdropMessage) => {
   const { mintToken, mintStatus } = useMintToken();
   const [imageCID, setImageCID] = useState();
   const [tokenURICID, setTokenURICID] = useState();
@@ -19,7 +19,8 @@ const useMintTokenCoordinator = () => {
             tokenURICID: tokenURICID,
           },
         }
-      );
+      ) &&
+      setOpenBackdrop(false);
   }, [mintStatus]);
 
   const mintTokenCoordinator = async (formData) => {
@@ -31,6 +32,12 @@ const useMintTokenCoordinator = () => {
       )
       .then((res) => res.data);
     mintToken(data.tokenURI);
+
+    setBackdropMessage(
+      <p className="text-onPrimary text-lg font-bold">
+        Please, confirm the transaction to create your NFT
+      </p>
+    );
     setImageCID(data.imageCID);
     setTokenURICID(data.tokenURICID);
   };

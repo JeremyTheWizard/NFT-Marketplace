@@ -1,6 +1,25 @@
 import { createTheme } from "@mui/material/styles";
 
 export const MaterialTheme = createTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: "#1676ba",
+      light: "#1d9df9",
+      dark: "#1d9df9",
+      contrastText: "#ffffff",
+    },
+    secondary: {
+      main: "#37ef97",
+    },
+    background: {
+      default: "#0f1d2b",
+      paper: "#f5f6ee",
+    },
+    text: {
+      primary: "#000000",
+    },
+  },
   typography: {
     fontFamily: [
       "ui-sans-serif",
