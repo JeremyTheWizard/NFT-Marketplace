@@ -1,8 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer utilities {
-    .pause {
-        animation-play-state: paused;
-    }
+  .pause {
+    animation-play-state: paused;
+  }
+}
+
+@layer base {
+  input {
+    --tw-ring-shadow: 0 0 #000 !important;
+  }
 }
