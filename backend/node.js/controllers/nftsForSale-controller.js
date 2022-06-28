@@ -83,7 +83,6 @@ export const getNonce = async (req, res, nex) => {
 
 export const createTokenURI = async (req, res, next) => {
   const file = req.files;
-  console.log(`data = ${req.body}`);
   const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
   const data = new FormData();
   data.append("file", file.file.data, req.body.name);
