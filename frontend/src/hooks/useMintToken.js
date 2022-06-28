@@ -12,7 +12,7 @@ const useMintToken = () => {
   );
   const mintStatus = mintState.status;
 
-  return { mintToken, mintState };
+  return { mintToken, mintStatus };
 };
 
 export default useMintToken;

@@ -7,6 +7,7 @@ import {
   getNftsForSale,
   getNonce,
   incrementNonce,
+  removeTokenURI,
   updateNftsForSale,
 } from "../controllers/nftsForSale-controller.js";
 
@@ -17,6 +18,7 @@ router.get("/getnft/:contract/:tokenid", getNftForSale);
 router.post("/add", addNftForSale);
 router.get("/getnonce", getNonce);
 router.post("/createtokenuri", createTokenURI);
+router.delete("/removetokenuri", removeTokenURI);
 router.post("/incrementnonce", incrementNonce);
 router.put("/update/:id", updateNftsForSale);
 router.delete("/delete/:contract/:tokenid", deleteNftForSale);

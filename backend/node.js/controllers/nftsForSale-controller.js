@@ -101,7 +101,6 @@ export const createTokenURI = async (req, res, next) => {
     console.log(error);
     return res.status(400).json({ success: false });
   }
-  const IPFSHash = response.data.IpfsHash;
 
   const metadata = {
     name: req.body.name,
@@ -119,13 +118,73 @@ export const createTokenURI = async (req, res, next) => {
         pinata_secret_api_key: process.env.PINATA_API_SECRET,
       },
     });
-    return res
-      .status(200)
-      .json({ tokenURI: "ipfs://" + jsonResponse.data.IpfsHash });
+    return res.status(200).json({
+      imageCID: response.data.IpfsHash,
+      tokenURICID: jsonResponse.data.IpfsHash,
+      tokenURI: "ipfs://" + jsonResponse.data.IpfsHash,
+    });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ success: false });
   }
+};
+
+export const removeTokenURI = async (req, res) => {
+  console.log("🚀 ~ req.body", req.body);
+  const { imageCID, tokenURICID } = req.body;
+  console.log("🚀 ~ tokenURICID2", tokenURICID);
+  console.log("🚀 ~ imageCID2", imageCID);
+
+  const removeFileFromPinata = async (CID) => {
+    console.log("🚀 ~ CID!", CID);
+    var config = {
+      method: "delete",
+      url: "https://api.pinata.cloud/pinning/unpin/" + CID,
+      headers: {
+        pinata_api_key: process.env.PINATA_API_KEY,
+        pinata_secret_api_key: process.env.PINATA_API_SECRET,
+      },
+    };
+
+    try {
+      const response = await axios(config);
+      console.log("🚀 ~ response", response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const response = {
+    removeImage: { success: true },
+    removeTokenURI: { success: true },
+  };
+
+  try {
+    removeFileFromPinata(imageCID);
+  } catch (error) {
+    console.log(error);
+    response.removeImage.success = false;
+  }
+
+  try {
+    removeFileFromPinata(tokenURICID);
+  } catch (error) {
+    console.log(error);
+    response.removeTokenURI.success = false;
+  }
+
+  if (
+    response.removeImage.success === true &&
+    response.removeTokenURI.success === true
+  ) {
+    return res.status(200).json({ success: true, response });
+  } else if (
+    response.removeImage.success === false &&
+    response.removeTokenURI.false === false
+  ) {
+    return res.status(400).json({ success: failed, response });
+  }
+  return res.status(200).json({ success: false, response });
 };
 
 export const incrementNonce = async (req, res, nex) => {
