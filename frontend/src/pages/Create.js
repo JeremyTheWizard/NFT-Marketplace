@@ -1,15 +1,19 @@
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import FormData from "form-data";
 import React, { useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import Attributes from "../components/Asset/offers-history/Attributes";
 import AttributesModal from "../components/Create/AttributesModal";
-import ComboBox from "../components/Create/ComboBox";
+import CollectionComboBox from "../components/Create/CollectionComboBox";
+import ModifiedTextField from "../components/ModifiedTextField";
 import useMintTokenCoordinator from "../hooks/useMintTokenCoordinator";
 
 const Create = () => {
   const [attributes, setAttributes] = useState();
   const [file, setFile] = useState();
   const { mintTokenCoordinator, mintState } = useMintTokenCoordinator();
+  const theme = useTheme();
 
   const changeImage = (e) => {
     e.persist();
@@ -28,11 +32,11 @@ const Create = () => {
       <form
         id="form"
         onSubmit={handleSubmit}
-        className="overflow-hidden flex flex-col md:grid md:grid-cols-2 rounded-lg mt-12"
+        className="bg-onPrimary overflow-hidden flex flex-col lg:grid md:grid-cols-2 rounded-lg mt-12"
       >
         <label
           for="dropzone-file"
-          className="flex flex-col justify-center items-center w-full h-full aspect-square border-2 border-dashed cursor-pointer  bg-gray-700  border-gray-500 hover:border-gray-400 hover:bg-gray-600"
+          className="flex flex-col self-center justify-center items-center w-full lg:m-3 xl:m-0 aspect-square border-2 border-dashed cursor-pointer  bg-gray-700  border-gray-500 hover:border-gray-400 hover:bg-gray-600"
         >
           <div className="w-full flex flex-col justify-center items-center p-3">
             {file ? (
@@ -86,43 +90,39 @@ const Create = () => {
           />
         </label>
         <div className="bg-onPrimary p-6 lg:p-12 flex flex-col gap-6">
-          <div>
-            <label className="sr-only" for="name">
-              Name
-            </label>
-            <div className="flex gap-1 items-center">
-              <p className="text-red-500 font-bold">*</p>
-              <input
-                className="w-full p-3 text-sm border-[1px] border-b-2 border-black rounded-lg"
-                placeholder="Name"
-                type="text"
-                name="name"
-                id="name"
-                required
-              />
-            </div>
+          <ModifiedTextField
+            required="Name"
+            name="name"
+            id="name"
+            label="Name"
+          />
+
+          <div className="flex flex-col gap-1">
+            <CollectionComboBox />
           </div>
 
-          <div className="flex items-center gap-1">
-            <p className="text-red-500 font-bold">*</p>
-            <ComboBox />
-          </div>
+          {useMediaQuery(theme.breakpoints.down("xl")) && (
+            <ModifiedTextField
+              multiline
+              label="Description"
+              rows="2"
+              name="description"
+              id="description"
+              sx={{ "& textarea": { boxShadow: "none" } }}
+            ></ModifiedTextField>
+          )}
 
-          <div>
-            <label className="sr-only" for="description">
-              Description
-            </label>
-            <div className="flex gap-1 items-center">
-              <p className="invisible text-red-500 font-bold">*</p>
-              <textarea
-                className="w-full p-3 text-sm border-[1px] border-b-2 border-black rounded-lg"
-                placeholder="Description"
-                rows="2"
-                name="description"
-                id="description"
-              ></textarea>
-            </div>
-          </div>
+          {useMediaQuery(theme.breakpoints.up("xl")) && (
+            <ModifiedTextField
+              multiline
+              label="Description"
+              minRows="3"
+              maxRows="8"
+              name="description"
+              id="description"
+              sx={{ "& textarea": { boxShadow: "none" } }}
+            ></ModifiedTextField>
+          )}
 
           <div>
             <AttributesModal
