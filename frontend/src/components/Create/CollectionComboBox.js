@@ -101,6 +101,7 @@ const CollectionComboBox = () => {
         renderInput={(params) => (
           <ModifiedTextField
             {...params}
+            required
             label="Collection"
             name="collection"
             id="collection"
