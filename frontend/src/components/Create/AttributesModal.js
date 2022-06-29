@@ -160,7 +160,9 @@ const AttributesModal = ({ setCreateAttributes }) => {
                   <p className="text-sm">Add attribute</p>
                 </div>
               </button>
-              <Button type="submit">Save</Button>
+              <Button type="button" onClick={save}>
+                Save
+              </Button>
             </div>
           </form>
         </Modal.Body>
