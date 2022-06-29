@@ -2,14 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import useMintToken from "./useMintToken";
 
-const useMintTokenCoordinator = (setOpenBackdrop, setBackdropMessage) => {
+const useMintTokenCoordinator = () => {
   const { mintToken, mintStatus } = useMintToken();
   const [imageCID, setImageCID] = useState();
   const [tokenURICID, setTokenURICID] = useState();
 
   // Remove tokenURI if transaction was not approved
   useEffect(() => {
-    console.log(`mintStatus = ${mintStatus}`);
     mintStatus === "Exception" &&
       axios.delete(
         "http://localhost:8000/api/nfts/nftsforsale/removetokenuri",
@@ -19,8 +18,7 @@ const useMintTokenCoordinator = (setOpenBackdrop, setBackdropMessage) => {
             tokenURICID: tokenURICID,
           },
         }
-      ) &&
-      setOpenBackdrop(false);
+      );
   }, [mintStatus]);
 
   const mintTokenCoordinator = async (formData) => {
@@ -32,12 +30,6 @@ const useMintTokenCoordinator = (setOpenBackdrop, setBackdropMessage) => {
       )
       .then((res) => res.data);
     mintToken(data.tokenURI);
-
-    setBackdropMessage(
-      <p className="text-onPrimary text-lg font-bold">
-        Please, confirm the transaction to create your NFT
-      </p>
-    );
     setImageCID(data.imageCID);
     setTokenURICID(data.tokenURICID);
   };

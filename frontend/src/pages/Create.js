@@ -1,13 +1,14 @@
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import FormData from "form-data";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import Attributes from "../components/Asset/offers-history/Attributes";
 import AttributesModal from "../components/Create/AttributesModal";
 import CollectionComboBox from "../components/Create/CollectionComboBox";
-import ModifiedBackDrop from "../components/Create/ModifiedBackdrop";
 import ModifiedTextField from "../components/ModifiedTextField";
 import useMintTokenCoordinator from "../hooks/useMintTokenCoordinator";
 
@@ -15,15 +16,40 @@ const Create = () => {
   const [attributes, setAttributes] = useState();
   const [file, setFile] = useState();
   const [openBackdrop, setOpenBackdrop] = useState(false);
-  const [backdropMessage, setBackdropMessage] = useState(
-    <p className="text-onPrimary text-lg font-bold">
+  const [openTokenCreatedDialog, setOpenTokenCreatedDialog] = useState(false);
+
+  const backdropMessageOptions = [
+    <p className="text-onPrimary text-center text-lg font-bold">
       Building the transaction...
-    </p>
+    </p>,
+    <p className="text-onPrimary text-center text-lg font-bold">
+      Please, confirm the transaction to create your NFT
+    </p>,
+    <p className="text-onPrimary text-center text-lg font-bold">
+      Creating your NFT.<br></br>
+      We'll be done in a few moments...
+    </p>,
+  ];
+  const [backdropMessage, setBackdropMessage] = useState(
+    backdropMessageOptions[0]
   );
-  const { mintTokenCoordinator, mintState } = useMintTokenCoordinator(
-    setOpenBackdrop,
-    setBackdropMessage
-  );
+  const { mintTokenCoordinator, mintStatus } = useMintTokenCoordinator();
+
+  useEffect(() => {
+    if (mintStatus === "PendingSignature") {
+      setBackdropMessage(backdropMessageOptions[1]);
+    }
+    if (mintStatus === "Exception") {
+      setOpenBackdrop(false);
+      setBackdropMessage(backdropMessageOptions[0]);
+    }
+    mintStatus === "Mining" && setBackdropMessage(backdropMessageOptions[2]);
+    if (mintStatus === "Success") {
+      setOpenBackdrop(false);
+      setOpenTokenCreatedDialog(true);
+      setBackdropMessage(backdropMessageOptions[0]);
+    }
+  }, [mintStatus]);
 
   const theme = useTheme();
 
@@ -168,13 +194,28 @@ const Create = () => {
         {<Attributes attributes={attributes} />}
       </div>
 
-      <ModifiedBackDrop
+      <Backdrop
         open={openBackdrop}
-        sx={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.75rem",
+          padding: "1.25rem",
+        }}
       >
         <CircularProgress color="primary" size="3rem" thickness={6} />
         {backdropMessage}
-      </ModifiedBackDrop>
+      </Backdrop>
+
+      <Dialog
+        onClose={() => {
+          setOpenTokenCreatedDialog(false);
+        }}
+        open={openTokenCreatedDialog}
+      >
+        <DialogTitle>Congratulations! You have created an NFT</DialogTitle>
+        <DialogContent></DialogContent>
+      </Dialog>
     </div>
   );
 };
