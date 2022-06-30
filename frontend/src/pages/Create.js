@@ -1,69 +1,112 @@
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  Snackbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import FormData from "form-data";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 import Attributes from "../components/Asset/offers-history/Attributes";
 import AttributesModal from "../components/Create/AttributesModal";
 import CollectionComboBox from "../components/Create/CollectionComboBox";
+import ModifiedDialogActions from "../components/ModifiedMuiComponents/ModifiedDialogActions";
+import ModifiedDialogTitle from "../components/ModifiedMuiComponents/ModifiedDialogTitle";
 import ModifiedTextField from "../components/ModifiedTextField";
+import useGetNFTMinterContract from "../hooks/useGetNFTMinterContract";
 import useMintTokenCoordinator from "../hooks/useMintTokenCoordinator";
 
 const Create = () => {
   const [attributes, setAttributes] = useState();
   const [file, setFile] = useState();
-  const [openBackdrop, setOpenBackdrop] = useState(false);
-  const [openTokenCreatedDialog, setOpenTokenCreatedDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [transactionFailureAlert, setTransactionFailureAlert] = useState(false);
+  const tokenName = useRef();
+  const collectionName = useRef();
 
-  const backdropMessageOptions = [
-    <p className="text-onPrimary text-center text-lg font-bold">
-      Building the transaction...
-    </p>,
-    <p className="text-onPrimary text-center text-lg font-bold">
-      Please, confirm the transaction to create your NFT
-    </p>,
-    <p className="text-onPrimary text-center text-lg font-bold">
-      Creating your NFT.<br></br>
+  const loadingMessages = [
+    "Building the transaction...",
+    "Please, confirm the transaction to create your NFT",
+    <span>
+      Creating your NFT.
+      <br />
       We'll be done in a few moments...
-    </p>,
+    </span>,
   ];
-  const [backdropMessage, setBackdropMessage] = useState(
-    backdropMessageOptions[0]
-  );
-  const { mintTokenCoordinator, mintStatus } = useMintTokenCoordinator();
+  const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
+  const { mintTokenCoordinator, mintStatus, resetMintState, mintEvents } =
+    useMintTokenCoordinator();
 
   useEffect(() => {
     if (mintStatus === "PendingSignature") {
-      setBackdropMessage(backdropMessageOptions[1]);
+      setLoadingMessage(loadingMessages[1]);
     }
     if (mintStatus === "Exception") {
-      setOpenBackdrop(false);
-      setBackdropMessage(backdropMessageOptions[0]);
+      setOpenDialog(false);
+      setTransactionFailureAlert(true);
+      setLoadingMessage(loadingMessages[0]);
     }
-    mintStatus === "Mining" && setBackdropMessage(backdropMessageOptions[2]);
+    if (mintStatus === "Mining") {
+      setLoadingMessage(loadingMessages[2]);
+    }
     if (mintStatus === "Success") {
-      setOpenBackdrop(false);
-      setOpenTokenCreatedDialog(true);
-      setBackdropMessage(backdropMessageOptions[0]);
+      setLoadingMessage(loadingMessages[0]);
     }
   }, [mintStatus]);
 
   const theme = useTheme();
+
+  const NFTMinterContractAddress = useGetNFTMinterContract().address;
+  let navigate = useNavigate();
+
+  const routeChange = (path) => {
+    navigate(path, {
+      state: {
+        imagePath: URL.createObjectURL(file),
+        collectionName: collectionName.current,
+        tokenName: tokenName.current,
+        tokenId: parseInt(mintEvents[0].args[2]._hex, 16),
+        //creatorImageUrl:
+        creator: mintEvents[0].args[1],
+        status: "Sell",
+        contractAddress: NFTMinterContractAddress,
+        attributes: attributes,
+      },
+    });
+  };
 
   const changeImage = (e) => {
     e.persist();
     setFile(e.target.files[0]);
   };
 
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    resetMintState();
+  };
+
+  const handleTransactionFailureAlertClose = (_, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setTransactionFailureAlert(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setOpenBackdrop(true);
+    setOpenDialog(true);
     var formData = new FormData(e.target);
     formData.append("file", file);
     mintTokenCoordinator(formData);
+    tokenName.current = e.target.name.value;
+    collectionName.current = e.target.collection.value;
   };
 
   return (
@@ -194,28 +237,91 @@ const Create = () => {
         {<Attributes attributes={attributes} />}
       </div>
 
-      <Backdrop
-        open={openBackdrop}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.75rem",
-          padding: "1.25rem",
-        }}
-      >
-        <CircularProgress color="primary" size="3rem" thickness={6} />
-        {backdropMessage}
-      </Backdrop>
-
       <Dialog
-        onClose={() => {
-          setOpenTokenCreatedDialog(false);
+        onClose={handleDialogClose}
+        open={openDialog}
+        PaperProps={{
+          style: { maxWidth: "24rem", width: "100%", alignItems: "center" },
         }}
-        open={openTokenCreatedDialog}
       >
-        <DialogTitle>Congratulations! You have created an NFT</DialogTitle>
-        <DialogContent></DialogContent>
+        {mintStatus !== "Success" && (
+          <>
+            <ModifiedDialogTitle
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress color="primary" size="3rem" thickness={6} />
+            </ModifiedDialogTitle>
+            <DialogContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h6" content="subtitle1" align="center">
+                {loadingMessage}
+              </Typography>
+            </DialogContent>
+          </>
+        )}
+        {mintStatus === "Success" && (
+          <>
+            <ModifiedDialogTitle
+              sx={{ textAlign: "center" }}
+              onClose={handleDialogClose}
+            >
+              Congratulations!
+              <br />
+              <Typography variant="subtitle1" color="initial">
+                You have created...
+              </Typography>
+            </ModifiedDialogTitle>
+            <DialogContent style={{ maxWidth: "24rem" }}>
+              <DialogContentText
+                gutterBottom
+                color=""
+                style={{ textAlign: "center" }}
+              >
+                {tokenName.current && tokenName.current}
+              </DialogContentText>
+
+              <img
+                src={file && URL.createObjectURL(file)}
+                className="object-cover aspect-square "
+              />
+            </DialogContent>
+            <ModifiedDialogActions style={{ width: "100%" }} normalPadding>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() =>
+                  routeChange(`/collections/${collectionName}/nft`)
+                }
+              >
+                CHECK IT OUT!
+              </Button>
+            </ModifiedDialogActions>
+          </>
+        )}
       </Dialog>
+      <Snackbar
+        open={transactionFailureAlert}
+        autoHideDuration={6000}
+        onClose={handleTransactionFailureAlertClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          severity="error"
+          variant="filled"
+          onClose={handleTransactionFailureAlertClose}
+        >
+          The transaction has been canceled!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
