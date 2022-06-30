@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useMintToken from "./useMintToken";
 
 const useMintTokenCoordinator = () => {
-  const { mintToken, mintStatus } = useMintToken();
+  const { mintToken, mintStatus, resetMintState, mintEvents } = useMintToken();
   const [imageCID, setImageCID] = useState();
   const [tokenURICID, setTokenURICID] = useState();
 
@@ -34,7 +34,7 @@ const useMintTokenCoordinator = () => {
     setTokenURICID(data.tokenURICID);
   };
 
-  return { mintTokenCoordinator, mintStatus };
+  return { mintTokenCoordinator, mintStatus, resetMintState, mintEvents };
 };
 
 export default useMintTokenCoordinator;
