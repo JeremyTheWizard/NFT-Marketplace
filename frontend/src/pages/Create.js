@@ -1,7 +1,6 @@
 import {
   Alert,
   Button,
-  CircularProgress,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -17,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import Attributes from "../components/Asset/offers-history/Attributes";
 import AttributesModal from "../components/Create/AttributesModal";
 import CollectionComboBox from "../components/Create/CollectionComboBox";
+import ModifiedCircularProgress from "../components/ModifiedMuiComponents/ModifiedCircularProgress";
 import ModifiedDialogActions from "../components/ModifiedMuiComponents/ModifiedDialogActions";
 import ModifiedDialogTitle from "../components/ModifiedMuiComponents/ModifiedDialogTitle";
 import ModifiedTextField from "../components/ModifiedTextField";
@@ -253,7 +253,7 @@ const Create = () => {
                 alignItems: "center",
               }}
             >
-              <CircularProgress color="primary" size="3rem" thickness={6} />
+              <ModifiedCircularProgress />
             </ModifiedDialogTitle>
             <DialogContent
               sx={{

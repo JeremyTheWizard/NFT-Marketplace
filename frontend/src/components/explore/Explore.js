@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 import AssetCard from "./AssetCard";
 
 const NftsCards = () => {
-  const [exploreCards, setExploreCards] = useState([]);
+  const [exploreCards, setExploreCards] = useState();
 
   const renderExploreCards = async () => {
     const nftsForSale = await axios
@@ -21,7 +22,13 @@ const NftsCards = () => {
         />
       );
     });
-    setExploreCards(exploreCards);
+    setExploreCards(
+      exploreCards.length ? (
+        exploreCards
+      ) : (
+        <p className="text-lg text-onPrimary">There are no NFTs on sale :(</p>
+      )
+    );
   };
 
   useEffect(() => {
@@ -34,7 +41,7 @@ const NftsCards = () => {
         Explore
       </h1>
       <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        {exploreCards && exploreCards}
+        {exploreCards ? exploreCards : <ModifiedCircularProgress />}
       </div>
     </div>
   );
