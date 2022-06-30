@@ -52,7 +52,7 @@ function AssetCard() {
       <div className="bg-onPrimary p-6 flex flex-col gap-6">
         <h4>{location.state.collectionName}</h4>
         <h3 className="text-2xl font-bold text-left">
-          {location.state.tokenId}
+          {location.state.name ? location.state.name : location.state.tokenId}
         </h3>
         {location.state.price && (
           <div className="flex gap-3">
