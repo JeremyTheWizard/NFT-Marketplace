@@ -23,7 +23,7 @@ const Sell = ({ tokenContractAddress, tokenId }) => {
           <input
             type="number"
             value={price}
-            placeholder="Your price here"
+            placeholder="Your price"
             min="0"
             step="any"
             required
