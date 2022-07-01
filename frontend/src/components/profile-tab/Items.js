@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useMoralisWeb3Api } from "react-moralis";
 import { useEthers } from "@usedapp/core";
-import CollectionCard from "../items-activity/CollectionCard";
-import randomPerson from "../../photos/random-person.jpeg";
+import React, { useEffect, useState } from "react";
+import { useMoralisWeb3Api } from "react-moralis";
+import AssetCard from "../explore/AssetCard";
 
 const Items = () => {
   const Web3Api = useMoralisWeb3Api();
@@ -51,14 +50,16 @@ const Items = () => {
       const image = metadata && metadata["image"];
       metadata &&
         nftsCardsHtml.push(
-          <CollectionCard
-            imagePath={image.startsWith("ipfs") ? fixUrl(image) : image}
+          <AssetCard
             collectionName={nft.name}
-            tokenId={nft.token_id}
-            owner={""}
-            contractAddress={nft.token_address}
-            sell={true}
-            attributes={metadata.attributes}
+            seller={account}
+            status="Sell"
+            assetInfo={{
+              imageUrl: image,
+              tokenId: nft.token_id,
+              assetContractAddress: nft.token_address,
+              attributes: metadata.attributes,
+            }}
           />
         );
     });

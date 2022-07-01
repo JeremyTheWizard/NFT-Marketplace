@@ -4,7 +4,7 @@ import { FaEthereum } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fixUrl from "../../useful-scripts/fixUrl";
 
-function AssetCard({ collectionName, seller, assetInfo }) {
+function AssetCard({ collectionName, seller, status, assetInfo }) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
 
@@ -21,7 +21,8 @@ function AssetCard({ collectionName, seller, assetInfo }) {
         price: assetInfo.price && assetInfo.price,
         creatorImageUrl: assetInfo.creatorImageUrl,
         creator: assetInfo.creator,
-        sell: seller && true,
+        seller: seller,
+        status: status,
         contractAddress: assetInfo.assetContractAddress,
         attributes: assetInfo.attributes,
       },
