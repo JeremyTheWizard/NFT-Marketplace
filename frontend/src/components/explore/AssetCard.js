@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { FaEthereum } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,19 @@ import fixUrl from "../../useful-scripts/fixUrl";
 function AssetCard({ collectionName, seller, status, assetInfo }) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
+  const [ethUsd, setEthUsd] = useState();
+
+  const fetchEthPrice = async () => {
+    const response = await fetch(
+      "https://api.etherscan.io/api?module=stats&action=ethprice&apikey=2TK8NI1JT3WXC7WCCFQP8V3Q22J347ZC5F"
+    );
+    const ethUsd = (await response.json()).result.ethusd;
+    setEthUsd(ethUsd);
+  };
+
+  useEffect(() => {
+    fetchEthPrice();
+  }, []);
 
   let navigate = useNavigate();
 
@@ -59,7 +72,12 @@ function AssetCard({ collectionName, seller, status, assetInfo }) {
                 <FaEthereum />
                 <p className="text-lg font-semibold">{assetInfo.price}</p>
               </div>
-              <p>($63.00)</p>
+              <p>
+                {ethUsd &&
+                  `($${parseFloat(assetInfo.price * ethUsd)
+                    .toFixed()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")})`}
+              </p>
             </div>
           ) : (
             <p className="text-sm text-gray-500">Not for sale</p>
