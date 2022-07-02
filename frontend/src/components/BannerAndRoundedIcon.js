@@ -1,28 +1,14 @@
 import React from "react";
+import Banner from "./Banner";
+import RoundedIcon from "./RoundedIcon";
 
-function BannerAndRoundedIcon({ bannerImage, profileImage }) {
+const BannerAndRoundedIcon = ({ _bannerImage, _roundedIconImage }) => {
   return (
     <div className="w-full">
-      <div className="w-full h-32 md:h-48 lg:h-64 bg-gray-500">
-        {bannerImage && (
-          <img
-            src={bannerImage}
-            alt=""
-            className="w-full h-32 md:h-48 lg:h-64 object-cover"
-          />
-        )}
-      </div>
-      <div className="w-24 h-24 md:w-36 md:h-36 rounded-full border-[1px] relative -top-12 bg-gray-500 ">
-        {profileImage && (
-          <img
-            src={profileImage}
-            alt=""
-            className="w-24 h-24 md:w-36 md:h-36 rounded-full object-cover"
-          />
-        )}
-      </div>
+      <Banner _bannerImage={_bannerImage} />
+      <RoundedIcon _roundedIconImage={_roundedIconImage} />
     </div>
   );
-}
+};
 
 export default BannerAndRoundedIcon;
