@@ -1,12 +1,20 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-const RoundedIcon = ({ _roundedIconImage }) => {
+const RoundedIcon = ({ _roundedIconImage, _account }) => {
   const [editRoundedIconImage, setEditRoundedIconImage] = useState(false);
   const [roundedIconImage, setRoundedIconImage] = useState(_roundedIconImage);
 
   const handleChangeRoundedIconImage = (e) => {
     if (e.target.files[0]) setRoundedIconImage(e.target.files[0]);
+
+    const formData = new FormData();
+    formData.append("account", _account);
+    formData.append("roundedIconImage", e.target.files[0]);
+    axios.post("http://localhost:8000/api/users/roundedIcon", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   };
 
   return (

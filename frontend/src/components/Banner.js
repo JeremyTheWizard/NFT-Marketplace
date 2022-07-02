@@ -1,12 +1,20 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-const Banner = ({ _bannerImage }) => {
+const Banner = ({ _bannerImage, _account }) => {
   const [editBannerImage, setEditBannerImage] = useState(false);
   const [bannerImage, setBannerImage] = useState(_bannerImage);
 
   const handleChangeBannerImage = (e) => {
     if (e.target.files[0]) setBannerImage(e.target.files[0]);
+
+    const formData = new FormData();
+    formData.append("account", _account);
+    formData.append("bannerImage", e.target.files[0]);
+    axios.post("http://localhost:8000/api/users/banner", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   };
 
   return (
