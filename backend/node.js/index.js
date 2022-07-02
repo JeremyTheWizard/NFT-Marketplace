@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 
 import nftInformationRoutes from "./routes/nftInformation-routes.js";
 import nftsForSaleRoutes from "./routes/nftsForSale-routes.js";
+import usersRoutes from "./routes/users-routes.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(fileUpload());
 
 app.use("/api/nfts/nftsforsale", nftsForSaleRoutes);
 app.use("/api/nfts/nftinformation", nftInformationRoutes);
+app.use("/api/users", usersRoutes);
 
 const CONNECTION_URL = `mongodb+srv://Mijail:${encodeURIComponent(
   process.env.MONGODB_PASSWORD
