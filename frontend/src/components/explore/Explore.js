@@ -18,6 +18,8 @@ const NftsCards = () => {
     nftsForSale &&
       (await Promise.all(
         nftsForSale.map(async (nft, key) => {
+          // bypass opensea's api rate limit
+          await new Promise((resolve) => setTimeout(resolve, 1000 * key));
           const data = await axios
             .get(
               `https://testnets-api.opensea.io/api/v1/asset/${nft.tokenContractAddress}/${nft.tokenId}/`

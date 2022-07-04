@@ -16,6 +16,7 @@ function Items({ assetContractAddress, collectionName }) {
   };
 
   const createAssetCards = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const data = await axios
       .get(
         `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}&cursor=${
