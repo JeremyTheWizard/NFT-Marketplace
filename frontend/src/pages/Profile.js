@@ -29,6 +29,7 @@ const Profile = () => {
       <BannerAndRoundedIcon
         _bannerImage={bannerImage && bannerImage}
         _roundedIcon={roundedIcon ? roundedIcon : defaultProfile}
+        _editable={true}
       />
       <Tabs />
     </div>

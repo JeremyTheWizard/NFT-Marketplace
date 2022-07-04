@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-const RoundedIcon = ({ _roundedIcon, _account }) => {
+const RoundedIcon = ({ _roundedIcon, _account, _editable }) => {
   const [editRoundedIconImage, setEditRoundedIconImage] = useState(false);
   const [roundedIcon, setRoundedIcon] = useState(_roundedIcon);
 
@@ -28,7 +28,9 @@ const RoundedIcon = ({ _roundedIcon, _account }) => {
       onMouseLeave={() => {
         setEditRoundedIconImage(false);
       }}
-      className="inline-block relative w-24 h-24 md:w-36 md:h-36 rounded-full -top-12 bg-gray-500 hover:cursor-pointer"
+      className={`inline-block relative w-24 h-24 md:w-36 md:h-36 rounded-full -top-12 bg-gray-500 hover:cursor-pointer ${
+        !_editable && "pointer-events-none"
+      }`}
     >
       {(_roundedIcon || roundedIcon) && (
         <img

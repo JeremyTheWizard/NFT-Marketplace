@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-const Banner = ({ _bannerImage, _account }) => {
+const Banner = ({ _bannerImage, _account, _editable }) => {
   const [editBannerImage, setEditBannerImage] = useState(false);
   const [bannerImage, setBannerImage] = useState();
 
@@ -26,7 +26,9 @@ const Banner = ({ _bannerImage, _account }) => {
       onMouseLeave={() => {
         setEditBannerImage(false);
       }}
-      className="inline-block relative w-full h-32 md:h-48 lg:h-64 bg-gray-700 hover:bg-gray-600 hover:cursor-pointer"
+      className={`inline-block relative w-full h-32 md:h-48 lg:h-64 bg-gray-700 hover:bg-gray-600 hover:cursor-pointer ${
+        !_editable && "pointer-events-none"
+      }`}
     >
       {(_bannerImage || bannerImage) && (
         <img

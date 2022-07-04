@@ -1,4 +1,6 @@
-import React from "react";
+import { useEthers } from "@usedapp/core";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import BannerAndRoundedIcon from "../BannerAndRoundedIcon";
 
 const CollectionIntro = ({
@@ -8,11 +10,32 @@ const CollectionIntro = ({
   description,
   stats,
 }) => {
+  const [userCollections, setUserCollections] = useState();
+  const { account } = useEthers();
+
+  const getUserCollections = async () => {
+    const response = await axios.get(
+      `http://localhost:8000/api/users/user/${account}`
+    );
+    setUserCollections(response.data.collections);
+  };
+
+  useEffect(() => {
+    getUserCollections();
+  }, []);
+
   return (
     <div className="w-full">
       <BannerAndRoundedIcon
-        bannerImage={bannerImageUrl ? bannerImageUrl : ""}
-        profileImage={profileImage ? profileImage : ""}
+        _bannerImage={bannerImageUrl ? bannerImageUrl : null}
+        _roundedIcon={profileImage ? profileImage : null}
+        _editable={
+          userCollections
+            ? userCollections.includes(collectionName)
+              ? true
+              : false
+            : false
+        }
       />
 
       <div className="grid lg:grid-cols-2 gap-12 items-center ">
