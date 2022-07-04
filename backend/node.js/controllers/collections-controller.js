@@ -7,7 +7,9 @@ export const getTopCollections = async (req, res) => {
     const topCollections = collections.topCollections;
     console.log("Success!");
     console.log(`top collection = ${topCollections}`);
-    return res.status(200).json({ success: true, topCollections });
+    return res
+      .status(200)
+      .json({ success: true, topCollections: topCollections });
   } catch (err) {
     console.log("ERROR!");
     console.log(err);

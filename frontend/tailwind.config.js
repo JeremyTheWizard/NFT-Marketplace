@@ -27,5 +27,9 @@ module.exports = {
       blur: "blur(20px)",
     },
   },
-  plugins: [require("tailwindcss-filters"), require("flowbite/plugin")],
+  plugins: [
+    require("tailwindcss-filters"),
+    require("@tailwindcss/line-clamp"),
+    require("flowbite/plugin"),
+  ],
 };

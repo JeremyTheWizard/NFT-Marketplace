@@ -29,13 +29,24 @@ const TopCollections = () => {
     /* We loop through the images twice because if not there would be an empty
     space while the slide animation repeats.
     */
-    [...topCollections, ...topCollections].map(async (collection, key) => {
-      imagesHtml.push(
-        <TopCollectionsCollection imagePath={collection.imageUrl} />
-      );
-    });
+    await Promise.all(
+      topCollections.map((collection, key) => {
+        // due to opensea's api rate limit, the top collections info is stored
+        // in a private db so there is no need to call the api
+        imagesHtml.push(
+          <TopCollectionsCollection
+            key={key}
+            collectionSlug={collection.slug}
+            collectionName={collection.name}
+            imageUrl={collection.imageUrl}
+            description={collection.description}
+          />
+        );
+      })
+    );
 
-    setTopCollectionsImages(imagesHtml);
+    console.log("imagesHtml", [...imagesHtml, ...imagesHtml]);
+    setTopCollectionsImages([...imagesHtml, ...imagesHtml]);
   };
 
   return (

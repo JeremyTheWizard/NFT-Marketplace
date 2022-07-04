@@ -3,8 +3,10 @@ import mongoose from "mongoose";
 const collectionsSchema = mongoose.Schema({
   topCollections: [
     {
-      slug: { type: String, required: true },
+      slug: { type: "string", required: true },
+      name: { type: String, required: true },
       imageUrl: { type: String, required: true },
+      description: { type: String, required: true },
     },
   ],
 });
