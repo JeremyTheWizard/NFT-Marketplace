@@ -4,10 +4,11 @@ import { AiFillEdit } from "react-icons/ai";
 
 const Banner = ({ _bannerImage, _account }) => {
   const [editBannerImage, setEditBannerImage] = useState(false);
-  const [bannerImage, setBannerImage] = useState(_bannerImage);
+  const [bannerImage, setBannerImage] = useState();
 
   const handleChangeBannerImage = (e) => {
-    if (e.target.files[0]) setBannerImage(e.target.files[0]);
+    if (e.target.files[0])
+      setBannerImage(URL.createObjectURL(e.target.files[0]));
 
     const formData = new FormData();
     formData.append("account", _account);
@@ -27,13 +28,9 @@ const Banner = ({ _bannerImage, _account }) => {
       }}
       className="inline-block relative w-full h-32 md:h-48 lg:h-64 bg-gray-700 hover:bg-gray-600 hover:cursor-pointer"
     >
-      {bannerImage && (
+      {(_bannerImage || bannerImage) && (
         <img
-          src={
-            typeof bannerImage === "string"
-              ? bannerImage
-              : URL.createObjectURL(bannerImage)
-          }
+          src={_bannerImage ? _bannerImage : bannerImage}
           alt="banner"
           className="w-full h-32 md:h-48 lg:h-64 object-cover hover:opacity-90"
         />

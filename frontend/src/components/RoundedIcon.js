@@ -2,15 +2,18 @@ import axios from "axios";
 import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-const RoundedIcon = ({ _roundedIconImage, _account }) => {
+const RoundedIcon = ({ _roundedIcon, _account }) => {
   const [editRoundedIconImage, setEditRoundedIconImage] = useState(false);
-  const [roundedIconImage, setRoundedIconImage] = useState(_roundedIconImage);
+  const [roundedIcon, setRoundedIcon] = useState(_roundedIcon);
 
   const handleChangeRoundedIconImage = (e) => {
-    if (e.target.files[0]) setRoundedIconImage(e.target.files[0]);
+    if (e.target.files[0]) {
+      setRoundedIcon(URL.createObjectURL(e.target.files[0]));
+    }
 
     const formData = new FormData();
     formData.append("account", _account);
+    console.log(e.target.files[0]);
     formData.append("roundedIconImage", e.target.files[0]);
     axios.post("http://localhost:8000/api/users/roundedIcon", formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -27,13 +30,9 @@ const RoundedIcon = ({ _roundedIconImage, _account }) => {
       }}
       className="inline-block relative w-24 h-24 md:w-36 md:h-36 rounded-full -top-12 bg-gray-500 hover:cursor-pointer"
     >
-      {roundedIconImage && (
+      {(_roundedIcon || roundedIcon) && (
         <img
-          src={
-            typeof roundedIconImage === "string"
-              ? roundedIconImage
-              : URL.createObjectURL(roundedIconImage)
-          }
+          src={_roundedIcon ? _roundedIcon : roundedIcon}
           alt="profile"
           className="w-24 h-24 md:w-36 md:h-36 rounded-full object-cover hover:opacity-90"
         />

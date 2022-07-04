@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema({
   account: { type: String, required: true },
-  bannerImage: { data: Buffer, contentType: String },
-  roundedIconImage: { data: Buffer, contentType: String },
+  bannerImage: { type: String },
+  roundedIconImage: { type: String },
   collectionsCreated: [{ type: String }],
 });
 
