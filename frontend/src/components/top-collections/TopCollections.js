@@ -1,29 +1,42 @@
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import TopCollectionsCollection from "./TopCollectionsCollection";
 
-function TopCollections() {
-  function importAllImages(r) {
-    return r.keys().map(r);
-  }
-  const allImages = importAllImages(
-    require.context("../../photos/TopCollecionts", false, /\.(png|jpe?g|svg)$/)
-  );
+const TopCollections = () => {
+  const [topCollections, setTopCollections] = useState();
+  const [topCollectionsImages, setTopCollectionsImages] = useState();
 
-  function renderTopCollectionsImages() {
+  useEffect(() => {
+    getTopCollections();
+  }, []);
+
+  useEffect(() => {
+    if (topCollections) {
+      renderTopCollectionsImages();
+    }
+  }, [topCollections]);
+
+  const getTopCollections = async () => {
+    const response = await axios.get(
+      "http://localhost:8000/api/collections/topcollections"
+    );
+    setTopCollections(response.data.topCollections);
+  };
+
+  const renderTopCollectionsImages = async () => {
     const imagesHtml = [];
 
-    /* We loop through the images twice because if not there wourld be an empty
+    /* We loop through the images twice because if not there would be an empty
     space while the slide animation repeats.
     */
-    let ii = 0;
-    for (let i = 0; i <= allImages.length * 2; i++) {
-      if (ii === 10) {
-        ii = 0;
-      }
-      imagesHtml.push(<TopCollectionsCollection imagePath={allImages[ii]} />);
-      ii++;
-    }
-    return imagesHtml;
-  }
+    [...topCollections, ...topCollections].map(async (collection, key) => {
+      imagesHtml.push(
+        <TopCollectionsCollection imagePath={collection.imageUrl} />
+      );
+    });
+
+    setTopCollectionsImages(imagesHtml);
+  };
 
   return (
     <>
@@ -35,11 +48,11 @@ function TopCollections() {
       to set the left margin with the calc function.*/}
       <div className="overflow-hidden mx-auto flex w-[100vw] md:w-full relative md:static left-[calc(-50vw+50%)]">
         <div className="flex animate-auto-slide hover:pause overflow-visible relative">
-          {renderTopCollectionsImages()}
+          {topCollectionsImages && topCollectionsImages}
         </div>
       </div>
     </>
   );
-}
+};
 
 export default TopCollections;

@@ -4,6 +4,7 @@ import express from "express";
 import fileUpload from "express-fileUpload";
 import mongoose from "mongoose";
 
+import collectionsRoutes from "./routes/collections-routes.js";
 import nftInformationRoutes from "./routes/nftInformation-routes.js";
 import nftsForSaleRoutes from "./routes/nftsForSale-routes.js";
 import usersRoutes from "./routes/users-routes.js";
@@ -19,6 +20,7 @@ app.use(fileUpload());
 app.use("/api/nfts/nftsforsale", nftsForSaleRoutes);
 app.use("/api/nfts/nftinformation", nftInformationRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/collections", collectionsRoutes);
 
 const CONNECTION_URL = `mongodb+srv://Mijail:${encodeURIComponent(
   process.env.MONGODB_PASSWORD

@@ -3,6 +3,7 @@ import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
 function TopCollectionsCollection(props) {
+  console.log("🚀 ~ props", props);
   let navigate = useNavigate();
   function routeChange(path) {
     navigate(path, { state: { imagePath: props.imagePath } });
