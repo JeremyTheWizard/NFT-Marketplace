@@ -46,7 +46,7 @@ const CollectionIntro = ({
           <p className="text-onPrimary">
             {description
               ? description
-              : `Welcome to the home of {collectionName} on NFT Palace. Discover the
+              : `Welcome to the home of ${collectionName} on NFT Palace. Discover the
             best items in this collection.`}
           </p>
         </div>
