@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import TabNavItem from "./TabNavItem";
-import TabContent from "./TabContent";
-import Items from "./Items";
+import Created from "./Created";
 import DropDownMenuContent from "./DropDownMenuContent";
+import Items from "./Items";
+import TabContent from "./TabContent";
+import TabNavItem from "./TabNavItem";
 
 function Tabs() {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -32,23 +33,21 @@ function Tabs() {
     <>
       <div className="flex mb-3 relative">
         <ul className="flex justify-center gap-12 text-onPrimary text-lg">
-          <TabNavItem id="tab1" title="Items" {...props} />
-          <TabNavItem id="tab2" title="Offers made" {...props} />
-          <TabNavItem id="tab3" title="Offers received" {...props} />
-          <TabNavItem id="tab4" title="Created" {...props} />
+          <TabNavItem id="tab1" title="Owned" {...props} />
+          <TabNavItem id="tab2" title="Collections" {...props} />
         </ul>
         <DropDownMenuContent {...props} />
       </div>
 
       <hr className="bg-onPrimary w-full border-1" />
 
-      <div>
+      <div className="w-full mb-12">
         <TabContent id="tab1" activeTab={activeTab}>
           <Items />
         </TabContent>
-        <TabContent id="tab2" activeTab={activeTab}></TabContent>
-        <TabContent id="tab3" activeTab={activeTab}></TabContent>
-        <TabContent id="tab4" activeTab={activeTab}></TabContent>
+        <TabContent id="tab2" activeTab={activeTab} classNames="mt-12">
+          <Created />
+        </TabContent>
       </div>
     </>
   );
