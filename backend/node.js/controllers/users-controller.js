@@ -165,3 +165,40 @@ export const addTokenToCollection = async (req, res) => {
 
   return res.json({ success: true });
 };
+
+export const addCollection = async (req, res) => {
+  console.log("Initializing addCollection");
+  const { account, collectionName } = req.body;
+
+  const collectionExists = await User.findOne({
+    account: account,
+    "collectionsCreated.name": collectionName,
+  });
+
+  if (collectionExists) {
+    console.log("ERROR! Collection already exists!");
+    return res
+      .status(409)
+      .json({ success: false, message: "Collection already exists" });
+  } else {
+    console.log("Updating user");
+    try {
+      const res = await User.updateOne(
+        {
+          account: account,
+        },
+        {
+          $push: {
+            collectionsCreated: { name: collectionName },
+          },
+        }
+      );
+      console.log("User updated!");
+    } catch (err) {
+      console.log("ERROR!");
+      console.log(err);
+      return res.status(400).json({ success: false, message: err });
+    }
+  }
+  return res.status(200).json({ success: true });
+};

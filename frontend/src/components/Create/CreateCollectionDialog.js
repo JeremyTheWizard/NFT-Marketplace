@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -5,37 +6,42 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import * as React from "react";
-import { useState } from "react";
+import { useEthers } from "@usedapp/core";
+import axios from "axios";
+import React, { useRef } from "react";
 
-const CreateCollectionDialog = ({ setValue, open, toggleOpen }) => {
-  const [dialogValue, setDialogValue] = useState({
-    title: "",
-    year: "",
-  });
+const CreateCollectionDialog = ({
+  setValue,
+  open,
+  setOpenCreateCollectionDialog,
+}) => {
+  const collectionValue = useRef();
+  const loading = useRef(false);
+  const { account } = useEthers();
 
   const handleClose = () => {
-    setDialogValue({
-      title: "",
-      year: "",
-    });
-
-    toggleOpen(false);
+    setOpenCreateCollectionDialog(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleCreateCollection = async () => {
+    console.log("collection value = ", collectionValue.current);
     setValue({
-      title: dialogValue.title,
-      year: parseInt(dialogValue.year, 10),
+      name: collectionValue.current,
     });
+
+    loading.current = true;
+    await axios.post("http://localhost:8000/api/users/user/collection", {
+      account: account,
+      collectionName: collectionValue.current,
+    });
+    loading.current = false;
 
     handleClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <form onSubmit={handleSubmit}>
+      <form>
         <DialogTitle>Create a new collection</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -48,21 +54,22 @@ const CreateCollectionDialog = ({ setValue, open, toggleOpen }) => {
             autoFocus
             margin="dense"
             id="name"
-            value={dialogValue.title}
-            onChange={(event) =>
-              setDialogValue({
-                ...dialogValue,
-                title: event.target.value,
-              })
-            }
+            name="name"
             label="Collection Name"
             type="text"
             variant="standard"
+            onChange={(e) => (collectionValue.current = e.target.value)}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Add</Button>
+          <LoadingButton
+            loading={loading.current}
+            type="button"
+            onClick={handleCreateCollection}
+          >
+            Add
+          </LoadingButton>
         </DialogActions>
       </form>
     </Dialog>

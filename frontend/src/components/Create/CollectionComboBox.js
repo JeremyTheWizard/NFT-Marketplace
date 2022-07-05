@@ -66,7 +66,7 @@ const CollectionComboBox = () => {
         }}
         // Avoid isOptionEqualToValue warnings
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        onChange={(_, newValue) => {
+        onChange={async (_, newValue) => {
           if (
             newValue &&
             newValue.name &&
@@ -78,6 +78,13 @@ const CollectionComboBox = () => {
               name: newValue,
             });
           } else if (newValue && newValue.inputValue) {
+            await axios.post(
+              "http://localhost:8000/api/users/user/collection",
+              {
+                account: account,
+                collectionName: newValue.inputValue,
+              }
+            );
             // Create a new value from the user input
             setValue({
               name: newValue.inputValue,
@@ -168,7 +175,7 @@ const CollectionComboBox = () => {
       <CreateCollectionDialog
         setValue={setValue}
         open={openCreateCollectionDialog}
-        toggleOpen={setOpenCreateCollectionDialog}
+        setOpenCreateCollectionDialog={setOpenCreateCollectionDialog}
       />
     </>
   );
