@@ -9,6 +9,8 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useEthers } from "@usedapp/core";
+import axios from "axios";
 import FormData from "form-data";
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
@@ -30,6 +32,8 @@ const Create = () => {
   const [transactionFailureAlert, setTransactionFailureAlert] = useState(false);
   const tokenName = useRef();
   const collectionName = useRef();
+
+  const { account } = useEthers();
 
   const loadingMessages = [
     "Building the transaction...",
@@ -58,6 +62,12 @@ const Create = () => {
     }
     if (mintStatus === "Success") {
       setLoadingMessage(loadingMessages[0]);
+      axios.post("http://localhost:8000/api/users/token", {
+        account: account,
+        collectionName: collectionName,
+        tokenName: tokenName,
+        tokenId: parseInt(mintEvents[0].args[2]._hex, 16),
+      });
     }
   }, [mintStatus]);
 
