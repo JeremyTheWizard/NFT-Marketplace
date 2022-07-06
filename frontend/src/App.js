@@ -31,11 +31,11 @@ function App() {
               <Route path="/marketplace" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
               <Route
-                path="/collections/:collectionname"
+                path="/collections/:collectionslug"
                 element={<Collection />}
               />
               <Route
-                path="/collections/:collectionname/:asset"
+                path="/collections/:collectionslug/:asset"
                 element={<Asset />}
               />
               <Route path="/create" element={<Create />} />

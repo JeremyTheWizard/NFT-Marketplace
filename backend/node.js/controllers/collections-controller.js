@@ -1,4 +1,5 @@
 import axios from "axios";
+import FormData from "form-data";
 import Collection from "../models/Collection";
 import User from "../models/User";
 
@@ -148,7 +149,7 @@ export const changeBannerImage = async (req, res) => {
   if (collectionToUpdate) {
     console.log("Updating collection...");
     try {
-      collectionToUpdate.bannerImage = newBannerImageData.data.url;
+      collectionToUpdate.bannerImageUrl = newBannerImageData.data.url;
       await collectionToUpdate.save();
       console.log("Collection banner updated!");
       res.status(200).json({ success: true });
@@ -169,7 +170,7 @@ export const changeBannerImage = async (req, res) => {
 export const changeRoundedIconImage = async (req, res) => {
   console.log("Changing banner image...");
 
-  const newRoundedIconImage = req.files.bannerImage;
+  const newRoundedIconImage = req.files.roundedIconImage;
   const { collectionSlug, account } = req.body;
 
   console.log("Checking if account === createdBy");
@@ -218,7 +219,7 @@ export const changeRoundedIconImage = async (req, res) => {
   if (collectionToUpdate) {
     console.log("Updating collection...");
     try {
-      collectionToUpdate.roundedIconImage = newRoundedIconImageData.data.url;
+      collectionToUpdate.roundedIconImageUrl = newRoundedIconImageData.data.url;
       await collectionToUpdate.save();
       console.log("Collection banner updated!");
       res.status(200).json({ success: true });

@@ -1,10 +1,14 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-const RoundedIcon = ({ _roundedIcon, _account, _editable }) => {
+const RoundedIcon = ({ _roundedIcon, _editable, _axiosOptions }) => {
   const [editRoundedIconImage, setEditRoundedIconImage] = useState(false);
-  const [roundedIcon, setRoundedIcon] = useState(_roundedIcon);
+  const [roundedIcon, setRoundedIcon] = useState();
+
+  useEffect(() => {
+    setRoundedIcon(_roundedIcon);
+  }, [_roundedIcon]);
 
   const handleChangeRoundedIconImage = (e) => {
     if (e.target.files[0]) {
@@ -12,11 +16,16 @@ const RoundedIcon = ({ _roundedIcon, _account, _editable }) => {
     }
 
     const formData = new FormData();
-    formData.append("account", _account);
-    console.log(e.target.files[0]);
+    formData.append("account", _axiosOptions.data.account);
     formData.append("roundedIconImage", e.target.files[0]);
-    axios.post("http://localhost:8000/api/users/roundedIcon", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+    if (_axiosOptions.data.collectionSlug) {
+      formData.append("collectionSlug", _axiosOptions.data.collectionSlug);
+    }
+    axios({
+      method: _axiosOptions.method,
+      url: _axiosOptions.url,
+      data: formData,
+      headers: _axiosOptions.headers,
     });
   };
 
@@ -32,9 +41,9 @@ const RoundedIcon = ({ _roundedIcon, _account, _editable }) => {
         !_editable && "pointer-events-none"
       }`}
     >
-      {(_roundedIcon || roundedIcon) && (
+      {roundedIcon && (
         <img
-          src={_roundedIcon ? _roundedIcon : roundedIcon}
+          src={roundedIcon}
           alt="profile"
           className="w-24 h-24 md:w-36 md:h-36 rounded-full object-cover hover:opacity-90"
         />

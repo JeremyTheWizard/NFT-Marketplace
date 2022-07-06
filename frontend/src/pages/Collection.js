@@ -5,28 +5,55 @@ import CollectionIntro from "../components/collection-intro/CollectionIntro";
 import ItemsActivity from "../components/items-activity/ItemsActivity";
 
 function Collection() {
-  const { collectionname } = useParams();
+  const { collectionslug } = useParams();
   const [collectionRelevantInfo, setCollectionRelevantInfo] = useState();
 
-  const getCollectionInfo = async () => {
-    const collectionInfo = await axios
-      .get(
-        `https://testnets-api.opensea.io/api/v1/collection/${collectionname}`
-      )
-      .then((res) => res.data.collection);
+  const fetchCollectionInfo = async () => {
+    // First check if there is a collection in the db if not check opensea's api
 
-    setCollectionRelevantInfo({
-      assetContractAddress: collectionInfo.primary_asset_contracts[0].address,
-      name: collectionInfo.name,
-      bannerImageUrl: collectionInfo.banner_image_url,
-      profileImageUrl: collectionInfo.image_url,
-      description: collectionInfo.description,
-      stats: collectionInfo.stats,
-    });
+    let response;
+    try {
+      response = await axios.get(
+        `http://localhost:8000/api/collections/collection/${collectionslug}`
+      );
+    } catch {}
+
+    if (response) {
+      const collectionInfo = response.data.collectionInfo;
+      setCollectionRelevantInfo({
+        assetContractAddress: collectionInfo.assetContractAddress,
+        name: collectionInfo.name,
+        bannerImageUrl: collectionInfo.bannerImageUrl,
+        profileImageUrl: collectionInfo.roundedIconImageUrl,
+        description: collectionInfo.description,
+        creator: collectionInfo.createdBy,
+      });
+    } else {
+      // The idea is that all urls will have the same structure prepending
+      // "nft-palace-collections" to all of them. However to use opensea's api
+      // we need to split the url.
+      const collectionInfo = await axios
+        .get(
+          `https://testnets-api.opensea.io/api/v1/collection/${
+            collectionslug.split("nft-palace-collections-")[1]
+          }`
+        )
+        .then((res) => res.data.collection);
+      console.log("whats happening");
+
+      setCollectionRelevantInfo({
+        assetContractAddress: collectionInfo.primary_asset_contracts[0].address,
+        name: collectionInfo.name,
+        bannerImageUrl: collectionInfo.banner_image_url,
+        profileImageUrl: collectionInfo.image_url,
+        description: collectionInfo.description,
+        stats: collectionInfo.stats,
+      });
+    }
   };
 
   useEffect(() => {
-    getCollectionInfo();
+    fetchCollectionInfo();
   }, []);
 
   return (
@@ -38,6 +65,7 @@ function Collection() {
           profileImage={collectionRelevantInfo.profileImageUrl}
           description={collectionRelevantInfo.description}
           stats={collectionRelevantInfo.stats}
+          creator={collectionRelevantInfo.creator}
         />
       )}
       {collectionRelevantInfo && (

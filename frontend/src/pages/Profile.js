@@ -8,6 +8,8 @@ import defaultProfile from "../photos/default-profile.jpeg";
 const Profile = () => {
   const [bannerImage, setBannerImage] = useState();
   const [roundedIcon, setRoundedIcon] = useState();
+  const [bannerAxiosOptions, setBannerAxiosOptions] = useState();
+  const [roundedIconAxiosOptions, setRoundedIconAxiosOptions] = useState();
 
   const { account } = useEthers();
 
@@ -21,7 +23,21 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    account && updateUserData();
+    if (account) {
+      updateUserData();
+      setBannerAxiosOptions({
+        method: "post",
+        url: "http://localhost:8000/api/users/banner",
+        data: { account: account },
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setRoundedIconAxiosOptions({
+        method: "post",
+        url: "http://localhost:8000/api/users/roundedIcon",
+        data: { account: account },
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    }
   }, [account]);
 
   return (
@@ -30,6 +46,8 @@ const Profile = () => {
         _bannerImage={bannerImage && bannerImage}
         _roundedIcon={roundedIcon ? roundedIcon : defaultProfile}
         _editable={true}
+        _bannerAxiosOptions={bannerAxiosOptions}
+        _roundedIconAxiosOptions={roundedIconAxiosOptions}
       />
       <Tabs />
     </div>

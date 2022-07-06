@@ -2,6 +2,7 @@ import express from "express";
 import {
   addCollection,
   changeBannerImage,
+  changeRoundedIconImage,
   getCollectionInfo,
 } from "../controllers/collections-controller";
 
@@ -10,6 +11,6 @@ const router = express.Router();
 router.post("/collection", addCollection);
 router.get("/collection/:collectionSlug", getCollectionInfo);
 router.post("/collection/banner", changeBannerImage);
-router.post("/collection/roundediconimage", changeBannerImage);
+router.post("/collection/roundedicon", changeRoundedIconImage);
 
 export default router;

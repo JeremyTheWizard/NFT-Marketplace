@@ -1,6 +1,6 @@
 import { useEthers } from "@usedapp/core";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useParams } from "react-router-dom";
 import BannerAndRoundedIcon from "../BannerAndRoundedIcon";
 
 const CollectionIntro = ({
@@ -9,33 +9,30 @@ const CollectionIntro = ({
   profileImage,
   description,
   stats,
+  creator,
 }) => {
-  const [userCollections, setUserCollections] = useState();
   const { account } = useEthers();
+  const { collectionslug } = useParams();
 
-  const getUserCollections = async () => {
-    const response = await axios.get(
-      `http://localhost:8000/api/users/user/${account}`
-    );
-    setUserCollections(response.data.collections);
+  const bannerAxiosOptions = {
+    method: "post",
+    url: "http://localhost:8000/api/collections/collection/banner",
+    data: { collectionSlug: collectionslug, account: account },
   };
-
-  useEffect(() => {
-    getUserCollections();
-  }, []);
+  const roundedIconAxiosOptions = {
+    method: "post",
+    url: "http://localhost:8000/api/collections/collection/roundedicon",
+    data: { collectionSlug: collectionslug, account: account },
+  };
 
   return (
     <div className="w-full">
       <BannerAndRoundedIcon
         _bannerImage={bannerImageUrl ? bannerImageUrl : null}
         _roundedIcon={profileImage ? profileImage : null}
-        _editable={
-          userCollections
-            ? userCollections.includes(collectionName)
-              ? true
-              : false
-            : false
-        }
+        _editable={creator ? (creator === account ? true : false) : false}
+        _bannerAxiosOptions={bannerAxiosOptions}
+        _roundedIconAxiosOptions={roundedIconAxiosOptions}
       />
 
       <div className="grid lg:grid-cols-2 gap-12 items-center ">
@@ -55,25 +52,27 @@ const CollectionIntro = ({
           <div className="div flex flex-col gap-3 items-center">
             <p className="md:text-xl font-semibold">Items</p>
             <p className="md:text-xl">
-              {stats.total_supply ? stats.total_supply : "---"}
+              {stats && stats.total_supply ? stats.total_supply : "---"}
             </p>
           </div>
           <div className="div flex flex-col gap-3 items-center">
             <p className="md:text-xl font-semibold">Owners</p>
             <p className="md:text-xl">
-              {stats.total_owners ? stats.total_owners : "---"}
+              {stats && stats.total_owners ? stats.total_owners : "---"}
             </p>
           </div>
           <div className="div flex flex-col gap-3 items-center">
             <p className="md:text-xl font-semibold">Floor Price</p>
             <p className="md:text-xl">
-              {stats.floor_price ? stats.floor_price : "---"}
+              {stats && stats.floor_price ? stats.floor_price : "---"}
             </p>
           </div>
           <div className="div flex flex-col gap-3 items-center">
             <p className="md:text-xl font-semibold">Total Volume</p>
             <p className="md:text-xl">
-              {stats.total_volume ? stats.total_volume.toFixed(2) : "---"}
+              {stats && stats.total_volume
+                ? stats.total_volume.toFixed(2)
+                : "---"}
             </p>
           </div>
         </div>
