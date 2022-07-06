@@ -129,9 +129,21 @@ export const changeRoundedIconImage = async (req, res) => {
 };
 
 export const getUser = async (req, res) => {
+  console.log("Initializing getUser...");
   const account = req.params.account;
 
-  const user = await User.findOne({ account: account });
+  let user;
+  try {
+    console.log("Looking for user...");
+    user = await User.findOne({ account: account }).populate(
+      "collectionsCreated"
+    );
+    console.log("User found.");
+    console.log(`User = ${user}`);
+  } catch (err) {
+    console.log("ERROR!");
+    console.log(err);
+  }
 
   if (user) {
     return res.status(200).json({ success: true, user });
@@ -168,18 +180,24 @@ export const addTokenToCollection = async (req, res) => {
 
 export const addCollection = async (req, res) => {
   console.log("Initializing addCollection");
-  const { account, collectionName } = req.body;
+  const { account, collectionId } = req.body;
+
+  const userExists = await User.findOne({ account: account });
+
+  if (!userExists) {
+  }
 
   const collectionExists = await User.findOne({
     account: account,
-    "collectionsCreated.name": collectionName,
+    collectionsCreated: collectionId,
   });
 
   if (collectionExists) {
     console.log("ERROR! Collection already exists!");
-    return res
-      .status(409)
-      .json({ success: false, message: "Collection already exists" });
+    return res.status(409).json({
+      success: false,
+      message: "Collection already exists",
+    });
   } else {
     console.log("Updating user");
     try {
@@ -189,7 +207,7 @@ export const addCollection = async (req, res) => {
         },
         {
           $push: {
-            collectionsCreated: { name: collectionName },
+            collectionsCreated: collectionId,
           },
         }
       );
@@ -201,4 +219,30 @@ export const addCollection = async (req, res) => {
     }
   }
   return res.status(200).json({ success: true });
+};
+
+export const createUser = async (req, res) => {
+  console.log("Initializing createUser...");
+  const { account } = req.body;
+
+  const exists = await User.findOne({ account: account });
+  if (exists) {
+    console.log("ERROR! User already exists");
+    return res
+      .status(409)
+      .json({ success: false, message: "User already exists" });
+  }
+
+  try {
+    console.log("Creating user...");
+    const newUser = await new User({ account: account });
+    await newUser.save();
+    console.log("Success!");
+    console.log(`newUser = ${newUser}`);
+    return res.status(200).json({ success: true, newUser });
+  } catch (err) {
+    console.log("ERROR!");
+    console.log(err);
+    return res.status(400).json({ success: false, message: err.message });
+  }
 };
