@@ -17,7 +17,7 @@ const Created = () => {
   const navigate = useNavigate();
 
   const handleNavigateToCollection = (collection) => {
-    navigate(`collections/${collection.slug}`, {
+    navigate(`/collections/${collection.slug}`, {
       state: {
         assetContractAddress: collection.assetContractAddress,
         editable: true,
