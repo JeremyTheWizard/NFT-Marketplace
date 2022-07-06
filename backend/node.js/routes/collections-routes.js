@@ -1,8 +1,15 @@
 import express from "express";
-import { getTopCollections } from "../controllers/collections-controller";
+import {
+  addCollection,
+  changeBannerImage,
+  getCollectionInfo,
+} from "../controllers/collections-controller";
 
 const router = express.Router();
 
-router.get("/topcollections", getTopCollections);
+router.post("/collection", addCollection);
+router.get("/collection/:collectionSlug", getCollectionInfo);
+router.post("/collection/banner", changeBannerImage);
+router.post("/collection/roundediconimage", changeBannerImage);
 
 export default router;

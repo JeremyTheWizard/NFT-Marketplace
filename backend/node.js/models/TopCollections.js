@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const collectionsSchema = mongoose.Schema({
+const topCollectionsSchema = mongoose.Schema({
   topCollections: [
     {
       slug: { type: "string", required: true },
@@ -11,5 +11,5 @@ const collectionsSchema = mongoose.Schema({
   ],
 });
 
-export default mongoose.models.Collections ||
-  mongoose.model("Collections", collectionsSchema);
+export default mongoose.models.TopCollections ||
+  mongoose.model("TopCollections", topCollectionsSchema);
