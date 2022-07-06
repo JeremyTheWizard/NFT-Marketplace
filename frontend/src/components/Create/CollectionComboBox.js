@@ -2,6 +2,7 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import useGetNFTMinterContract from "../../hooks/useGetNFTMinterContract";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 import ModifiedTextField from "../ModifiedTextField";
 import CreateCollectionDialog from "./CreateCollectionDialog";
@@ -14,13 +15,17 @@ const CollectionComboBox = () => {
     useState(false);
   const [openAutocompleteOptions, setOpenAutocompleteOptions] = useState(false);
   const [userCollections, setUserCollections] = useState();
+
+  const nftPalaceContractAddress = useGetNFTMinterContract().address;
   const { account } = useEthers();
+
   const loading = openAutocompleteOptions && !userCollections;
 
-  const updateUserCollections = async () => {
-    const response = await axios.get(
-      `http://localhost:8000/api/users/user/${account}`
-    );
+  const fetchUserCollections = async () => {
+    const response = await axios({
+      method: "get",
+      url: `http://localhost:8000/api/users/user/${account}`,
+    });
     setUserCollections(response.data.user.collectionsCreated);
   };
 
@@ -33,7 +38,7 @@ const CollectionComboBox = () => {
       }
       (async () => {
         if (active) {
-          await updateUserCollections();
+          await fetchUserCollections();
         }
       })();
 
@@ -66,7 +71,7 @@ const CollectionComboBox = () => {
         }}
         // Avoid isOptionEqualToValue warnings
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        onChange={async (_, newValue) => {
+        onChange={(_, newValue) => {
           if (
             newValue &&
             newValue.name &&
@@ -78,13 +83,11 @@ const CollectionComboBox = () => {
               name: newValue,
             });
           } else if (newValue && newValue.inputValue) {
-            await axios.post(
-              "http://localhost:8000/api/users/user/collection",
-              {
-                account: account,
-                collectionName: newValue.inputValue,
-              }
-            );
+            axios.post("http://localhost:8000/api/collections/collection", {
+              account: account,
+              collectionName: newValue.inputValue,
+              assetContractAddress: nftPalaceContractAddress, // All tokens created by users use the NFT Palace contract
+            });
             // Create a new value from the user input
             setValue({
               name: newValue.inputValue,
@@ -102,14 +105,19 @@ const CollectionComboBox = () => {
             (option) => inputValue === option.name
           );
           if (filtered.length === 0) {
-            filtered.shift();
-            filtered.push({
-              inputValue,
-              name: `Create collection "${inputValue}"`,
-              description:
-                "This is a quick creation. You'll be able to fill the collection's details later on your profile.",
-            });
-            return loading ? [] : filtered;
+            if (
+              !loading &&
+              ((userCollections && userCollections.length) || inputValue)
+            ) {
+              filtered.shift();
+              filtered.push({
+                inputValue,
+                name: `Create collection "${inputValue}"`,
+                description:
+                  "This is a quick creation. You'll be able to fill the collection's details later on your profile.",
+              });
+              return filtered;
+            }
           }
 
           return [
