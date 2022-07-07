@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import TabNavItem from "./TabNavItem";
-import TabContent from "./TabContent";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import ActivityTab from "./ActivityTab";
 import Attributes from "./Attributes";
-import { useLocation } from "react-router-dom";
+import TabContent from "./TabContent";
+import TabNavItem from "./TabNavItem";
 
 function Tabs() {
   const [activeTab, setActiveTab] = useState("tab1");
@@ -20,8 +20,7 @@ function Tabs() {
       <div className="flex mb-3 mt-12 relative">
         <ul className="flex justify-center gap-12 text-onPrimary text-lg">
           <TabNavItem id="tab1" title="Attributes" {...props} />
-          <TabNavItem id="tab2" title="Offers" {...props} />
-          <TabNavItem id="tab3" title="Activity" {...props} />
+          <TabNavItem id="tab2" title="Activity" {...props} />
         </ul>
       </div>
 
@@ -31,8 +30,7 @@ function Tabs() {
         <TabContent id="tab1" activeTab={activeTab}>
           <Attributes attributes={location.state.attributes} />
         </TabContent>
-        <TabContent id="tab2" activeTab={activeTab}></TabContent>
-        <TabContent id="tab3" activeTab={activeTab}>
+        <TabContent id="tab2" activeTab={activeTab}>
           <ActivityTab
             contractAddress={location.state.contractAddress}
             tokenId={location.state.tokenId}
