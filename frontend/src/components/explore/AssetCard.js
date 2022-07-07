@@ -36,6 +36,8 @@ function AssetCard({ collectionName, seller, status, assetInfo }) {
         status: status,
         contractAddress: assetInfo.assetContractAddress,
         attributes: assetInfo.attributes,
+        name: assetInfo.name,
+        description: assetInfo.description,
       },
     });
   }

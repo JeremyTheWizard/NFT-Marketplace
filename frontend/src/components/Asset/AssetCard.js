@@ -41,7 +41,7 @@ function AssetCard() {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl flex flex-col md:grid md:grid-cols-2 cursor-pointer">
+    <div className="w-full overflow-hidden rounded-xl flex flex-col md:grid md:grid-cols-2">
       <div className="w-full">
         <img
           src={location.state.imagePath}
@@ -52,7 +52,9 @@ function AssetCard() {
       <div className="bg-onPrimary p-6 flex flex-col gap-6">
         <h4>{location.state.collectionName}</h4>
         <h3 className="text-2xl font-bold text-left">
-          {location.state.name ? location.state.name : location.state.tokenId}
+          {location.state.name
+            ? location.state.name
+            : `#${location.state.tokenId}`}
         </h3>
         {location.state.price && (
           <div className="flex gap-3">
@@ -65,10 +67,10 @@ function AssetCard() {
             <p>($555)</p>
           </div>
         )}
-        <p className="text-left">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi eius
-          inventore mollitia ipsum. Autem voluptatum ducimus quisquam cupiditate
-          eius eum!
+        <p className=" text-left">
+          {location.state.description
+            ? location.state.description
+            : "This item has no description."}
         </p>
         {location.state.status === "Sell" ? (
           <Sell
@@ -98,7 +100,7 @@ function AssetCard() {
               <h4 className="text-base">{location.state.creatorName}</h4>
             )}
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center cursor-pointer">
             {likeIcon()}
             <p className="text-base">{likeCount}</p>
           </div>
