@@ -107,7 +107,7 @@ export const createTokenURI = async (req, res, next) => {
     collection: req.body.collection,
     description: req.body.description,
     image: "ipfs://" + response.data.IpfsHash,
-    attributes: req.body.attributes,
+    attributes: JSON.parse(req.body.attributes),
   };
   const jsonUrl = "https://api.pinata.cloud/pinning/pinJSONToIPFS";
   try {

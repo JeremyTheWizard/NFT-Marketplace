@@ -110,6 +110,7 @@ const Create = () => {
     e.preventDefault();
     setOpenDialog(true);
     var formData = new FormData(e.target);
+    formData.append("attributes", JSON.stringify(attributes));
     formData.append("file", file);
     mintTokenCoordinator(formData);
     tokenName.current = e.target.name.value;
