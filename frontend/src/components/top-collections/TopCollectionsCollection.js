@@ -34,7 +34,9 @@ function TopCollectionsCollection({
           onMouseLeave={(e) => {
             setDisplay("hidden");
           }}
-          onClick={() => routeChange(`/collections/${collectionSlug}`)}
+          onClick={() =>
+            routeChange(`/collections/nft-palace-collections-${collectionSlug}`)
+          }
         >
           <div className="h-60 w-60 shrink-0 pl-4 py-4">
             <img
