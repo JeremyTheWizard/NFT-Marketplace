@@ -6,7 +6,7 @@ import fixUrl from "../../useful-scripts/fixUrl";
 
 function AssetCard({ collectionName, seller, status, assetInfo }) {
   const [isLike, setIsLike] = useState(false);
-  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
+  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 25));
   const [ethUsd, setEthUsd] = useState();
 
   const fetchEthPrice = async () => {
