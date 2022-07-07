@@ -74,7 +74,7 @@ function Collection() {
           collectionSlug={collectionRelevantInfo.collectionSlug}
           assetContractAddress={collectionRelevantInfo.assetContractAddress}
           collectionName={collectionRelevantInfo.name}
-          i
+          creator={collectionRelevantInfo.creator}
         />
       )}
     </div>

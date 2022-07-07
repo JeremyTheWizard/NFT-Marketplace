@@ -9,6 +9,7 @@ function Items({
   assetContractAddress,
   collectionName,
   collectionSlug = null,
+  editable,
 }) {
   const [assetCards, setAssetCards] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -68,18 +69,18 @@ function Items({
     const assetCards = [];
     collectionAssets.map((nft, key) => {
       const relevantInfo = {
-        assetContactAddress: nft.asset_contract.address,
+        assetContractAddress: nft.asset_contract.address,
         tokenId: nft.token_id,
         imageUrl: nft.image_url,
         name: nft.name,
         description: nft.description,
         price: undefined,
-        owner: nft.owner.address,
         attributes: nft.traits,
       };
 
       if (
-        relevantInfo.assetContactAddress === nftsForSale.tokenContractAddress &&
+        relevantInfo.assetContractAddress ===
+          nftsForSale.tokenContractAddress &&
         relevantInfo.tokenId === nftsForSale.tokenId
       ) {
         relevantInfo.price = nftsForSale.price;
@@ -91,6 +92,7 @@ function Items({
             collectionName={collectionName}
             seller={nftsForSale.seller}
             assetInfo={relevantInfo}
+            status={editable && "Sell"}
           />
         );
     });

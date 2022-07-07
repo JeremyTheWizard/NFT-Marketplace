@@ -1,3 +1,4 @@
+import { useEthers } from "@usedapp/core";
 import React, { useState } from "react";
 import ActivityTab from "./ActivityTab";
 import Items from "./Items";
@@ -6,8 +7,10 @@ function ItemsActivity({
   collectionSlug,
   assetContractAddress,
   collectionName,
+  creator,
 }) {
   const [itemsDisplay, setItemsDisplay] = useState("flex");
+  const { account } = useEthers();
 
   return (
     <div className="w-full my-12">
@@ -36,6 +39,7 @@ function ItemsActivity({
           collectionSlug={collectionSlug}
           assetContractAddress={assetContractAddress}
           collectionName={collectionName}
+          editable={creator === account}
         />
       </div>
       <div
