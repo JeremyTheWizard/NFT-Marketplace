@@ -2,6 +2,7 @@ import { useEthers } from "@usedapp/core";
 import React from "react";
 import { useParams } from "react-router-dom";
 import BannerAndRoundedIcon from "../BannerAndRoundedIcon";
+import Description from "./Description";
 
 const CollectionIntro = ({
   collectionName,
@@ -40,12 +41,15 @@ const CollectionIntro = ({
           <h2 className="text-onPrimary text-2xl md:text-3xl font-bold">
             {collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}
           </h2>
-          <p className="text-onPrimary">
-            {description
-              ? description
-              : `Welcome to the home of ${collectionName} on NFT Palace. Discover the
-            best items in this collection.`}
-          </p>
+          <Description
+            description={
+              description
+                ? description
+                : `Welcome to the home of ${collectionName} on NFT Palace. Discover the best items in this collection.`
+            }
+            collectionSlug={collectionslug}
+            editable={creator === account}
+          />
         </div>
 
         <div className="grid grid-cols-2 grid-rows-2 gap-y-6 md:flex justify-around p-3 text-onPrimary border-2 border-buttonSecondary rounded-xl">

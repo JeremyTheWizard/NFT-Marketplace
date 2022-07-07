@@ -236,3 +236,22 @@ export const changeRoundedIconImage = async (req, res) => {
       .json({ success: false, message: "Collection doesn't exists'" });
   }
 };
+
+export const changeDescription = async (req, res) => {
+  console.log("Initializing changeDescription...");
+  const { collectionSlug, newDescription } = req.body;
+
+  try {
+    console.log("Updating collection description...");
+    await Collection.updateOne(
+      { slug: collectionSlug },
+      { description: newDescription }
+    );
+    console.log("Collection description updated!");
+    return res.status(400).json({ success: true });
+  } catch (error) {
+    console.log("ERROR!");
+    console.log("err");
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
