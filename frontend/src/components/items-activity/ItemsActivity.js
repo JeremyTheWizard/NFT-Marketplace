@@ -8,6 +8,7 @@ function ItemsActivity({
   assetContractAddress,
   collectionName,
   creator,
+  tokens,
 }) {
   const [itemsDisplay, setItemsDisplay] = useState("flex");
   const { account } = useEthers();
@@ -47,7 +48,10 @@ function ItemsActivity({
           itemsDisplay === "flex" ? "hidden" : "flex"
         } flex-col my-6`}
       >
-        <ActivityTab assetContractAddress={assetContractAddress} />
+        <ActivityTab
+          assetContractAddress={assetContractAddress}
+          tokens={tokens}
+        />
       </div>
     </div>
   );

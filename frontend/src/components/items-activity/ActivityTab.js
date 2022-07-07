@@ -2,18 +2,35 @@ import React, { useEffect, useState } from "react";
 import { useMoralisWeb3Api } from "react-moralis";
 import ActivityTabItem from "./ActivityTabItem";
 
-function ActivityTab({ assetContractAddress, tokenId }) {
+function ActivityTab({ assetContractAddress, tokens }) {
+  const [tokensIds, setTokensIds] = useState();
   const [ethUsd, setEthUsd] = useState();
   const [transfers, setTransfers] = useState();
   const Web3Api = useMoralisWeb3Api();
+
+  const updateTokensIds = () => {
+    let tokensIds = [];
+    tokens.forEach((token) => {
+      tokensIds.push(token.tokenId);
+    });
+    setTokensIds(tokensIds);
+  };
 
   const fetchContractNFTTransfers = async () => {
     const options = {
       address: assetContractAddress,
       chain: "rinkeby",
     };
-    const nftTransfers = await Web3Api.token.getContractNFTTransfers(options);
-    setTransfers(nftTransfers.result);
+    let nftTransfers = await Web3Api.token
+      .getContractNFTTransfers(options)
+      .then((res) => res.result);
+    if (tokensIds) {
+      nftTransfers = nftTransfers.filter((transfer) =>
+        tokensIds.includes(transfer.token_id)
+      );
+      setTransfers(nftTransfers);
+    }
+    setTransfers(nftTransfers);
   };
 
   const fetchEthPrice = async () => {
@@ -25,9 +42,17 @@ function ActivityTab({ assetContractAddress, tokenId }) {
   };
 
   useEffect(() => {
-    fetchEthPrice();
-    fetchContractNFTTransfers();
+    if (tokens) {
+      updateTokensIds();
+    }
   }, []);
+
+  useEffect(() => {
+    if (!tokens || tokensIds) {
+      fetchEthPrice();
+      fetchContractNFTTransfers();
+    }
+  }, [tokensIds]);
 
   return (
     <>

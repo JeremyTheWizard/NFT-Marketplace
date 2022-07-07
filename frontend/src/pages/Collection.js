@@ -28,6 +28,7 @@ function Collection() {
         profileImageUrl: collectionInfo.roundedIconImageUrl,
         description: collectionInfo.description,
         creator: collectionInfo.createdBy,
+        tokens: collectionInfo.tokens,
       });
     } else {
       // The idea is that all urls will have the same structure prepending
@@ -75,6 +76,7 @@ function Collection() {
           assetContractAddress={collectionRelevantInfo.assetContractAddress}
           collectionName={collectionRelevantInfo.name}
           creator={collectionRelevantInfo.creator}
+          tokens={collectionRelevantInfo.tokens}
         />
       )}
     </div>
