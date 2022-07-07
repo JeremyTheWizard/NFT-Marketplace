@@ -9,7 +9,7 @@ import CreateCollectionDialog from "./CreateCollectionDialog";
 
 const filter = createFilterOptions();
 
-const CollectionComboBox = () => {
+const CollectionComboBox = ({ collectionSlug }) => {
   const [value, setValue] = React.useState(null);
   const [openCreateCollectionDialog, setOpenCreateCollectionDialog] =
     useState(false);
@@ -72,6 +72,7 @@ const CollectionComboBox = () => {
         // Avoid isOptionEqualToValue warnings
         isOptionEqualToValue={(option, value) => option.id === value.id}
         onChange={(_, newValue) => {
+          collectionSlug.current = newValue.slug;
           if (
             newValue &&
             newValue.name &&
@@ -93,7 +94,7 @@ const CollectionComboBox = () => {
               name: newValue.inputValue,
             });
           } else {
-            setValue(newValue);
+            setValue(newValue.name);
           }
         }}
         filterOptions={(options, params) => {

@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addCollection,
+  addTokenToCollection,
   changeBannerImage,
   changeDescription,
   changeRoundedIconImage,
@@ -14,5 +15,6 @@ router.get("/collection/:collectionSlug", getCollectionInfo);
 router.post("/collection/banner", changeBannerImage);
 router.post("/collection/roundedicon", changeRoundedIconImage);
 router.post("/collection/description", changeDescription);
+router.post("/collection/token", addTokenToCollection);
 
 export default router;

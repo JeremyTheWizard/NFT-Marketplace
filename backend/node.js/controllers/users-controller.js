@@ -152,32 +152,6 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const addTokenToCollection = async (req, res) => {
-  console.log("Initializing adding token to collection....");
-  const { account, collectionName, tokenName, tokenId } = req.body;
-
-  try {
-    await User.findOneAndUpdate(
-      {
-        account: account,
-        collectionsCreated: { $elemMatch: { name: collectionName } },
-      },
-      {
-        $push: {
-          "collectionsCreated.$.tokens": { name: tokenName, tokenId: tokenId },
-        },
-      }
-    );
-    console.log("User updated!");
-  } catch (error) {
-    console.log("ERROR!");
-    console.log(error);
-    return res.status(400).json({ success: false, error });
-  }
-
-  return res.json({ success: true });
-};
-
 export const addCollection = async (req, res) => {
   console.log("Initializing addCollection");
   const { account, collectionId } = req.body;

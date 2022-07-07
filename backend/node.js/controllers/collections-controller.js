@@ -255,3 +255,35 @@ export const changeDescription = async (req, res) => {
     return res.status(400).json({ success: false, message: error.message });
   }
 };
+
+export const addTokenToCollection = async (req, res) => {
+  console.log("Initializing adding token to collection....");
+  const { collectionSlug, tokenName, tokenId } = req.body;
+
+  const tokenExists = await Collection.findOne({
+    slug: collectionSlug,
+    "tokens.tokenId": tokenId,
+  });
+
+  if (tokenExists) {
+    console.log("ERROR!");
+    console.log("Token already exists");
+    return res
+      .status(409)
+      .json({ success: false, message: "Token already exists" });
+  }
+
+  try {
+    console.log("Updating collection's tokens...");
+    await Collection.updateOne(
+      { slug: collectionSlug },
+      { $addToSet: { tokens: { name: tokenName, tokenId: tokenId } } }
+    );
+    console.log("Token added to collection!");
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.log("ERROR!");
+    console.log(err);
+    return res.status(400).json({ success: false, message: err.message });
+  }
+};

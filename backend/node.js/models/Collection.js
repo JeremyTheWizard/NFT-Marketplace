@@ -24,7 +24,10 @@ const collectionSchema = mongoose.Schema({
   bannerImageUrl: { type: String },
   roundedIconImageUrl: { type: String },
   tokens: [
-    { name: { type: String, required: true }, tokenId: { type: String } },
+    {
+      name: { type: String, required: true },
+      tokenId: { type: String, required: true },
+    },
   ],
   createdBy: { type: String, required: true },
 });

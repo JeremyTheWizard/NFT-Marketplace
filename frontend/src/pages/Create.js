@@ -9,7 +9,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import FormData from "form-data";
 import React, { useEffect, useRef, useState } from "react";
@@ -32,8 +31,7 @@ const Create = () => {
   const [transactionFailureAlert, setTransactionFailureAlert] = useState(false);
   const tokenName = useRef();
   const collectionName = useRef();
-
-  const { account } = useEthers();
+  const collectionSlug = useRef();
 
   const loadingMessages = [
     "Building the transaction...",
@@ -62,11 +60,10 @@ const Create = () => {
     }
     if (mintStatus === "Success") {
       setLoadingMessage(loadingMessages[0]);
-      axios.post("http://localhost:8000/api/users/token", {
-        account: account,
-        collectionName: collectionName,
-        tokenName: tokenName,
-        tokenId: parseInt(mintEvents[0].args[2]._hex, 16),
+      axios.post("http://localhost:8000/api/collections/collection/token", {
+        collectionSlug: collectionSlug.current,
+        tokenName: tokenName.current,
+        tokenId: String(parseInt(mintEvents[0].args[2]._hex, 16)),
       });
     }
   }, [mintStatus]);
@@ -191,7 +188,7 @@ const Create = () => {
           />
 
           <div className="flex flex-col gap-1">
-            <CollectionComboBox />
+            <CollectionComboBox collectionSlug={collectionSlug} />
           </div>
 
           {useMediaQuery(theme.breakpoints.down("xl")) && (
