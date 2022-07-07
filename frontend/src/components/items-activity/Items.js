@@ -1,9 +1,15 @@
+import { Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import useGetNFTMinterContract from "../../hooks/useGetNFTMinterContract";
 import AssetCard from "../explore/AssetCard";
 
-function Items({ assetContractAddress, collectionName }) {
+function Items({
+  assetContractAddress,
+  collectionName,
+  collectionSlug = null,
+}) {
   const [assetCards, setAssetCards] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState(undefined);
@@ -15,18 +21,50 @@ function Items({ assetContractAddress, collectionName }) {
       .then((res) => res.data.nftsForSale);
   };
 
-  const createAssetCards = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const data = await axios
-      .get(
-        `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}&cursor=${
-          cursor ? cursor : ""
-        }`
-      )
-      .then((res) => res.data);
-    const collectionAssets = data.assets;
-    const next = data.next;
+  const tokenMinterContractAddress = useGetNFTMinterContract().address;
 
+  const createAssetCards = async () => {
+    let collectionAssets = [];
+
+    // First check if the collection was created in the website and grab the
+    //  useful information
+    let collectionInfo;
+    if (collectionSlug) {
+      try {
+        collectionInfo = await axios
+          .get(
+            `http://localhost:8000/api/collections/collection/${collectionSlug}`
+          )
+          .then((res) => res.data.collectionInfo);
+      } catch {}
+
+      if (collectionInfo) {
+        let url = `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}`;
+        collectionInfo.tokens.forEach((token) => {
+          url += `&token_ids=${token.tokenId}`;
+        });
+
+        collectionAssets = await axios.get(url).then((res) => res.data.assets);
+      }
+    }
+
+    // If the collection wasn't created on the website grab the info directly
+    // from opensea
+    let next;
+    if (!collectionInfo) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const data = await axios
+        .get(
+          `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}&cursor=${
+            cursor ? cursor : ""
+          }`
+        )
+        .then((res) => res.data);
+      collectionAssets = data.assets;
+      next = data.next;
+    }
+
+    // Mutual code in any case
     const assetCards = [];
     collectionAssets.map((nft, key) => {
       const relevantInfo = {
@@ -37,7 +75,7 @@ function Items({ assetContractAddress, collectionName }) {
         description: nft.description,
         price: undefined,
         owner: nft.owner.address,
-        traits: nft.traits,
+        attributes: nft.traits,
       };
 
       if (
@@ -81,9 +119,14 @@ function Items({ assetContractAddress, collectionName }) {
       hasMore={hasMore}
       loader={<p className="text-onPrimary text-center">Loading...</p>}
       endMessage={
-        <p style={{ textAlign: "center" }}>
-          <b>Yay! You have seen it all</b>
-        </p>
+        <Typography
+          variant="h6"
+          component="p"
+          color="onPrimary"
+          style={{ textAlign: "center", marginTop: "3rem" }}
+        >
+          This collection has no more items
+        </Typography>
       }
     >
       <div className="mt-12 grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12">

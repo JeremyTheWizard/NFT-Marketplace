@@ -19,6 +19,7 @@ export const MaterialTheme = createTheme({
     text: {
       primary: "#000000",
     },
+    onPrimary: "#f5f6ee",
   },
   typography: {
     fontFamily: [

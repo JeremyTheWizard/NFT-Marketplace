@@ -21,6 +21,7 @@ function Collection() {
     if (response) {
       const collectionInfo = response.data.collectionInfo;
       setCollectionRelevantInfo({
+        collectionSlug: collectionInfo.slug,
         assetContractAddress: collectionInfo.assetContractAddress,
         name: collectionInfo.name,
         bannerImageUrl: collectionInfo.bannerImageUrl,
@@ -70,6 +71,7 @@ function Collection() {
       )}
       {collectionRelevantInfo && (
         <ItemsActivity
+          collectionSlug={collectionRelevantInfo.collectionSlug}
           assetContractAddress={collectionRelevantInfo.assetContractAddress}
           collectionName={collectionRelevantInfo.name}
           i

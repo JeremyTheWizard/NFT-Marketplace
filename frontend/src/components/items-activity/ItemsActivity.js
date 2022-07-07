@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import ActivityTab from "./ActivityTab";
 import Items from "./Items";
 
-function ItemsActivity({ assetContractAddress, collectionName }) {
+function ItemsActivity({
+  collectionSlug,
+  assetContractAddress,
+  collectionName,
+}) {
   const [itemsDisplay, setItemsDisplay] = useState("flex");
 
   return (
@@ -29,6 +33,7 @@ function ItemsActivity({ assetContractAddress, collectionName }) {
 
       <div className={`${itemsDisplay} flex flex-col`}>
         <Items
+          collectionSlug={collectionSlug}
           assetContractAddress={assetContractAddress}
           collectionName={collectionName}
         />
