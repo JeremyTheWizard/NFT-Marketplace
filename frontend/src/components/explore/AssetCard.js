@@ -32,8 +32,6 @@ function AssetCard({ collectionName, seller, status, assetInfo }) {
         collectionName: collectionName,
         tokenId: assetInfo.tokenId,
         price: assetInfo.price && assetInfo.price,
-        creatorImageUrl: assetInfo.creatorImageUrl,
-        creator: assetInfo.creator,
         seller: seller,
         status: status,
         contractAddress: assetInfo.assetContractAddress,
