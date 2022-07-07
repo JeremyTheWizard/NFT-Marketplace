@@ -14,6 +14,7 @@ const CreateCollectionDialog = ({
   setValue,
   open,
   setOpenCreateCollectionDialog,
+  assetContractAddress,
 }) => {
   const collectionValue = useRef();
   const loading = useRef(false);
@@ -30,9 +31,10 @@ const CreateCollectionDialog = ({
     });
 
     loading.current = true;
-    await axios.post("http://localhost:8000/api/users/user/collection", {
+    await axios.post("http://localhost:8000/api/collections/collection", {
       account: account,
       collectionName: collectionValue.current,
+      assetContractAddress: assetContractAddress,
     });
     loading.current = false;
 

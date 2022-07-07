@@ -16,7 +16,6 @@ export const addCollection = async (req, res) => {
     name: collectionName,
   });
 
-  let collection = null;
   if (collectionExists) {
     console.log("ERROR! Collection already exists!");
     return res.status(409).json({
@@ -26,6 +25,7 @@ export const addCollection = async (req, res) => {
   }
 
   console.log("Creating collection");
+  let collection = null;
   try {
     collection = await new Collection({
       name: collectionName,

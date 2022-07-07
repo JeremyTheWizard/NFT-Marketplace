@@ -16,7 +16,7 @@ const CollectionComboBox = ({ collectionSlug }) => {
   const [openAutocompleteOptions, setOpenAutocompleteOptions] = useState(false);
   const [userCollections, setUserCollections] = useState();
 
-  const nftPalaceContractAddress = useGetNFTMinterContract().address;
+  const nftMinterContractAddress = useGetNFTMinterContract().address;
   const { account } = useEthers();
 
   const loading = openAutocompleteOptions && !userCollections;
@@ -87,7 +87,7 @@ const CollectionComboBox = ({ collectionSlug }) => {
             axios.post("http://localhost:8000/api/collections/collection", {
               account: account,
               collectionName: newValue.inputValue,
-              assetContractAddress: nftPalaceContractAddress, // All tokens created by users use the NFT Palace contract
+              assetContractAddress: nftMinterContractAddress, // All tokens created by users use the NFT Palace contract
             });
             // Create a new value from the user input
             setValue({
@@ -185,6 +185,7 @@ const CollectionComboBox = ({ collectionSlug }) => {
         setValue={setValue}
         open={openCreateCollectionDialog}
         setOpenCreateCollectionDialog={setOpenCreateCollectionDialog}
+        assetContractAddress={nftMinterContractAddress}
       />
     </>
   );
