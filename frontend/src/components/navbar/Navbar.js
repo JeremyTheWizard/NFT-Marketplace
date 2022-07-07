@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
 import { useEthers } from "@usedapp/core";
+import React, { useState } from "react";
+import { FaWallet } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 import Logo from "../../photos/Logo.jpeg";
 import MainButton from "../MainButton";
-import { FaWallet } from "react-icons/fa";
 
 function Navbar() {
   const [isMenuHidden, setIsMenuHidden] = useState("hidden");
@@ -89,6 +89,16 @@ function Navbar() {
                   }}
                 >
                   Profile
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/create"
+                  className={({ isActive }) => {
+                    return isActive && "text-buttonSecondary";
+                  }}
+                >
+                  Create!
                 </NavLink>
               </li>
             </ul>
