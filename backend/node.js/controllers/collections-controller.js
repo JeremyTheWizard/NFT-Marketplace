@@ -1,6 +1,7 @@
 import axios from "axios";
 import FormData from "form-data";
 import Collection from "../models/Collection";
+import ExternalCollection from "../models/ExternalCollection";
 import User from "../models/User";
 
 export const addCollection = async (req, res) => {
@@ -85,8 +86,14 @@ export const getCollectionInfo = async (req, res) => {
   const collectionSlug = req.params.collectionSlug;
 
   console.log(`Searching for ${collectionSlug}`);
-  const collectionInfo = await Collection.findOne({ slug: collectionSlug });
-  console.log("🚀 ~ collectionInfo", collectionInfo);
+  let collectionInfo;
+  if (collectionSlug.startsWith("nft-palace-collections")) {
+    const collectionInfo = await Collection.findOne({ slug: collectionSlug });
+    console.log("🚀 ~ collectionInfo", collectionInfo);
+  } else {
+    collectionInfo = await ExternalCollection.findOne({ slug: collectionSlug });
+    console.log("🚀 ~ collectionInfo", collectionInfo);
+  }
 
   if (!collectionInfo) {
     return res
@@ -285,5 +292,23 @@ export const addTokenToCollection = async (req, res) => {
     console.log("ERROR!");
     console.log(err);
     return res.status(400).json({ success: false, message: err.message });
+  }
+};
+
+export const getCollections = async (req, res) => {
+  console.log("Initializing collection...");
+
+  try {
+    console.log("Fetching collections...");
+    const internalCollections = await Collection.find();
+    const externalCollections = await ExternalCollection.find();
+    return res.status(200).json({
+      success: true,
+      collections: [...externalCollections, ...internalCollections],
+    });
+  } catch (error) {
+    console.log("ERROR!");
+    console.log(error);
+    return res.status(400).json({ success: false, message: error.message });
   }
 };
