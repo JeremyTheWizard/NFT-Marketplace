@@ -1,10 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import MainButton from "../MainButton";
 import TopCollectionsCollection from "./TopCollectionsCollection";
 
 const TopCollections = () => {
   const [topCollections, setTopCollections] = useState();
   const [topCollectionsImages, setTopCollectionsImages] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getTopCollections();
@@ -45,7 +48,6 @@ const TopCollections = () => {
       })
     );
 
-    console.log("imagesHtml", [...imagesHtml, ...imagesHtml]);
     setTopCollectionsImages([...imagesHtml, ...imagesHtml]);
   };
 
@@ -61,6 +63,15 @@ const TopCollections = () => {
         <div className="flex animate-auto-slide hover:pause overflow-visible relative">
           {topCollectionsImages && topCollectionsImages}
         </div>
+      </div>
+      <div className="flex flex-col items-center">
+        <MainButton
+          onClick={() => {
+            navigate("/collections");
+          }}
+          text="DISCOVER ALL COLLECTIONS"
+          styles="mt-6"
+        />
       </div>
     </>
   );

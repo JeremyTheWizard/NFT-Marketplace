@@ -8,6 +8,7 @@ import MainButton from "../MainButton";
 function Navbar() {
   const [isMenuHidden, setIsMenuHidden] = useState("hidden");
   const { account } = useEthers();
+  const { activateBrowserWallet } = useEthers();
 
   return (
     <nav className="w-[90vw] max-w-[1200px] mx-auto py-4 bg-primary">
@@ -57,7 +58,10 @@ function Navbar() {
               </div>
             ) : (
               <div className="md:hidden mt-3">
-                <MainButton text="Connect Wallet" />
+                <MainButton
+                  text="Connect Wallet"
+                  onClick={activateBrowserWallet()}
+                />
               </div>
             )}
             <ul className="flex flex-col mt-3 text-white md:flex-row gap-3 md:space-x-8 md:mt-0 md:text-md md:font-medium">
@@ -114,7 +118,10 @@ function Navbar() {
           </div>
         ) : (
           <div className="hidden md:inline md:order-3 text-onPrimary">
-            <MainButton text="Connect Wallet" />
+            <MainButton
+              text="Connect Wallet"
+              onClick={activateBrowserWallet()}
+            />
           </div>
         )}
       </div>
