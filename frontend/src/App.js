@@ -7,6 +7,7 @@ import { alchemyApiKey, appId, serverURL } from "./config";
 import { MaterialTheme } from "./MaterialTheme";
 import Asset from "./pages/Asset";
 import Collection from "./pages/Collection.js";
+import Collections from "./pages/Collections.js";
 import Create from "./pages/Create.js";
 import ErrorPage from "./pages/ErrorPage.js";
 import Home from "./pages/Home.js";
@@ -34,6 +35,7 @@ function App() {
                 path="/collections/:collectionslug"
                 element={<Collection />}
               />
+              <Route path="/collections" element={<Collections />} />
               <Route
                 path="/collections/:collectionslug/:asset"
                 element={<Asset />}
