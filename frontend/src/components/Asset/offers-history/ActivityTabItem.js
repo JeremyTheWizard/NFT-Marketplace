@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { IoCart } from "react-icons/io5";
+import { useEthers } from "@usedapp/core";
+import { constants, utils } from "ethers";
+import React, { useEffect, useState } from "react";
 import { BiTransfer } from "react-icons/bi";
 import { BsArrowUpRightSquare } from "react-icons/bs";
-import timeSinceCalculator from "../../../useful-scripts/TimeSinceCalculator";
-import { utils, constants } from "ethers";
 import { FaBabyCarriage, FaEthereum } from "react-icons/fa";
-import { useEthers } from "@usedapp/core";
+import { IoCart } from "react-icons/io5";
+import timeSinceCalculator from "../../../useful-scripts/TimeSinceCalculator";
 
 function ActivityTabItem({ transfer, ethUsd }) {
+  console.log("here+!");
   const [isMoreInfo, setIsMoreInfo] = useState(true);
   const [isMore, setIsMore] = useState(true);
   const [price, setPrice] = useState();
