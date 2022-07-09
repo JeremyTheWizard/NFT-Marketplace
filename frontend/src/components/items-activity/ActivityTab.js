@@ -48,11 +48,11 @@ function ActivityTab({ assetContractAddress, tokens }) {
   }, []);
 
   useEffect(() => {
-    if (!tokens || tokensIds) {
+    if (assetContractAddress && (!tokens || tokensIds)) {
       fetchEthPrice();
       fetchContractNFTTransfers();
     }
-  }, [tokensIds]);
+  }, [tokensIds, assetContractAddress]);
 
   return (
     <>

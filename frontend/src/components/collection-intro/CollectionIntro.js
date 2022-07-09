@@ -39,7 +39,8 @@ const CollectionIntro = ({
       <div className="grid lg:grid-cols-2 gap-12 items-center ">
         <div className="flex flex-col gap-8">
           <h2 className="text-onPrimary text-2xl md:text-3xl font-bold">
-            {collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}
+            {collectionName &&
+              collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}
           </h2>
           <Description
             description={

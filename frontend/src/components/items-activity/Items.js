@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import useGetNFTMinterContract from "../../hooks/useGetNFTMinterContract";
 import AssetCard from "../explore/AssetCard";
+import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 
 function Items({
   assetContractAddress,
@@ -37,7 +38,9 @@ function Items({
             `http://localhost:8000/api/collections/collection/${collectionSlug}`
           )
           .then((res) => res.data.collectionInfo);
-      } catch {}
+      } catch (err) {
+        console.log(err);
+      }
 
       if (collectionInfo) {
         let url = `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}`;
@@ -111,15 +114,20 @@ function Items({
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    assetContractAddress && fetchData();
+  }, [assetContractAddress]);
 
   return (
     <InfiniteScroll
+      style={{ overflow: "hidden" }}
       dataLength={assetCards.length}
       next={fetchData}
       hasMore={hasMore}
-      loader={<p className="text-onPrimary text-center">Loading...</p>}
+      loader={
+        <div className="flex flex-col items-center mt-6">
+          <ModifiedCircularProgress />
+        </div>
+      }
       endMessage={
         <Typography
           variant="h6"
