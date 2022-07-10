@@ -91,7 +91,7 @@ function Collection() {
             collectionInfo.roundedIconImageUrl;
         }
         if (collectionInfo.description) {
-          collectionRelevantInfo.bannerImageUrl = collectionInfo.description;
+          collectionRelevantInfo.description = collectionInfo.description;
         }
       }
 
