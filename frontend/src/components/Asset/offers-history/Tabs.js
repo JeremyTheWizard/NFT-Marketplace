@@ -14,7 +14,6 @@ function Tabs() {
   };
 
   const location = useLocation();
-
   return (
     <>
       <div className="flex mb-3 mt-12 relative">
