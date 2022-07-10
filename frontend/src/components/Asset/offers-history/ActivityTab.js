@@ -29,20 +29,20 @@ function ActivityTab({ contractAddress, tokenId }) {
           );
         }
       });
-      if (activity.every((activity) => activity === "undefined")) {
+      if (!activity.every((activity) => activity === "undefined")) {
         setActivity(activity);
+      } else {
+        setActivity(
+          <Typography
+            variant="h6"
+            component="paragraph"
+            color="onPrimary"
+            style={{ textAlign: "center" }}
+          >
+            This item has no recent activity.
+          </Typography>
+        );
       }
-    } else {
-      setActivity(
-        <Typography
-          variant="h6"
-          component="paragraph"
-          color="onPrimary"
-          style={{ textAlign: "center" }}
-        >
-          This item has no recent activity.
-        </Typography>
-      );
     }
   }, [transfers]);
 
