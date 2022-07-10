@@ -9,78 +9,56 @@ import AssetCard from "./AssetCard";
 const NftsCards = () => {
   const [exploreCards, setExploreCards] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const [nftsForSale, setNftsForSale] = useState([]);
-  const cursor = useRef(0);
-  const nftsDisplayed = useRef(0);
+  const page = useRef(0);
 
-  const updateNftsForSale = async () => {
-    const nftsForSale = await axios
-      .get("http://localhost:8000/api/nfts/nftsforsale/getall")
-      .then((res) => res.data.nftsForSale);
-    setNftsForSale(nftsForSale);
-  };
-
-  const createExploreCards = async () => {
-    nftsDisplayed.current = 0;
-    let exploreCards = [];
-
-    for (let i = 0; i < 3; i++) {
-      if (nftsForSale[cursor.current + i]) {
-        // bypass opensea's api rate limit
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        const nftForSale = nftsForSale[cursor.current + i];
-        let data;
-        try {
-          data = await axios
-            .get(
-              `https://testnets-api.opensea.io/api/v1/asset/${nftForSale.tokenContractAddress}/${nftForSale.tokenId}/`
-            )
-            .then((res) => res.data);
-        } catch {}
-
-        if (data) {
-          nftsDisplayed.current += 1;
-
-          exploreCards.push(
-            <AssetCard
-              collectionName={data.collection.name}
-              seller={nftForSale.seller}
-              status="Buy"
-              assetInfo={{
-                assetContractAddress: nftForSale.tokenContractAddress,
-                imageUrl: data.image_url,
-                tokenId: nftForSale.tokenId,
-                price: utils.formatEther(nftForSale.price),
-                attributes: data.traits,
-              }}
-            />
-          );
-        }
-      }
+  const fetchNftsForSale = async () => {
+    let nftsForSale = [];
+    try {
+      nftsForSale = await axios
+        .get(
+          `http://localhost:8000/api/nfts/nftsforsale/getall?page=${page.current}`
+        )
+        .then((res) => res.data.nftsForSale);
+    } catch (err) {
+      console.log(err);
     }
 
-    return [exploreCards, cursor.current + nftsDisplayed.current];
+    let exploreCards = [];
+
+    nftsForSale.map((nft) => {
+      exploreCards.push(
+        <AssetCard
+          collectionName={nft.name}
+          seller={nft.seller}
+          status="Buy"
+          assetInfo={{
+            assetContractAddress: nft.tokenContractAddress,
+            imageUrl: nft.imageUrl,
+            tokenId: nft.tokenId,
+            price: utils.formatEther(nft.price),
+            attributes: nft.attributes,
+          }}
+        />
+      );
+    });
+
+    return [exploreCards, page.current];
   };
 
   const fetchData = async () => {
-    const [newExploreCards, next] = await createExploreCards();
+    const [newExploreCards, next] = await fetchNftsForSale();
     setExploreCards((exploreCards) => [...exploreCards, ...newExploreCards]);
 
-    cursor.current = next;
-    if (!nftsForSale[next]) {
+    if (page.current === next) {
       setHasMore(false);
+    } else {
+      page.current = next;
     }
-
-    return;
   };
 
   useEffect(() => {
-    updateNftsForSale();
+    fetchData();
   }, []);
-
-  useEffect(() => {
-    nftsForSale.length && fetchData();
-  }, [nftsForSale]);
 
   return (
     <>

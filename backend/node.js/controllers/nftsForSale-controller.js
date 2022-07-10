@@ -7,9 +7,17 @@ import NftsForSaleNonce from "../models/NftsForSaleNonce";
 dotenv.config();
 
 export const getNftsForSale = async (req, res, next) => {
+  console.log("Initializing getNftsForSale...");
+  const { limit, page } = req.query;
+
   let nftsForSale = [];
   try {
-    nftsForSale = await NftsForSale.find();
+    console.log("Fetching nfts for sale...");
+    nftsForSale = await NftsForSale.paginate(
+      {},
+      { limit: limit || 20, page: page || 0 }
+    ).then((res) => res.docs);
+    console.log("🚀 ~ nftsForSale", nftsForSale);
   } catch (error) {
     return res.status(404).send(error.message);
   }
