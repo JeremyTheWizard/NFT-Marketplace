@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import CollectionIntro from "../components/collection-intro/CollectionIntro";
 import ItemsActivity from "../components/items-activity/ItemsActivity";
+import ModifiedCircularProgress from "../components/ModifiedMuiComponents/ModifiedCircularProgress";
 
 function Collection() {
   const { collectionslug } = useParams();
@@ -109,7 +110,9 @@ function Collection() {
       }
 
       collectionRelevantInfo = {
-        assetContractAddress: collectionInfo.primary_asset_contracts[0].address,
+        assetContractAddress:
+          collectionInfo.primary_asset_contracts[0] &&
+          collectionInfo.primary_asset_contracts[0].address,
         name: collectionInfo.name,
         stats: collectionInfo.stats,
         bannerImageUrl: collectionRelevantInfo.bannerImageUrl
@@ -124,7 +127,6 @@ function Collection() {
       };
     }
 
-    console.log("🚀 ~ collectionRelevantInfo", collectionRelevantInfo);
     setCollectionRelevantInfo(collectionRelevantInfo);
   };
 
@@ -133,8 +135,8 @@ function Collection() {
   }, []);
 
   return (
-    <div className="w-[90vw] max-w-[1200px] mx-auto mt-12 flex flex-col justify-center items-center">
-      {collectionRelevantInfo && (
+    <div className="w-[90vw] max-w-[1200px] h-full mx-auto mt-12 flex flex-col justify-center items-center">
+      {collectionRelevantInfo ? (
         <CollectionIntro
           collectionName={collectionRelevantInfo.name}
           bannerImageUrl={collectionRelevantInfo.bannerImageUrl}
@@ -143,6 +145,8 @@ function Collection() {
           stats={collectionRelevantInfo.stats}
           creator={collectionRelevantInfo.creator}
         />
+      ) : (
+        <ModifiedCircularProgress />
       )}
       {collectionRelevantInfo && (
         <ItemsActivity

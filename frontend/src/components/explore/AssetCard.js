@@ -1,10 +1,12 @@
+import { Typography } from "@mui/material";
+import { utils } from "ethers";
 import React, { useEffect, useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { FaEthereum } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fixUrl from "../../useful-scripts/fixUrl";
 
-function AssetCard({ collectionName, seller, status, assetInfo }) {
+function AssetCard({ asset, status }) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 25));
   const [ethUsd, setEthUsd] = useState();
@@ -26,18 +28,18 @@ function AssetCard({ collectionName, seller, status, assetInfo }) {
   function routeChange(path) {
     navigate(path, {
       state: {
-        imagePath: assetInfo.imageUrl.startsWith("ipfs")
-          ? fixUrl(assetInfo.imageUrl)
-          : assetInfo.imageUrl,
-        collectionName: collectionName,
-        tokenId: assetInfo.tokenId,
-        price: assetInfo.price && assetInfo.price,
-        seller: seller,
+        imagePath: asset.imageUrl.startsWith("ipfs")
+          ? fixUrl(asset.imageUrl)
+          : asset.imageUrl,
+        collectionName: asset.collectionName,
+        tokenId: asset.tokenId,
+        price: asset.price && asset.price,
+        seller: asset.seller,
         status: status,
-        contractAddress: assetInfo.assetContractAddress,
-        attributes: assetInfo.attributes,
-        name: assetInfo.name,
-        description: assetInfo.description,
+        contractAddress: asset.assetContractAddress,
+        attributes: asset.attributes,
+        name: asset.name,
+        description: asset.description,
       },
     });
   }
@@ -46,35 +48,56 @@ function AssetCard({ collectionName, seller, status, assetInfo }) {
     return (
       <div
         className="bg-onPrimary overflow-hidden rounded-xl flex flex-col cursor-pointer"
-        onClick={() => routeChange(`/collections/${collectionName}/nft`)}
+        onClick={() => routeChange(`/collections/${asset.collectionName}/nft`)}
       >
-        <div className="w-full">
-          {assetInfo.imageUrl && (
+        <div className="w-full h-full">
+          {asset.imageUrl ? (
             <img
               src={
-                assetInfo.imageUrl.startsWith("ipfs")
-                  ? fixUrl(assetInfo.imageUrl)
-                  : assetInfo.imageUrl
+                asset.imageUrl.startsWith("ipfs")
+                  ? fixUrl(asset.imageUrl)
+                  : asset.imageUrl
               }
               alt="NFT"
               className="w-full h-full object-cover aspect-square"
             />
+          ) : (
+            <div className="flex flex-col justify-center items-center w-full h-full">
+              <div className="w-full h-full bg-gray-700 blur-md"></div>
+              {asset.collection.imageUrl ? (
+                <img
+                  src={asset.collection.imageUrl}
+                  className="rounded-full w-60 h-60 absolute z-10"
+                />
+              ) : (
+                <Typography
+                  variant="h6"
+                  component="body1"
+                  style={{ position: "absolute" }}
+                  color="onPrimary"
+                >
+                  {asset.collectionName}
+                </Typography>
+              )}
+            </div>
           )}
         </div>
         <div className="p-6 flex flex-col gap-3">
-          <h4>{collectionName}</h4>
+          <h4>{asset.collectionName}</h4>
           <h3 className="text-xl font-semibold">
-            {assetInfo.name ? assetInfo.name : assetInfo.tokenId}
+            {asset.name ? asset.name : `#${asset.tokenId}`}
           </h3>
-          {assetInfo.price ? (
+          {asset.price ? (
             <div className="flex items-center gap-3">
               <div className="flex items-center">
                 <FaEthereum />
-                <p className="text-lg font-semibold">{assetInfo.price}</p>
+                <p className="text-lg font-semibold">
+                  {utils.formatEther(asset.price)}
+                </p>
               </div>
               <p>
                 {ethUsd &&
-                  `($${parseFloat(assetInfo.price * ethUsd)
+                  `($${parseFloat(utils.formatEther(asset.price) * ethUsd)
                     .toFixed()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")})`}
               </p>

@@ -73,6 +73,7 @@ function Items({
     const assetCards = [];
     collectionAssets.map((nft, key) => {
       const relevantInfo = {
+        collectionName: nft.collection.name,
         assetContractAddress: nft.asset_contract.address,
         tokenId: nft.token_id,
         imageUrl: nft.image_url,
@@ -93,10 +94,9 @@ function Items({
       relevantInfo.imageUrl &&
         assetCards.push(
           <AssetCard
-            collectionName={collectionName}
-            seller={nftsForSale.seller}
-            assetInfo={relevantInfo}
+            key={key}
             status={editable && "Sell"}
+            asset={relevantInfo}
           />
         );
     });

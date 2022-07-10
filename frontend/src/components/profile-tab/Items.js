@@ -1,67 +1,50 @@
 import { useEthers } from "@usedapp/core";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useMoralisWeb3Api } from "react-moralis";
 import AssetCard from "../explore/AssetCard";
 
 const Items = () => {
-  const Web3Api = useMoralisWeb3Api();
   const { account } = useEthers();
-  const [userNFTs, setUserNFTs] = useState();
+  const [userAssets, setUserAssets] = useState();
   const [nftsCardsHtml, setNftsCardsHtml] = useState();
   const [loading, setLoading] = useState(false);
 
   const fetchNFTs = async () => {
-    const userNFTss = await Web3Api.Web3API.account.getNFTs({
-      chain: "rinkeby",
-      address: account,
+    // bypass opensea's api rate limit
+    await new Promise((resolve) => {
+      setTimeout(resolve, 500);
     });
-    setUserNFTs(userNFTss);
+    let userAssets;
+    try {
+      userAssets = await axios({
+        method: "get",
+        url: "https://testnets-api.opensea.io/api/v1/assets",
+        params: { owner: account },
+      }).then((res) => res.data.assets);
+    } catch (err) {
+      console.log(err);
+    }
+    setUserAssets(userAssets);
   };
 
-  async function renderExploreCards() {
+  async function renderAssetCards() {
+    console.log("rendering assetCards...");
     const nftsCardsHtml = [];
-    const requests = userNFTs.result.map(async (nft) => {
-      const metadata = await JSON.parse(nft.metadata);
-      if (!nft.metadata) {
-        const options = {
-          chain: "rinkeby",
-          address: nft.token_address,
-          token_id: nft.token_id,
-          flag: "uri",
-        };
-        // setTimeout is used to bypass moralis api limitations by second
-        setTimeout(async () => {
-          const response2 = await Web3Api.token.reSyncMetadata(options);
-        }, 2000);
-        setLoading(true);
-        console.log("Uri syncing...");
-        nft.token_uri &&
-          setTimeout(async () => {
-            const response3 = await Web3Api.token.reSyncMetadata({
-              chain: "rinkeby",
-              address: nft.token_address,
-              token_id: nft.token_id,
-              flag: "metadata",
-            });
-          }, 200);
-        console.log("Metadata syncing...");
-      }
-
-      const image = metadata && metadata["image"];
-      metadata &&
-        nftsCardsHtml.push(
-          <AssetCard
-            collectionName={nft.name}
-            seller={account}
-            status="Sell"
-            assetInfo={{
-              imageUrl: image,
-              tokenId: nft.token_id,
-              assetContractAddress: nft.token_address,
-              attributes: metadata.attributes,
-            }}
-          />
-        );
+    const requests = userAssets.map(async (asset) => {
+      nftsCardsHtml.push(
+        <AssetCard
+          status="Sell"
+          asset={{
+            collectionName: asset.asset_contract.name,
+            seller: account,
+            imageUrl: asset.image_url,
+            tokenId: asset.token_id,
+            assetContractAddress: asset.asset_contract.address,
+            attributes: asset.attributes,
+            collection: { imageUrl: asset.collection.image_url },
+          }}
+        />
+      );
     });
     await Promise.all(requests);
     setNftsCardsHtml(nftsCardsHtml);
@@ -76,8 +59,8 @@ const Items = () => {
   }, [account]);
 
   useEffect(() => {
-    userNFTs && renderExploreCards();
-  }, [userNFTs]);
+    userAssets && renderAssetCards();
+  }, [userAssets]);
 
   return (
     <div className="my-12 grid justify-center sm:grid-cols-2 lg:grid-cols-3 gap-12">

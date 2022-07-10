@@ -1,6 +1,5 @@
 import { Typography } from "@mui/material";
 import axios from "axios";
-import { utils } from "ethers";
 import React, { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
@@ -26,20 +25,7 @@ const NftsCards = () => {
     let exploreCards = [];
 
     nftsForSale.map((nft) => {
-      exploreCards.push(
-        <AssetCard
-          collectionName={nft.name}
-          seller={nft.seller}
-          status="Buy"
-          assetInfo={{
-            assetContractAddress: nft.tokenContractAddress,
-            imageUrl: nft.imageUrl,
-            tokenId: nft.tokenId,
-            price: utils.formatEther(nft.price),
-            attributes: nft.attributes,
-          }}
-        />
-      );
+      exploreCards.push(<AssetCard status="Buy" asset={nft} />);
     });
 
     return [exploreCards, page.current];
