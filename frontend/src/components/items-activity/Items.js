@@ -56,6 +56,7 @@ function Items({
     // from opensea
     let next;
     if (!collectionInfo) {
+      // bypass openSea api rate limit
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const data = await axios
         .get(

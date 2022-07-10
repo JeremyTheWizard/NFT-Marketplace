@@ -10,7 +10,7 @@ function ItemsActivity({
   creator,
   tokens,
 }) {
-  const [itemsDisplay, setItemsDisplay] = useState("flex");
+  const [activeTab, setActiveTab] = useState(0);
   const { account } = useEthers();
 
   return (
@@ -18,41 +18,39 @@ function ItemsActivity({
       <div className="flex justify-center gap-12 text-onPrimary text-lg mb-3">
         <button
           className={`${
-            itemsDisplay === "flex" && "text-buttonSecondary"
+            activeTab === 0 && "text-buttonSecondary"
           } font-semibold :text-xl`}
-          onClick={() => setItemsDisplay("flex")}
+          onClick={() => setActiveTab(0)}
         >
           Items
         </button>
         <button
           className={`${
-            itemsDisplay === "hidden" && "text-buttonSecondary"
+            activeTab === 1 && "text-buttonSecondary"
           } font-semibold`}
-          onClick={() => setItemsDisplay("hidden")}
+          onClick={() => setActiveTab(1)}
         >
           Activity
         </button>
       </div>
       <hr className="bg-onPrimary w-full border-1" />
 
-      <div className={`${itemsDisplay} flex flex-col`}>
+      {activeTab === 0 && (
         <Items
           collectionSlug={collectionSlug}
           assetContractAddress={assetContractAddress}
           collectionName={collectionName}
           editable={creator === account}
         />
-      </div>
-      <div
-        className={`${
-          itemsDisplay === "flex" ? "hidden" : "flex"
-        } flex-col my-6`}
-      >
-        <ActivityTab
-          assetContractAddress={assetContractAddress}
-          tokens={tokens}
-        />
-      </div>
+      )}
+      {activeTab === 1 && (
+        <div className="flex flex-col my-6">
+          <ActivityTab
+            assetContractAddress={assetContractAddress}
+            tokens={tokens}
+          />
+        </div>
+      )}
     </div>
   );
 }

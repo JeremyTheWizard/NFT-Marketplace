@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useMoralisWeb3Api } from "react-moralis";
+import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 import ActivityTabItem from "./ActivityTabItem";
 
 function ActivityTab({ assetContractAddress, tokens }) {
@@ -17,6 +18,10 @@ function ActivityTab({ assetContractAddress, tokens }) {
   };
 
   const fetchContractNFTTransfers = async () => {
+    // bypass moralis api rate limit
+    await new Promise((resolve) => {
+      setTimeout(resolve, 500);
+    });
     const options = {
       address: assetContractAddress,
       chain: "rinkeby",
@@ -64,11 +69,13 @@ function ActivityTab({ assetContractAddress, tokens }) {
         <p>Time</p>
       </div>
       <div className="flex flex-col gap-16 md:gap-12">
-        {transfers &&
-          ethUsd &&
+        {transfers && ethUsd ? (
           transfers.map((transfer) => {
             return <ActivityTabItem transfer={transfer} ethUsd={ethUsd} />;
-          })}
+          })
+        ) : (
+          <ModifiedCircularProgress style={{ margin: "auto" }} />
+        )}
       </div>
     </>
   );
