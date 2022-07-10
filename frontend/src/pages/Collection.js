@@ -13,23 +13,25 @@ function Collection() {
     let collectionRelevantInfo = [];
 
     // use location params to increase loading speed
-    if (location.state.collectionInfo.bannerImageUrl) {
-      collectionRelevantInfo.bannerImageUrl =
-        location.state.collectionInfo.bannerImageUrl;
-    }
-    if (location.state.collectionInfo.roundedIconImageUrl) {
-      collectionRelevantInfo.profileImageUrl =
-        location.state.collectionInfo.roundedIconImageUrl;
-    }
-    if (location.state.collectionInfo.description) {
-      collectionRelevantInfo.description =
-        location.state.collectionInfo.description;
-    }
-    if (location.state.collectionInfo.name) {
-      collectionRelevantInfo.name = location.state.collectionInfo.name;
-    }
-    if (collectionRelevantInfo) {
-      setCollectionRelevantInfo(collectionRelevantInfo);
+    if (location.state.collectionInfo) {
+      if (location.state.collectionInfo.bannerImageUrl) {
+        collectionRelevantInfo.bannerImageUrl =
+          location.state.collectionInfo.bannerImageUrl;
+      }
+      if (location.state.collectionInfo.roundedIconImageUrl) {
+        collectionRelevantInfo.profileImageUrl =
+          location.state.collectionInfo.roundedIconImageUrl;
+      }
+      if (location.state.collectionInfo.description) {
+        collectionRelevantInfo.description =
+          location.state.collectionInfo.description;
+      }
+      if (location.state.collectionInfo.name) {
+        collectionRelevantInfo.name = location.state.collectionInfo.name;
+      }
+      if (collectionRelevantInfo) {
+        setCollectionRelevantInfo(collectionRelevantInfo);
+      }
     }
 
     // First check if there is a collection in the db if not check opensea's api
@@ -70,11 +72,13 @@ function Collection() {
         // "nft-palace-collections" to all of them. However to use opensea's api
         // we need to split the url.
         try {
-          collectionInfo = await axios.get(
-            `http://localhost/8000/api/collections/collection${
-              collectionslug.split("nft-palace-collections-")[1]
-            }`
-          );
+          collectionInfo = await axios
+            .get(
+              `http://localhost:8000/api/collections/collection/${
+                collectionslug.split("nft-palace-collections-")[1]
+              }`
+            )
+            .then((res) => res.data.collectionInfo);
         } catch (err) {
           console.log(err);
         }
@@ -83,7 +87,7 @@ function Collection() {
           collectionRelevantInfo.bannerImageUrl = collectionInfo.bannerImageUrl;
         }
         if (collectionInfo.roundedIconImageUrl) {
-          collectionRelevantInfo.bannerImageUrl =
+          collectionRelevantInfo.profileImageUrl =
             collectionInfo.roundedIconImageUrl;
         }
         if (collectionInfo.description) {
