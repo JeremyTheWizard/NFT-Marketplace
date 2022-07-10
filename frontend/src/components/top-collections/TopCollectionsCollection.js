@@ -2,17 +2,20 @@ import React, { useState } from "react";
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
-function TopCollectionsCollection({
-  collectionSlug,
-  collectionName,
-  imageUrl,
-  description,
-}) {
+function TopCollectionsCollection({ collection }) {
   let navigate = useNavigate();
-  function routeChange(path) {
-    navigate(path, { state: { imagePath: imageUrl } });
-  }
   const [display, setDisplay] = useState("hidden");
+
+  const navigateToCollection = () => {
+    navigate(`/collections/nft-palace-collections-${collection.slug}`, {
+      state: {
+        bannerImageUrl: collection.bannerImageUrl,
+        roundedIconImageUrl: collection.roundedIconImageUrl,
+        description: collection.description,
+        name: collection.name,
+      },
+    });
+  };
 
   return (
     <>
@@ -24,7 +27,7 @@ function TopCollectionsCollection({
           }}
         >
           <img
-            src={imageUrl}
+            src={collection.roundedIconImageUrl}
             alt=""
             className="h-full w-full object-cover rounded-xl"
           />
@@ -34,23 +37,23 @@ function TopCollectionsCollection({
           onMouseLeave={(e) => {
             setDisplay("hidden");
           }}
-          onClick={() =>
-            routeChange(`/collections/nft-palace-collections-${collectionSlug}`)
-          }
+          onClick={navigateToCollection}
         >
           <div className="h-60 w-60 shrink-0 pl-4 py-4">
             <img
-              src={imageUrl}
+              src={collection.roundedIconImageUrl}
               alt=""
               className="h-full w-full object-cover rounded-xl"
             />
           </div>
           <div className="m-4 ml-6 flex flex-col">
             <h1 className="text-left text-xl font-semibold mb-2">
-              {collectionName && collectionName}
+              {collection.name && collection.name}
             </h1>
             <p className="text-left break-word text-ellipsis line-clamp-4 max-height-[7.5rem]">
-              {description ? description : "This collection has no description"}
+              {collection.description
+                ? collection.description
+                : "This collection has no description"}
             </p>
             <BsFillArrowRightCircleFill
               className="shrink-0 self-end mt-auto"

@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
+import ExternalCollection from "./ExternalCollection";
 
 const topCollectionsSchema = mongoose.Schema({
   topCollections: [
     {
-      slug: { type: "string", required: true },
-      name: { type: String, required: true },
-      imageUrl: { type: String, required: true },
-      description: { type: String, required: true },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: ExternalCollection || Collection,
     },
   ],
 });

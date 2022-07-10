@@ -38,13 +38,7 @@ const TopCollections = () => {
         // due to opensea's api rate limit, the top collections info is stored
         // in a private db so there is no need to call the api
         imagesHtml.push(
-          <TopCollectionsCollection
-            key={key}
-            collectionSlug={collection.slug}
-            collectionName={collection.name}
-            imageUrl={collection.imageUrl}
-            description={collection.description}
-          />
+          <TopCollectionsCollection key={key} collection={collection} />
         );
       })
     );
