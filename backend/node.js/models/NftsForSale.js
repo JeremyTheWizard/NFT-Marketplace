@@ -12,6 +12,7 @@ const nftsForSaleSchema = mongoose.Schema({
   nonce: { type: Number, required: true, unique: true },
   marketplaceAddress: { type: String, required: true },
   sellerSignature: { type: String, required: true },
+  attributes: [{ trait_type: { type: String }, value: { type: String } }],
 });
 
 nftsForSaleSchema.plugin(mongoosePaginate);

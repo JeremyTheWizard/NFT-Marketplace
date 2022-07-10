@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { utils } from "ethers";
+import { useEffect, useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { FaEthereum } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
@@ -9,12 +10,26 @@ import Sell from "./Sell";
 function AssetCard() {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
+  const [ethUsd, setEthUsd] = useState();
   const location = useLocation();
 
   const { buyCoordinator, buyStatus } = useBuyCoordinator(
     location.state.contractAddress,
     location.state.tokenId
   );
+
+  useEffect(() => {
+    if (!location.state.ethUsd) {
+      fetchEthPrice();
+    }
+  }, []);
+
+  const fetchEthPrice = async () => {
+    const ethUsd = await fetch(
+      "https://api.etherscan.io/api?module=stats&action=ethprice&apikey=2TK8NI1JT3WXC7WCCFQP8V3Q22J347ZC5F"
+    ).then((res) => res.json().result.ethusd);
+    setEthUsd(ethUsd);
+  };
 
   function likeIcon() {
     if (isLike) {
@@ -57,14 +72,20 @@ function AssetCard() {
             : `#${location.state.tokenId}`}
         </h3>
         {location.state.price && (
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
             <div className="flex items-center">
               <FaEthereum />
               <p className="text-left text-xl font-semibold">
-                {location.state.price}
+                {utils.formatEther(location.state.price)}
               </p>
             </div>
-            <p>($555)</p>
+            <p>
+              {location.state.ethUsd
+                ? `$${location.state.ethUsd}`
+                : ethUsd
+                ? `$${ethUsd}`
+                : ""}
+            </p>
           </div>
         )}
         <p className=" text-left">

@@ -64,13 +64,15 @@ const TopCollections = () => {
         </div>
       </div>
       <div className="flex flex-col items-center">
-        <MainButton
-          onClick={() => {
-            navigate("/collections");
-          }}
-          text="DISCOVER ALL COLLECTIONS"
-          styles="mt-6"
-        />
+        {topCollectionsImages && (
+          <MainButton
+            onClick={() => {
+              navigate("/collections");
+            }}
+            text="DISCOVER ALL COLLECTIONS"
+            styles="mt-6"
+          />
+        )}
       </div>
     </>
   );

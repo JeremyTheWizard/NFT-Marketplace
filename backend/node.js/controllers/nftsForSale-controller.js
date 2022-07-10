@@ -17,7 +17,7 @@ export const getNftsForSale = async (req, res, next) => {
       {},
       { limit: limit || 20, page: page || 0 }
     ).then((res) => res.docs);
-    console.log("🚀 ~ nftsForSale", nftsForSale);
+    console.log("🚀 ~ NftsForSale", NftsForSale);
   } catch (error) {
     return res.status(404).send(error.message);
   }

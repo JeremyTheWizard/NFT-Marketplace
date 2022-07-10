@@ -40,6 +40,7 @@ function AssetCard({ asset, status }) {
         attributes: asset.attributes,
         name: asset.name,
         description: asset.description,
+        ethUsd: ethUsd,
       },
     });
   }
@@ -119,7 +120,8 @@ function AssetCard({ asset, status }) {
       return (
         <BsSuitHeartFill
           size="32px"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setIsLike(false);
             setLikeCount(likeCount - 1);
           }}
@@ -129,7 +131,8 @@ function AssetCard({ asset, status }) {
       return (
         <BsSuitHeart
           size="32px"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setIsLike(true);
             setLikeCount(likeCount + 1);
           }}
