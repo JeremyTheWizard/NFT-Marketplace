@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainButton from "../MainButton";
+import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 import TopCollectionsCollection from "./TopCollectionsCollection";
 
 const TopCollections = () => {
@@ -59,7 +60,11 @@ const TopCollections = () => {
       {/* Since the app.js has a with of 90vw, when we give this component
       100vw it will set a negative margin just on the right side. This the need
       to set the left margin with the calc function.*/}
-      <div className="overflow-hidden mx-auto flex w-[100vw] md:w-full relative md:static left-[calc(-50vw+50%)]">
+
+      <div className="overflow-hidden mx-auto flex w-[100vw] h-60 md:w-full relative md:static left-[calc(-50vw+50%)]">
+        {!topCollectionsImages && (
+          <ModifiedCircularProgress style={{ margin: "auto" }} />
+        )}
         <div className="flex animate-auto-slide hover:pause overflow-visible relative">
           {topCollectionsImages && topCollectionsImages}
         </div>
