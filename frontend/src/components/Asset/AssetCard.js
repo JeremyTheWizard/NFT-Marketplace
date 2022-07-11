@@ -88,7 +88,7 @@ function AssetCard() {
             </p>
           </div>
         )}
-        <p className=" text-left">
+        <p className="text-left line-clamp-[10]">
           {location.state.description
             ? location.state.description
             : "This item has no description."}
