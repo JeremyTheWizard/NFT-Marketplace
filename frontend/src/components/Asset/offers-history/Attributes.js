@@ -6,9 +6,18 @@ const Attributes = ({ attributes }) => {
       {attributes ? (
         attributes.map((attribute) => {
           return (
-            <li className="border-2 border-onPrimary w-40 shrink-0 p-3 text-center text-onPrimary rounded">
-              <p className="font-semibold text-lg">{attribute.trait_type}</p>
-              <p className="italic">{attribute.value}</p>
+            <li className="break-all border-2 border-onPrimary w-40 shrink-0 p-3 text-center text-onPrimary rounded">
+              <p className="font-semibold text-lg">
+                {typeof attribute.trait_type === "string"
+                  ? attribute.trait_type.charAt(0).toUpperCase() +
+                    attribute.trait_type.slice(1).toLowerCase()
+                  : attribute.trait_type}
+              </p>
+              <p className="italic">
+                {typeof attribute.value === "string"
+                  ? attribute.value.toLowerCase()
+                  : attribute.value}
+              </p>
             </li>
           );
         })
