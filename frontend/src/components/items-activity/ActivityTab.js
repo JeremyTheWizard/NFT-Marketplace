@@ -20,7 +20,7 @@ function ActivityTab({ assetContractAddress, tokens }) {
   const fetchContractNFTTransfers = async () => {
     // bypass moralis api rate limit
     await new Promise((resolve) => {
-      setTimeout(resolve, 500);
+      setTimeout(resolve, 1000);
     });
     const options = {
       address: assetContractAddress,

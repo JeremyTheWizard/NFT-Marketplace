@@ -47,6 +47,9 @@ function ActivityTab({ contractAddress, tokenId }) {
   }, [transfers]);
 
   const fetchContractNFTTransfers = async () => {
+    new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
     const options = {
       address: contractAddress,
       chain: "rinkeby",
