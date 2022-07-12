@@ -1,4 +1,5 @@
 import { Alert, Dialog, DialogContent, Snackbar } from "@mui/material";
+import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import { utils } from "ethers";
 import { useEffect, useState } from "react";
@@ -8,16 +9,51 @@ import { useLocation } from "react-router-dom";
 import useBuyCoordinator from "../../hooks/useBuyCoordinator";
 import ModifiedDialogTitle from "../ModifiedMuiComponents/ModifiedDialogTitle";
 import SecondaryButton from "../SecondaryButton";
+import RemoveAssetFromSale from "./RemoveAssetFromSale";
 import Sell from "./Sell";
 
-function AssetCard() {
+function AssetCard({ originalAccount }) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   const [ethUsd, setEthUsd] = useState();
-  const [onSale, setOnSale] = useState();
+  const [seller, setSeller] = useState(undefined);
   const [transactionFailureAlert, setTransactionFailureAlert] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [status, setStatus] = useState();
   const location = useLocation();
+  const { account } = useEthers();
+
+  useEffect(() => {
+    if (location.state.status) {
+      setStatus(location.state.status);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSeller();
+  }, []);
+
+  const fetchSeller = async () => {
+    let seller;
+    try {
+      seller = await axios({
+        method: "get",
+        url: "http://localhost:8000/api/nfts/nftsforsale/getnft",
+        params: {
+          contractAddress: location.state.contractAddress,
+          tokenId: location.state.tokenId,
+        },
+      }).then((res) => res.data.nftForSale[0].seller);
+    } catch (err) {
+      console.log(err);
+    }
+
+    if (seller) {
+      setSeller(seller);
+    } else {
+      setSeller(null);
+    }
+  };
 
   const handleSuccessDialogClose = () => {
     setShowSuccessDialog(false);
@@ -29,32 +65,10 @@ function AssetCard() {
   );
 
   useEffect(() => {
-    fetchNft();
-  }, []);
-
-  useEffect(() => {
     if (!location.state.ethUsd) {
       fetchEthPrice();
     }
   }, []);
-
-  const fetchNft = async () => {
-    let onSale;
-    try {
-      onSale = await axios({
-        method: "get",
-        url: "http://localhost:8000/api/nfts/nftsforsale/getnft",
-        params: {
-          contractAddress: location.state.contractAddress,
-          tokenId: location.state.tokenId,
-        },
-      }).then((res) => res.data.nftForSale);
-    } catch (err) {
-      console.log(err);
-    }
-    console.log("🚀 ~ onSale", onSale);
-    setOnSale(onSale.length ? true : false);
-  };
 
   const fetchEthPrice = async () => {
     const ethUsd = await fetch(
@@ -94,6 +108,54 @@ function AssetCard() {
     }
   }
 
+  const renderActionButton = () => {
+    const buyButton = (
+      <div className="w-full md:w-56 mt-4 mb-6 md:mb-0 flex flex-col gap-3">
+        <SecondaryButton
+          text="Buy"
+          onClick={() => {
+            buyCoordinator();
+          }}
+        />
+      </div>
+    );
+
+    if (status && seller !== undefined) {
+      if (seller === account) {
+        return (
+          <RemoveAssetFromSale
+            tokenContractAddress={location.state.contractAddress}
+            tokenId={location.state.tokenId}
+            setStatus={setStatus}
+            setSeller={setSeller}
+          />
+        );
+      } else {
+        if (status === "Buy") {
+          return buyButton;
+        } else if (status === "Sell") {
+          return (
+            <Sell
+              collectionName={location.state.collectionName}
+              description={location.state.description}
+              name={location.state.name}
+              imageUrl={location.state.imagePath}
+              tokenId={location.state.tokenId}
+              attributes={location.state.attributes}
+              tokenContractAddress={location.state.contractAddress}
+              setTransactionFailureAlert={setTransactionFailureAlert}
+              setShowSuccessDialog={setShowSuccessDialog}
+              setStatus={setStatus}
+              originalAccount={
+                originalAccount || location.state.originalAccount
+              }
+            />
+          );
+        }
+      }
+    }
+  };
+
   return (
     <>
       <div className="w-full overflow-hidden rounded-xl flex flex-col md:grid md:grid-cols-2">
@@ -112,8 +174,7 @@ function AssetCard() {
               : `#${location.state.tokenId}`}
           </h3>
 
-          {console.log(`onSale = ${onSale}`)}
-          {onSale === false && (
+          {seller === null && (
             <p className="text-sm text-gray-500">Not for sale</p>
           )}
 
@@ -139,33 +200,8 @@ function AssetCard() {
               ? location.state.description
               : "This item has no description."}
           </p>
-          {location.state.status === "Sell" ? (
-            onSale === false ? (
-              <Sell
-                collectionName={location.state.collectionName}
-                description={location.state.description}
-                name={location.state.name}
-                imageUrl={location.state.imagePath}
-                tokenId={location.state.tokenId}
-                attributes={location.state.attributes}
-                tokenContractAddress={location.state.contractAddress}
-                setTransactionFailureAlert={setTransactionFailureAlert}
-                setShowSuccessDialog={setShowSuccessDialog}
-                setOnSale={setOnSale}
-              />
-            ) : null
-          ) : (
-            location.state.status === "Buy" && (
-              <div className="w-full md:w-56 mt-4 mb-6 md:mb-0 flex flex-col gap-3">
-                <SecondaryButton
-                  text="Buy"
-                  onClick={() => {
-                    buyCoordinator();
-                  }}
-                />
-              </div>
-            )
-          )}
+          {renderActionButton()}
+
           <div className="flex justify-between mt-auto">
             <div className="flex items-center gap-2 ">
               {location.state.creatorImagePath && (

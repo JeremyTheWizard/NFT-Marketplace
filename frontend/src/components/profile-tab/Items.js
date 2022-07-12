@@ -45,6 +45,7 @@ const Items = () => {
             name: asset.name,
             description: asset.description,
           }}
+          originalAccount={account}
         />
       );
     });

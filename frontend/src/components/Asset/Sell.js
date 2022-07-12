@@ -14,7 +14,8 @@ const Sell = ({
   description = null,
   setTransactionFailureAlert,
   setShowSuccessDialog,
-  setOnSale,
+  setStatus,
+  originalAccount,
 }) => {
   const [price, setPrice] = useState();
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,8 @@ const Sell = ({
     setLoading,
     setTransactionFailureAlert,
     setShowSuccessDialog,
-    setOnSale
+    setStatus,
+    originalAccount
   );
 
   const handleSubmit = (e) => {

@@ -10,7 +10,8 @@ const useSellCoordinator = (
   setLoading,
   setTransactionFailureAlert,
   setShowSuccessDialog,
-  setOnSale
+  setStatus,
+  originalAccount
 ) => {
   const marketplace = useGetMarketplaceContract();
   const { library, account } = useEthers();
@@ -48,7 +49,7 @@ const useSellCoordinator = (
       setLoading
     );
     if (approveSaleStatus === "Success") {
-      setOnSale(true);
+      setStatus("Buy");
       setShowSuccessDialog(true);
     } else {
       setTransactionFailureAlert(true);
@@ -76,39 +77,46 @@ const useSellCoordinator = (
     _collectionName,
     _description = null
   ) => {
-    if (value) {
-      if (value[0] === true) {
-        const approveSaleStatus = await addSaleToDb(
-          library,
-          _tokenContractAddress,
-          _tokenId,
-          _price,
-          account,
-          marketplace.address,
-          _name,
-          _imageUrl,
-          _attributes,
-          _collectionName,
-          _description
-        );
-        if (approveSaleStatus === "Success") {
-          setOnSale(true);
-          setShowSuccessDialog(true);
-        } else {
-          setTransactionFailureAlert(true);
+    if (originalAccount === account) {
+      // Avoid error where the user changed
+      //account to quickly
+      if (value) {
+        if (value[0] === true) {
+          const approveSaleStatus = await addSaleToDb(
+            library,
+            _tokenContractAddress,
+            _tokenId,
+            _price,
+            account,
+            marketplace.address,
+            _name,
+            _imageUrl,
+            _attributes,
+            _collectionName,
+            _description
+          );
+          if (approveSaleStatus === "Success") {
+            setStatus("Buy");
+            setShowSuccessDialog(true);
+          } else {
+            setTransactionFailureAlert(true);
+          }
+          setLoading(false);
         }
-        setLoading(false);
+        if (value[0] === false) {
+          approveCollection(marketplace.address);
+          setTokenId(_tokenId);
+          setPrice(_price);
+          setName(_name);
+          setImageUrl(_imageUrl);
+          setAttributes(_attributes);
+          setCollectionName(_collectionName);
+          setDescription(_description);
+        }
       }
-      if (value[0] === false) {
-        approveCollection(marketplace.address);
-        setTokenId(_tokenId);
-        setPrice(_price);
-        setName(_name);
-        setImageUrl(_imageUrl);
-        setAttributes(_attributes);
-        setCollectionName(_collectionName);
-        setDescription(_description);
-      }
+    } else {
+      setTransactionFailureAlert(true);
+      setLoading(false);
     }
   };
 

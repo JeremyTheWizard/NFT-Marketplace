@@ -6,7 +6,7 @@ import { FaEthereum } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import fixUrl from "../../useful-scripts/fixUrl";
 
-function AssetCard({ asset, status }) {
+function AssetCard({ asset, status, originalAccount }) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 25));
   const [ethUsd, setEthUsd] = useState();
@@ -36,11 +36,13 @@ function AssetCard({ asset, status }) {
         price: asset.price && asset.price,
         seller: asset.seller,
         status: status,
-        contractAddress: asset.assetContractAddress,
+        contractAddress:
+          asset.assetContractAddress || asset.tokenContractAddress,
         attributes: asset.attributes,
         name: asset.name,
         description: asset.description,
         ethUsd: ethUsd,
+        originalAccount: originalAccount,
       },
     });
   }

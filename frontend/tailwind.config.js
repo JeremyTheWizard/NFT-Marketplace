@@ -11,6 +11,8 @@ module.exports = {
         buttonSecondary: "#1D9DF9",
         hoverButtonSecondary: "#1676BA",
         onPrimary: "#F5F6EE",
+        materialRed800: "#c62828",
+        materialRed700: "#d32f2f",
       },
       keyframes: {
         slider: {
