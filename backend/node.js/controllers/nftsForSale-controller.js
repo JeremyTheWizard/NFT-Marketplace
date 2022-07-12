@@ -41,6 +41,7 @@ export const getNftForSale = async (req, res, next) => {
   }
   if (nftForSale) {
     console.log("Nft found");
+    console.log("🚀 ~ nftForSale", nftForSale);
     return res.status(200).json({ success: true, nftForSale });
   } else {
     console.log("NFT doesn't exists");

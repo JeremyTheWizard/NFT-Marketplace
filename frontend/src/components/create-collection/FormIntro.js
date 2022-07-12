@@ -4,7 +4,6 @@ import FormData from "form-data";
 import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import useGetNFTMinterContract from "../../hooks/useGetNFTMinterContract";
-import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 import SecondaryButton from "../SecondaryButton";
 import BannerAndRoundedIcon from "./BannerAndRoundedIcon";
 
@@ -89,9 +88,7 @@ const FormIntro = ({ setShowSuccessDialog }) => {
           </div>
         </div>
         <div className="w-40 ml-1 order-1 lg:order-2 -mt-9">
-          <SecondaryButton type="submit" loading={loading}>
-            {loading ? <ModifiedCircularProgress size={24} /> : "CREATE!"}
-          </SecondaryButton>
+          <SecondaryButton loading={loading} />
         </div>
       </div>
     </form>

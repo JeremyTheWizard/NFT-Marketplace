@@ -5,7 +5,13 @@ import getTokenContract from "../useful-scripts/getTokenContract";
 import useApproveCollection from "./useApproveCollection";
 import useGetMarketplaceContract from "./useGetMarketplaceContract";
 
-const useSellCoordinator = (_tokenContractAddress) => {
+const useSellCoordinator = (
+  _tokenContractAddress,
+  setLoading,
+  setTransactionFailureAlert,
+  setShowSuccessDialog,
+  setOnSale
+) => {
   const marketplace = useGetMarketplaceContract();
   const { library, account } = useEthers();
   const tokenContract = getTokenContract(_tokenContractAddress);
@@ -26,6 +32,40 @@ const useSellCoordinator = (_tokenContractAddress) => {
   const [collectionName, setCollectionName] = useState();
   const [description, setDescription] = useState();
 
+  const addSaleToDbFunc = async () => {
+    const approveSaleStatus = await addSaleToDb(
+      library,
+      _tokenContractAddress,
+      tokenId,
+      price,
+      account,
+      marketplace.address,
+      name,
+      imageUrl,
+      attributes,
+      collectionName,
+      description,
+      setLoading
+    );
+    if (approveSaleStatus === "Success") {
+      setOnSale(true);
+      setShowSuccessDialog(true);
+    } else {
+      setTransactionFailureAlert(true);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (approveCollectionStatus === "Success") {
+      addSaleToDbFunc();
+    }
+    if (approveCollectionStatus === "Exception") {
+      setLoading(false);
+      setTransactionFailureAlert(true);
+    }
+  }, [approveCollectionStatus]);
+
   const sellCoordinator = async (
     _tokenContractAddress,
     _tokenId,
@@ -38,7 +78,7 @@ const useSellCoordinator = (_tokenContractAddress) => {
   ) => {
     if (value) {
       if (value[0] === true) {
-        addSaleToDb(
+        const approveSaleStatus = await addSaleToDb(
           library,
           _tokenContractAddress,
           _tokenId,
@@ -51,6 +91,13 @@ const useSellCoordinator = (_tokenContractAddress) => {
           _collectionName,
           _description
         );
+        if (approveSaleStatus === "Success") {
+          setOnSale(true);
+          setShowSuccessDialog(true);
+        } else {
+          setTransactionFailureAlert(true);
+        }
+        setLoading(false);
       }
       if (value[0] === false) {
         approveCollection(marketplace.address);
@@ -64,23 +111,6 @@ const useSellCoordinator = (_tokenContractAddress) => {
       }
     }
   };
-
-  useEffect(() => {
-    approveCollectionStatus === "Success" &&
-      addSaleToDb(
-        library,
-        _tokenContractAddress,
-        tokenId,
-        price,
-        account,
-        marketplace.address,
-        name,
-        imageUrl,
-        attributes,
-        collectionName,
-        description
-      );
-  }, [approveCollectionStatus]);
 
   return sellCoordinator;
 };

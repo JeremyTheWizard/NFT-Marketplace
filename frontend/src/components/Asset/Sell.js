@@ -12,12 +12,23 @@ const Sell = ({
   attributes = null,
   collectionName,
   description = null,
+  setTransactionFailureAlert,
+  setShowSuccessDialog,
+  setOnSale,
 }) => {
   const [price, setPrice] = useState();
-  const sellCoordinator = useSellCoordinator(tokenContractAddress);
+  const [loading, setLoading] = useState(false);
+  const sellCoordinator = useSellCoordinator(
+    tokenContractAddress,
+    setLoading,
+    setTransactionFailureAlert,
+    setShowSuccessDialog,
+    setOnSale
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     sellCoordinator(
       tokenContractAddress,
       tokenId,
@@ -50,7 +61,7 @@ const Sell = ({
           />
         </div>
       </label>
-      <SecondaryButton text="Sell" onClick={handleSubmit} />
+      <SecondaryButton text="Sell" loading={loading} />
     </form>
   );
 };
