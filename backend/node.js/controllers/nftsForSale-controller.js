@@ -39,7 +39,7 @@ export const getNftForSale = async (req, res, next) => {
   } catch (error) {
     return res.status(404).json({ success: false, message: error.message });
   }
-  if (nftForSale) {
+  if (nftForSale.length) {
     console.log("Nft found");
     console.log("🚀 ~ nftForSale", nftForSale);
     return res.status(200).json({ success: true, nftForSale });
@@ -252,19 +252,23 @@ export const updateNftsForSale = async (req, res, next) => {
 };
 
 export const deleteNftForSale = async (req, res, next) => {
-  const contract = req.params.contract;
-  const tokenId = req.params.tokenid;
+  console.log("Initializing deleteNftForSale...");
+  const { tokenContractAddress, tokenId } = req.body;
+
   let nft;
   try {
+    console.log("Looking for nft...");
     nft = await NftsForSale.findOneAndRemove({
-      contract: contract,
+      tokenContractAddress: tokenContractAddress,
       tokenId: tokenId,
     });
   } catch (error) {
     console.log(error);
   }
   if (!nft) {
+    console.log("NFT not found!");
     return res.status(500).json({ message: "Unable to delete" });
   }
+  console.log("Nft removed.!");
   return res.status(200).json({ message: "Successfully deleted" });
 };

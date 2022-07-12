@@ -21,6 +21,6 @@ router.post("/createtokenuri", createTokenURI);
 router.delete("/removetokenuri", removeTokenURI);
 router.post("/incrementnonce", incrementNonce);
 router.put("/update/:id", updateNftsForSale);
-router.delete("/delete/:contract/:tokenid", deleteNftForSale);
+router.delete("/delete", deleteNftForSale);
 
 export default router;
