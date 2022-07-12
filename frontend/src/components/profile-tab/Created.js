@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -23,6 +23,10 @@ const Created = () => {
         editable: true,
       },
     });
+  };
+
+  const handleNavigateToCreateCollection = () => {
+    navigate(`/create/collection`);
   };
 
   const fetchUserCollectionsCreated = async () => {
@@ -71,6 +75,11 @@ const Created = () => {
           </div>
         )}
       </ul>
+      <div className="flex flex-col items-center mt-12">
+        <Button variant="contained" onClick={handleNavigateToCreateCollection}>
+          CREATE NEW COLLECTION
+        </Button>
+      </div>
     </>
   );
 };

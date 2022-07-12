@@ -12,26 +12,80 @@ export const addCollection = async (req, res) => {
     assetContractAddress,
     updateUser = true,
   } = req.body;
-
-  const collectionExists = await Collection.findOne({
-    name: collectionName,
-  });
-
-  if (collectionExists) {
-    console.log("ERROR! Collection already exists!");
-    return res.status(409).json({
-      success: false,
-      message: "Collection already exists",
-    });
-  }
+  const bannerImage = req.files.bannerImage;
+  const roundedIconImage = req.files.roundedIconImage;
 
   console.log("Creating collection");
+  let newBannerImageData = null;
+  if (bannerImage) {
+    const base64EncodedImage = Buffer.from(bannerImage.data).toString("base64");
+    const formData = new FormData();
+    formData.append("image", base64EncodedImage);
+    try {
+      console.log("Uploading banner image to hosting service...");
+      newBannerImageData = await axios
+        .post("https://api.imgbb.com/1/upload", formData, {
+          params: {
+            //'expiration': '600',
+            key: process.env.IMGBB_API_KEY,
+          },
+          headers: {
+            ...formData.getHeaders(),
+          },
+        })
+        .then((res) => res.data);
+      console.log("Image uploaded!");
+    } catch (err) {
+      console.log("Error uploading image to hosting service!");
+      console.log(err);
+      return res.status(400).json({
+        success: false,
+        message: "Error uploading image to hosting service!",
+      });
+    }
+  }
+
+  let newRoundedIconImageData = null;
+  if (roundedIconImage) {
+    const base64EncodedImage = Buffer.from(roundedIconImage.data).toString(
+      "base64"
+    );
+    const formData = new FormData();
+    formData.append("image", base64EncodedImage);
+    try {
+      console.log("Uploading roundedIcon image to hosting service...");
+      newRoundedIconImageData = await axios
+        .post("https://api.imgbb.com/1/upload", formData, {
+          params: {
+            //'expiration': '600',
+            key: process.env.IMGBB_API_KEY,
+          },
+          headers: {
+            ...formData.getHeaders(),
+          },
+        })
+        .then((res) => res.data);
+      console.log("Image uploaded!");
+    } catch (err) {
+      console.log("Error uploading image to hosting service!");
+      console.log(err);
+      return res.status(400).json({
+        success: false,
+        message: "Error uploading image to hosting service!",
+      });
+    }
+  }
+
   let collection = null;
   try {
     collection = await new Collection({
       name: collectionName,
       createdBy: account,
       assetContractAddress: assetContractAddress,
+      bannerImageUrl: newBannerImageData ? newBannerImageData.data.url : null,
+      roundedIconImageUrl: newRoundedIconImageData
+        ? newRoundedIconImageData.data.url
+        : null,
     });
     await collection.save();
     console.log("Collection created!");

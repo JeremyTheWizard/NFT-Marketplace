@@ -9,7 +9,22 @@
 }
 
 @layer base {
-  input {
-    --tw-ring-shadow: 0 0 #000 !important;
+  [type='text']:focus,
+  [type='email']:focus,
+  [type='url']:focus,
+  [type='password']:focus,
+  [type='number']:focus,
+  [type='date']:focus,
+  [type='datetime-local']:focus,
+  [type='month']:focus,
+  [type='search']:focus,
+  [type='tel']:focus,
+  [type='time']:focus,
+  [type='week']:focus,
+  [multiple]:focus,
+  textarea:focus,
+  select:focus {
+    --tw-ring-color: #1D9DF9;
+    border-color: var(--tw-ring-color);
   }
 }

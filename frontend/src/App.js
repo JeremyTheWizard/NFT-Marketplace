@@ -9,6 +9,7 @@ import Asset from "./pages/Asset";
 import Collection from "./pages/Collection.js";
 import Collections from "./pages/Collections.js";
 import Create from "./pages/Create.js";
+import CreateCollection from "./pages/CreateCollection.js";
 import ErrorPage from "./pages/ErrorPage.js";
 import Home from "./pages/Home.js";
 import Profile from "./pages/Profile";
@@ -41,6 +42,7 @@ function App() {
                 element={<Asset />}
               />
               <Route path="/create" element={<Create />} />
+              <Route path="/create/collection" element={<CreateCollection />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </Router>
