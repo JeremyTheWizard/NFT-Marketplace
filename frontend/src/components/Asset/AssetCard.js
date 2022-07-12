@@ -1,3 +1,4 @@
+import axios from "axios";
 import { utils } from "ethers";
 import { useEffect, useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
@@ -11,6 +12,7 @@ function AssetCard() {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
   const [ethUsd, setEthUsd] = useState();
+  const [onSale, setOnSale] = useState();
   const location = useLocation();
 
   const { buyCoordinator, buyStatus } = useBuyCoordinator(
@@ -19,10 +21,31 @@ function AssetCard() {
   );
 
   useEffect(() => {
+    fetchNft();
+  }, []);
+
+  useEffect(() => {
     if (!location.state.ethUsd) {
       fetchEthPrice();
     }
   }, []);
+
+  const fetchNft = async () => {
+    let onSale;
+    try {
+      onSale = await axios({
+        method: "get",
+        url: "http://localhost:8000/api/nfts/nftsforsale/getnft",
+        params: {
+          contractAddress: location.state.contractAddress,
+          tokenId: location.state.tokenId,
+        },
+      }).then((res) => res.data.nftForSale);
+    } catch (err) {
+      console.log(err);
+    }
+    setOnSale(onSale.length ? true : false);
+  };
 
   const fetchEthPrice = async () => {
     const ethUsd = await fetch(
@@ -71,6 +94,8 @@ function AssetCard() {
             ? location.state.name
             : `#${location.state.tokenId}`}
         </h3>
+
+        {!onSale && <p className="text-sm text-gray-500">Not for sale</p>}
         {location.state.price && (
           <div className="flex gap-3 items-center">
             <div className="flex items-center">
@@ -88,31 +113,35 @@ function AssetCard() {
             </p>
           </div>
         )}
-        <p className="text-left line-clamp-[10]">
+        <p className="text-left line-clamp-[10] md:line-clamp-5 lg:line-clamp-[10]">
           {location.state.description
             ? location.state.description
             : "This item has no description."}
         </p>
         {location.state.status === "Sell" ? (
-          <Sell
-            collectionName={location.state.collectionName}
-            description={location.state.description}
-            name={location.state.name}
-            imageUrl={location.state.imagePath}
-            tokenId={location.state.tokenId}
-            attributes={location.state.attributes}
-            tokenContractAddress={location.state.contractAddress}
-          />
-        ) : location.state.status === "Buy" ? (
-          <div className="w-full md:w-56 mt-4 mb-6 md:mb-0 flex flex-col gap-3">
-            <SecondaryButton
-              text="Buy"
-              onClick={() => {
-                buyCoordinator();
-              }}
+          onSale === false ? (
+            <Sell
+              collectionName={location.state.collectionName}
+              description={location.state.description}
+              name={location.state.name}
+              imageUrl={location.state.imagePath}
+              tokenId={location.state.tokenId}
+              attributes={location.state.attributes}
+              tokenContractAddress={location.state.contractAddress}
             />
-          </div>
-        ) : null}
+          ) : null
+        ) : (
+          location.state.status === "Buy" && (
+            <div className="w-full md:w-56 mt-4 mb-6 md:mb-0 flex flex-col gap-3">
+              <SecondaryButton
+                text="Buy"
+                onClick={() => {
+                  buyCoordinator();
+                }}
+              />
+            </div>
+          )
+        )}
         <div className="flex justify-between mt-auto">
           <div className="flex items-center gap-2 ">
             {location.state.creatorImagePath && (

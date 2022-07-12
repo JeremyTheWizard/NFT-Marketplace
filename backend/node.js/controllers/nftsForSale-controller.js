@@ -25,18 +25,27 @@ export const getNftsForSale = async (req, res, next) => {
 };
 
 export const getNftForSale = async (req, res, next) => {
-  const contract = req.params.contract;
-  const tokenId = req.params.tokenid;
+  console.log("Initializing getNftForSale...");
+  const contractAddress = req.query.contractAddress;
+  const tokenId = req.query.tokenId;
+
   let nftForSale;
   try {
+    console.log("Searching token...");
     nftForSale = await NftsForSale.find({
-      contract: contract,
+      tokenContractAddress: contractAddress,
       tokenId: tokenId,
     });
   } catch (error) {
-    return res.status(404).send(error.message);
+    return res.status(404).json({ success: false, message: error.message });
   }
-  return res.status(200).json({ nftForSale });
+  if (nftForSale) {
+    console.log("Nft found");
+    return res.status(200).json({ success: true, nftForSale });
+  } else {
+    console.log("NFT doesn't exists");
+    return res.status(404).json({ success: false, message: "Token not found" });
+  }
 };
 
 export const addNftForSale = async (req, res, next) => {

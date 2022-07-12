@@ -14,7 +14,7 @@ import {
 const router = express.Router();
 
 router.get("/getall", getNftsForSale);
-router.get("/getnft/:contract/:tokenid", getNftForSale);
+router.get("/getnft", getNftForSale);
 router.post("/add", addNftForSale);
 router.get("/getnonce", getNonce);
 router.post("/createtokenuri", createTokenURI);
