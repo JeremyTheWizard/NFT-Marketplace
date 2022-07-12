@@ -95,8 +95,13 @@ function AssetCard() {
         </p>
         {location.state.status === "Sell" ? (
           <Sell
-            tokenContractAddress={location.state.contractAddress}
+            collectionName={location.state.collectionName}
+            description={location.state.description}
+            name={location.state.name}
+            imageUrl={location.state.imagePath}
             tokenId={location.state.tokenId}
+            attributes={location.state.attributes}
+            tokenContractAddress={location.state.contractAddress}
           />
         ) : location.state.status === "Buy" ? (
           <div className="w-full md:w-56 mt-4 mb-6 md:mb-0 flex flex-col gap-3">

@@ -7,7 +7,12 @@ const addSaleToDb = async (
   _tokenId,
   _price,
   _account,
-  _marketplaceAddress
+  _marketplaceAddress,
+  _name,
+  _imageUrl,
+  _attributes,
+  _collectionName,
+  _description
 ) => {
   const nonce = await axios
     .get("http://localhost:8000/api/nfts/nftsforsale/getnonce/")
@@ -35,14 +40,25 @@ const addSaleToDb = async (
         console.log(err);
       });
   }
-  axios.post("http://localhost:8000/api/nfts/nftsforsale/add", {
-    tokenContractAddress: _tokenContractAddress,
-    tokenId: _tokenId,
-    price: _price,
-    seller: _account,
-    nonce: nonce,
-    marketplaceAddress: _marketplaceAddress,
-    sellerSignature: sellerSignature,
+  const formData = new FormData();
+  formData.append("imageUrl", _imageUrl);
+  formData.append("tokenContractAddress", _tokenContractAddress);
+  formData.append("price", _price);
+  formData.append("seller", _account);
+  formData.append("nonce", nonce);
+  formData.append("marketplace", _marketplaceAddress);
+  formData.append("sellerSignature", sellerSignature);
+  formData.append("collectionName", _collectionName);
+  _description && formData.append("description", _description);
+  formData.append("marketplaceAddress", _marketplaceAddress);
+  formData.append("tokenId", _tokenId);
+  formData.append("attributes", JSON.stringify(_attributes));
+  _name && formData.append("name", _name);
+
+  axios({
+    method: "post",
+    url: "http://localhost:8000/api/nfts/nftsforsale/add",
+    data: formData,
   });
 };
 

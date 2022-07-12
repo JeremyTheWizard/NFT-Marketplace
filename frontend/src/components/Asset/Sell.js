@@ -4,12 +4,30 @@ import { FaEthereum } from "react-icons/fa";
 import useSellCoordinator from "../../hooks/useSellCoordinator";
 import SecondaryButton from "../SecondaryButton";
 
-const Sell = ({ tokenContractAddress, tokenId }) => {
+const Sell = ({
+  tokenContractAddress,
+  tokenId,
+  name,
+  imageUrl,
+  attributes = null,
+  collectionName,
+  description = null,
+}) => {
   const [price, setPrice] = useState();
   const sellCoordinator = useSellCoordinator(tokenContractAddress);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    sellCoordinator(
+      tokenContractAddress,
+      tokenId,
+      utils.parseEther(price.toString()).toString(),
+      name,
+      imageUrl,
+      attributes,
+      collectionName,
+      description
+    );
   };
 
   return (
@@ -32,16 +50,7 @@ const Sell = ({ tokenContractAddress, tokenId }) => {
           />
         </div>
       </label>
-      <SecondaryButton
-        text="Sell"
-        onClick={() => {
-          sellCoordinator(
-            tokenContractAddress,
-            tokenId,
-            utils.parseEther(price.toString()).toString()
-          );
-        }}
-      />
+      <SecondaryButton text="Sell" onClick={handleSubmit} />
     </form>
   );
 };

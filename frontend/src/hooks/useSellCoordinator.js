@@ -20,8 +20,22 @@ const useSellCoordinator = (_tokenContractAddress) => {
 
   const [tokenId, setTokenId] = useState();
   const [price, setPrice] = useState();
+  const [name, setName] = useState();
+  const [imageUrl, setImageUrl] = useState();
+  const [attributes, setAttributes] = useState();
+  const [collectionName, setCollectionName] = useState();
+  const [description, setDescription] = useState();
 
-  const sellCoordinator = async (_tokenContractAddress, _tokenId, _price) => {
+  const sellCoordinator = async (
+    _tokenContractAddress,
+    _tokenId,
+    _price,
+    _name,
+    _imageUrl,
+    _attributes = null,
+    _collectionName,
+    _description = null
+  ) => {
     if (value) {
       if (value[0] === true) {
         addSaleToDb(
@@ -30,13 +44,23 @@ const useSellCoordinator = (_tokenContractAddress) => {
           _tokenId,
           _price,
           account,
-          marketplace.address
+          marketplace.address,
+          _name,
+          _imageUrl,
+          _attributes,
+          _collectionName,
+          _description
         );
       }
       if (value[0] === false) {
         approveCollection(marketplace.address);
         setTokenId(_tokenId);
         setPrice(_price);
+        setName(_name);
+        setImageUrl(_imageUrl);
+        setAttributes(_attributes);
+        setCollectionName(_collectionName);
+        setDescription(_description);
       }
     }
   };
@@ -49,7 +73,12 @@ const useSellCoordinator = (_tokenContractAddress) => {
         tokenId,
         price,
         account,
-        marketplace.address
+        marketplace.address,
+        name,
+        imageUrl,
+        attributes,
+        collectionName,
+        description
       );
   }, [approveCollectionStatus]);
 

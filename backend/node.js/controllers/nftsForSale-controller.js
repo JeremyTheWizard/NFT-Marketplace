@@ -48,8 +48,14 @@ export const addNftForSale = async (req, res, next) => {
     nonce,
     marketplaceAddress,
     sellerSignature,
+    name = null,
+    attributes = null,
+    imageUrl,
+    collectionName,
+    description = null,
   } = req.body;
 
+  const parsedAttributes = JSON.parse(attributes);
   let nftForSale;
   const exists = await NftsForSale.findOne({
     tokenContractAddress,
@@ -66,6 +72,11 @@ export const addNftForSale = async (req, res, next) => {
       nonce,
       marketplaceAddress,
       sellerSignature,
+      name,
+      imageUrl,
+      attributes: parsedAttributes,
+      description,
+      collectionName,
     });
   } else {
     return res.status(400).send("NFT already exists");

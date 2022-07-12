@@ -2,17 +2,18 @@ import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
 const nftsForSaleSchema = mongoose.Schema({
+  collectionName: { type: String, required: true },
+  description: { type: String },
   name: { type: String },
   imageUrl: { type: String, required: true },
   tokenId: { type: String, required: true },
-  attributes: { type: String },
   tokenContractAddress: { type: String, required: true },
   price: { type: String, required: true },
   seller: { type: String, required: true },
   nonce: { type: Number, required: true, unique: true },
   marketplaceAddress: { type: String, required: true },
   sellerSignature: { type: String, required: true },
-  attributes: [{ trait_type: { type: String }, value: { type: String } }],
+  attributes: [{}],
 });
 
 nftsForSaleSchema.plugin(mongoosePaginate);
