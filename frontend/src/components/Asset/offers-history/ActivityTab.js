@@ -29,9 +29,7 @@ function ActivityTab({ contractAddress, tokenId }) {
           );
         }
       });
-      if (!activity.every((activity) => activity === "undefined")) {
-        setActivity(activity);
-      } else {
+      if (activity.every((activity) => activity === "undefined" || "null")) {
         setActivity(
           <Typography
             variant="h6"
@@ -42,6 +40,8 @@ function ActivityTab({ contractAddress, tokenId }) {
             This item has no recent activity.
           </Typography>
         );
+      } else {
+        setActivity(activity);
       }
     }
   }, [transfers]);

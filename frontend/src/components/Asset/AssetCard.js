@@ -14,7 +14,7 @@ import Sell from "./Sell";
 
 function AssetCard({ originalAccount }) {
   const [isLike, setIsLike] = useState(false);
-  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 100));
+  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 25));
   const [ethUsd, setEthUsd] = useState();
   const [seller, setSeller] = useState(undefined);
   const [transactionFailureAlert, setTransactionFailureAlert] = useState(false);
