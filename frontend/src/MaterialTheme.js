@@ -47,4 +47,13 @@ export const MaterialTheme = createTheme({
       xl: 1280,
     },
   },
+  components: {
+    MuiAlert: {
+      styleOverrides: {
+        filledError: {
+          backgroundColor: "#991b1b",
+        },
+      },
+    },
+  },
 });
