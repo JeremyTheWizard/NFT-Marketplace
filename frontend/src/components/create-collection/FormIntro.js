@@ -88,7 +88,7 @@ const FormIntro = ({ setShowSuccessDialog }) => {
           </div>
         </div>
         <div className="w-40 ml-1 order-1 lg:order-2 -mt-9">
-          <SecondaryButton loading={loading} />
+          <SecondaryButton loading={loading} text="CREATE!" />
         </div>
       </div>
     </form>
