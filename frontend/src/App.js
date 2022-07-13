@@ -1,10 +1,11 @@
 import { ThemeProvider } from "@mui/material/styles";
-import { DAppProvider, Kovan, Rinkeby } from "@usedapp/core";
+import { DAppProvider, Rinkeby } from "@usedapp/core";
 import { MoralisProvider } from "react-moralis";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar.js";
 import { alchemyApiKey, appId, serverURL } from "./config";
 import { MaterialTheme } from "./MaterialTheme";
+import NetworkWarningBanner from "./NetworkWarningBanner";
 import Asset from "./pages/Asset";
 import Collection from "./pages/Collection.js";
 import Collections from "./pages/Collections.js";
@@ -14,9 +15,9 @@ import ErrorPage from "./pages/ErrorPage.js";
 import Home from "./pages/Home.js";
 import Profile from "./pages/Profile";
 
-function App() {
+const App = () => {
   const config = {
-    networks: [Rinkeby, Kovan],
+    networks: [Rinkeby],
     readOnlyChainId: Rinkeby.chainId,
     readOnlyUrls: {
       [Rinkeby.chainId]: `https://eth-rinkeby.alchemyapi.io/v2/${alchemyApiKey}`,
@@ -29,6 +30,7 @@ function App() {
         <DAppProvider config={config}>
           <Router>
             <Navbar />
+            <NetworkWarningBanner />
             <Routes>
               <Route path="/marketplace" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
@@ -50,6 +52,6 @@ function App() {
       </MoralisProvider>
     </ThemeProvider>
   );
-}
+};
 
 export default App;
