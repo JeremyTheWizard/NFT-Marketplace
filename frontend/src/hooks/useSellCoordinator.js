@@ -11,7 +11,8 @@ const useSellCoordinator = (
   setTransactionFailureAlert,
   setShowSuccessDialog,
   setStatus,
-  originalAccount
+  originalAccount,
+  setSeller
 ) => {
   const marketplace = useGetMarketplaceContract();
   const { library, account } = useEthers();
@@ -50,6 +51,7 @@ const useSellCoordinator = (
     );
     if (approveSaleStatus === "Success") {
       setStatus("Buy");
+      setSeller(account);
       setShowSuccessDialog(true);
     } else {
       setTransactionFailureAlert(true);
@@ -97,6 +99,7 @@ const useSellCoordinator = (
           );
           if (approveSaleStatus === "Success") {
             setStatus("Buy");
+            setSeller(account);
             setShowSuccessDialog(true);
           } else {
             setTransactionFailureAlert(true);

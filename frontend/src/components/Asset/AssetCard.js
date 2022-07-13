@@ -18,6 +18,7 @@ function AssetCard({ originalAccount }) {
   const [ethUsd, setEthUsd] = useState();
   const [seller, setSeller] = useState(undefined);
   const [transactionFailureAlert, setTransactionFailureAlert] = useState(false);
+  const [removalSuccessAlert, setRemovalSuccessAlert] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [status, setStatus] = useState();
   const location = useLocation();
@@ -84,6 +85,13 @@ function AssetCard({ originalAccount }) {
     setTransactionFailureAlert(false);
   };
 
+  const handleRemovalSuccessAlertClose = (_, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setRemovalSuccessAlert(false);
+  };
+
   function likeIcon() {
     if (isLike) {
       return (
@@ -128,6 +136,7 @@ function AssetCard({ originalAccount }) {
             tokenId={location.state.tokenId}
             setStatus={setStatus}
             setSeller={setSeller}
+            setRemovalSuccessAlert={setRemovalSuccessAlert}
           />
         );
       } else {
@@ -146,6 +155,7 @@ function AssetCard({ originalAccount }) {
               setTransactionFailureAlert={setTransactionFailureAlert}
               setShowSuccessDialog={setShowSuccessDialog}
               setStatus={setStatus}
+              setSeller={setSeller}
               originalAccount={
                 originalAccount || location.state.originalAccount
               }
@@ -235,6 +245,20 @@ function AssetCard({ originalAccount }) {
           onClose={handleTransactionFailureAlertClose}
         >
           The transaction has been canceled!
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={removalSuccessAlert}
+        autoHideDuration={6000}
+        onClose={handleRemovalSuccessAlertClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          severity="success"
+          variant="filled"
+          onClose={handleRemovalSuccessAlertClose}
+        >
+          Your NFT has been removed from sale.
         </Alert>
       </Snackbar>
       <Dialog

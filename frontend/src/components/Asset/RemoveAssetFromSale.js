@@ -7,6 +7,7 @@ const RemoveAssetFromSale = ({
   tokenId,
   setStatus,
   setSeller,
+  setRemovalSuccessAlert,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +21,7 @@ const RemoveAssetFromSale = ({
     setStatus("Sell");
     setSeller(null);
     setLoading(false);
+    setRemovalSuccessAlert(true);
   };
 
   return (
