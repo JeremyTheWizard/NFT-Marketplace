@@ -1,9 +1,10 @@
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
+import SecondaryButton from "../SecondaryButton";
 import CreatedCollectionsBox from "./CreatedCollectionsBox";
 
 const Created = () => {
@@ -76,9 +77,12 @@ const Created = () => {
         )}
       </ul>
       <div className="flex flex-col items-center mt-12">
-        <Button variant="contained" onClick={handleNavigateToCreateCollection}>
+        <SecondaryButton
+          onClick={handleNavigateToCreateCollection}
+          styles={"w-auto grow-0"}
+        >
           CREATE NEW COLLECTION
-        </Button>
+        </SecondaryButton>
       </div>
     </>
   );
