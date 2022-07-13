@@ -12,13 +12,13 @@ const CreatedCollectionsBox = ({ _roundedIcon, _account }) => {
       onMouseLeave={() => {
         setEditRoundedIconImage(false);
       }}
-      className="inline-block relative w-24 h-24 md:w-36 md:h-36 bg-gray-500 text-center rounded-full"
+      className="inline-block relative w-24 h-24 md:w-36 md:h-36 bg-gray-500 text-center rounded-lg "
     >
       {_roundedIcon && (
         <img
           src={_roundedIcon}
           alt="profile"
-          className="w-24 h-24 md:w-36 md:h-36 rounded-full object-cover hover:opacity-80"
+          className="w-full h-full rounded-lg object-cover hover:opacity-80"
         />
       )}
       {editRoundedIconImage && (
