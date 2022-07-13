@@ -1,37 +1,41 @@
+import { Typography } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import AssetCard from "../explore/AssetCard";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 
 const Items = () => {
   const { account } = useEthers();
-  const [userAssets, setUserAssets] = useState();
-  const [nftsCardsHtml, setNftsCardsHtml] = useState();
+  const [assetCards, setAssetCards] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const cursor = useRef();
+
+  useEffect(() => {
+    account && fetchData();
+  }, [account]);
 
   const fetchNFTs = async () => {
     // bypass opensea's api rate limit
     await new Promise((resolve) => {
       setTimeout(resolve, 500);
     });
-    let userAssets;
+
+    let data;
     try {
-      userAssets = await axios({
+      data = await axios({
         method: "get",
         url: "https://testnets-api.opensea.io/api/v1/assets",
-        params: { owner: account },
-      }).then((res) => res.data.assets);
+        params: { owner: account, cursor: cursor.current },
+      }).then((res) => res.data);
     } catch (err) {
       console.log(err);
     }
-    setUserAssets(userAssets);
-  };
 
-  async function renderAssetCards() {
-    console.log("rendering assetCards...");
-    const nftsCardsHtml = [];
-    const requests = userAssets.map(async (asset) => {
-      nftsCardsHtml.push(
+    const assetCards = [];
+    const requests = data.assets.map(async (asset) => {
+      assetCards.push(
         <AssetCard
           status="Sell"
           asset={{
@@ -50,32 +54,51 @@ const Items = () => {
       );
     });
     await Promise.all(requests);
-    setNftsCardsHtml(nftsCardsHtml);
-  }
+
+    return [assetCards, data.next];
+  };
+
+  const fetchData = async () => {
+    const [newAssetCards, next] = await fetchNFTs();
+    setAssetCards([...assetCards, ...newAssetCards]);
+
+    if (cursor.current === next) {
+      setHasMore(false);
+    } else {
+      cursor.current = next;
+    }
+  };
 
   const fixUrl = (url) => {
     return "https://ipfs.io/ipfs/" + url.split("ipfs://")[1];
   };
 
-  useEffect(() => {
-    account && fetchNFTs();
-  }, [account]);
-
-  useEffect(() => {
-    userAssets && renderAssetCards();
-  }, [userAssets]);
-
   return (
-    <>
-      {!nftsCardsHtml && (
-        <div className="flex flex-col items-center my-12">
+    <InfiniteScroll
+      style={{ overflow: "hidden" }}
+      dataLength={assetCards.length}
+      next={fetchData}
+      hasMore={hasMore}
+      loader={
+        <div className="flex flex-col items-center mt-6">
           <ModifiedCircularProgress />
         </div>
-      )}
+      }
+      endMessage={
+        <Typography
+          variant="h6"
+          component="p"
+          color="onPrimary"
+          style={{ textAlign: "center", marginTop: "3rem" }}
+        >
+          You have no more items.
+        </Typography>
+      }
+    >
       <div className="my-12 grid justify-center sm:grid-cols-2 lg:grid-cols-3 gap-12">
-        {nftsCardsHtml && nftsCardsHtml}
+        {assetCards}
       </div>
-    </>
+    </InfiniteScroll>
   );
 };
 
