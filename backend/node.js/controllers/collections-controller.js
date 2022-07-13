@@ -142,7 +142,7 @@ export const getCollectionInfo = async (req, res) => {
   console.log(`Searching for ${collectionSlug}`);
   let collectionInfo;
   if (collectionSlug.startsWith("nft-palace-collections")) {
-    const collectionInfo = await Collection.findOne({ slug: collectionSlug });
+    collectionInfo = await Collection.findOne({ slug: collectionSlug });
     console.log("🚀 ~ collectionInfo", collectionInfo);
   } else {
     collectionInfo = await ExternalCollection.findOne({ slug: collectionSlug });

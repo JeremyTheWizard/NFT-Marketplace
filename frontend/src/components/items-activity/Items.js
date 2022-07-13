@@ -6,12 +6,7 @@ import useGetNFTMinterContract from "../../hooks/useGetNFTMinterContract";
 import AssetCard from "../explore/AssetCard";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 
-function Items({
-  assetContractAddress,
-  collectionName,
-  collectionSlug = null,
-  editable,
-}) {
+function Items({ assetContractAddress, collectionSlug = null, editable }) {
   const [assetCards, setAssetCards] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState(undefined);
@@ -28,8 +23,8 @@ function Items({
   const createAssetCards = async () => {
     let collectionAssets = [];
 
-    // First check if the collection was created in the website and grab the
-    //  useful information
+    // First check if the collection was created in the website and grab
+    // only the tokens that were created under that collection
     let collectionInfo;
     if (collectionSlug) {
       try {
@@ -42,7 +37,7 @@ function Items({
         console.log(err);
       }
 
-      if (collectionInfo) {
+      if (collectionInfo && collectionInfo.tokens.length) {
         let url = `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}`;
         collectionInfo.tokens.forEach((token) => {
           url += `&token_ids=${token.tokenId}`;

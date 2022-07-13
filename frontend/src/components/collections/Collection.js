@@ -5,11 +5,19 @@ const Collection = ({ collectionInfo }) => {
   const navigate = useNavigate();
 
   const navigateToCollection = (slug) => {
-    navigate(`/collections/nft-palace-collections-${slug}`, {
-      state: {
-        collectionInfo: collectionInfo,
-      },
-    });
+    if (slug.startsWith("nft-palace-collections")) {
+      navigate(`/collections/${slug}`, {
+        state: {
+          collectionInfo: collectionInfo,
+        },
+      });
+    } else {
+      navigate(`/collections/nft-palace-collections-${slug}`, {
+        state: {
+          collectionInfo: collectionInfo,
+        },
+      });
+    }
   };
 
   return (

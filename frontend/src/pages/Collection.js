@@ -11,9 +11,15 @@ function Collection() {
   const location = useLocation();
 
   const fetchCollectionInfo = async () => {
-    let collectionRelevantInfo = [];
+    // Fetches the collection info following the below system:
+    // first use the location params to increase speed
+    // Check if the collection is internal and call the db for info
+    // If the collection is external call opensea's api
 
-    // use location params to increase loading speed
+    let collectionRelevantInfo = [];
+    let collectionInfo = [];
+
+    // location params
     if (location.state.collectionInfo) {
       if (location.state.collectionInfo.bannerImageUrl) {
         collectionRelevantInfo.bannerImageUrl =
@@ -35,7 +41,7 @@ function Collection() {
       }
     }
 
-    // First check if there is a collection in the db if not check opensea's api
+    // Internal collection
     let response;
     try {
       response = await axios.get(
@@ -44,7 +50,7 @@ function Collection() {
     } catch {}
 
     if (response) {
-      const collectionInfo = response.data.collectionInfo;
+      collectionInfo = response.data.collectionInfo;
       collectionRelevantInfo = {
         collectionSlug: collectionInfo.slug,
         assetContractAddress: collectionInfo.assetContractAddress,
@@ -61,17 +67,16 @@ function Collection() {
         creator: collectionInfo.createdBy,
         tokens: collectionInfo.tokens,
       };
-    } else {
-      // Override important params with db params on external collections
-      let collectionInfo = [];
+    }
+    // External collection
+    else {
+      // We still want to check our db for external collections
+      // to check for overrides
       if (
         !collectionRelevantInfo.bannerImageUrl ||
         !collectionRelevantInfo.roundedIconImageUrl ||
         !collectionRelevantInfo.description
       ) {
-        // The idea is that all urls will have the same structure prepending
-        // "nft-palace-collections" to all of them. However to use opensea's api
-        // we need to split the url.
         try {
           collectionInfo = await axios
             .get(
@@ -96,7 +101,7 @@ function Collection() {
         }
       }
 
-      // get rest of info from opensea
+      // Now we call opensea's api
       try {
         collectionInfo = await axios
           .get(
@@ -113,7 +118,9 @@ function Collection() {
         assetContractAddress:
           collectionInfo.primary_asset_contracts[0] &&
           collectionInfo.primary_asset_contracts[0].address,
-        name: collectionInfo.name,
+        name: collectionRelevantInfo.name
+          ? collectionRelevantInfo.name
+          : collectionInfo.name.split("-").join(" "),
         stats: collectionInfo.stats,
         bannerImageUrl: collectionRelevantInfo.bannerImageUrl
           ? collectionRelevantInfo.bannerImageUrl
@@ -126,7 +133,6 @@ function Collection() {
           : collectionInfo.description,
       };
     }
-
     setCollectionRelevantInfo(collectionRelevantInfo);
   };
 
@@ -150,11 +156,11 @@ function Collection() {
       )}
       {collectionRelevantInfo && (
         <ItemsActivity
-          collectionSlug={collectionRelevantInfo.collectionSlug}
           assetContractAddress={collectionRelevantInfo.assetContractAddress}
           collectionName={collectionRelevantInfo.name}
           creator={collectionRelevantInfo.creator}
           tokens={collectionRelevantInfo.tokens}
+          collectionSlug={collectionRelevantInfo.collectionSlug}
         />
       )}
     </div>
