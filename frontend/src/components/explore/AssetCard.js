@@ -28,7 +28,7 @@ function AssetCard({ asset, status, originalAccount }) {
   function routeChange(path) {
     navigate(path, {
       state: {
-        imagePath: asset.imageUrl.startsWith("ipfs")
+        imageUrl: asset.imageUrl.startsWith("ipfs")
           ? fixUrl(asset.imageUrl)
           : asset.imageUrl,
         collectionName: asset.collectionName,
@@ -43,6 +43,7 @@ function AssetCard({ asset, status, originalAccount }) {
         description: asset.description,
         ethUsd: ethUsd,
         originalAccount: originalAccount,
+        owner: originalAccount,
       },
     });
   }
@@ -51,7 +52,13 @@ function AssetCard({ asset, status, originalAccount }) {
     return (
       <div
         className="bg-onPrimary overflow-hidden rounded-xl flex flex-col cursor-pointer"
-        onClick={() => routeChange(`/collections/${asset.collectionName}/nft`)}
+        onClick={() =>
+          routeChange(
+            `/assets/${
+              asset.assetContractAddress || asset.tokenContractAddress
+            }/${asset.tokenId}`
+          )
+        }
       >
         <div className="w-full h-full">
           {asset.imageUrl ? (

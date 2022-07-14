@@ -40,7 +40,7 @@ const App = () => {
               />
               <Route path="/collections" element={<Collections />} />
               <Route
-                path="/collections/:collectionslug/:asset"
+                path="/assets/:tokenContractAddress/:tokenId"
                 element={<Asset />}
               />
               <Route path="/create" element={<Create />} />

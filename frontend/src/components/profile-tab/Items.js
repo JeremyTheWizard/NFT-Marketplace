@@ -40,7 +40,6 @@ const Items = () => {
           status="Sell"
           asset={{
             collectionName: asset.asset_contract.name,
-            seller: account,
             imageUrl: asset.image_url,
             tokenId: asset.token_id,
             assetContractAddress: asset.asset_contract.address,
