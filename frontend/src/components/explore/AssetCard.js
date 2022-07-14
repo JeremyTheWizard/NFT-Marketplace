@@ -43,7 +43,7 @@ function AssetCard({ asset, status, originalAccount }) {
         description: asset.description,
         ethUsd: ethUsd,
         originalAccount: originalAccount,
-        owner: originalAccount,
+        owner: asset.owner,
       },
     });
   }
@@ -72,28 +72,32 @@ function AssetCard({ asset, status, originalAccount }) {
               className="w-full h-full object-cover aspect-square"
             />
           ) : (
-            <div className="flex flex-col justify-center items-center w-full h-full">
-              <div className="w-full h-full bg-gray-700 blur-md"></div>
-              {asset.collection.imageUrl ? (
+            <div className="flex flex-col justify-center items-center w-full aspect-square max-w-[600px]">
+              <div className="bg-gray-700 blur-md w-full h-full"></div>
+              {asset.collection && asset.collection.imageUrl ? (
                 <img
                   src={asset.collection.imageUrl}
                   className="rounded-full w-60 h-60 absolute z-10"
                 />
               ) : (
-                <Typography
-                  variant="h6"
-                  component="body1"
-                  style={{ position: "absolute" }}
-                  color="onPrimary"
-                >
-                  {asset.collectionName}
-                </Typography>
+                <div className="absolute flex flex-col gap-1 items-center">
+                  <Typography variant="h6" component="body1" color="onPrimary">
+                    {asset.collectionName}
+                  </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    component="body1"
+                    color="onPrimary"
+                  >
+                    Content not available yet.
+                  </Typography>
+                </div>
               )}
             </div>
           )}
         </div>
         <div className="p-6 flex flex-col gap-3">
-          <h4>{asset.collectionName}</h4>
+          <h4 className="line-clamp-1">{asset.collectionName}</h4>
           <h3 className="text-xl font-semibold">
             {asset.name ? asset.name : `#${asset.tokenId}`}
           </h3>

@@ -20,7 +20,7 @@ function Collection() {
     let collectionInfo = [];
 
     // location params
-    if (location.state.collectionInfo) {
+    if (location.state && location.state.collectionInfo) {
       if (location.state.collectionInfo.bannerImageUrl) {
         collectionRelevantInfo.bannerImageUrl =
           location.state.collectionInfo.bannerImageUrl;

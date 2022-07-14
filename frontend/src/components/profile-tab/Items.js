@@ -47,6 +47,7 @@ const Items = () => {
             collection: { imageUrl: asset.collection.image_url },
             name: asset.name,
             description: asset.description,
+            owner: account,
           }}
           originalAccount={account}
         />

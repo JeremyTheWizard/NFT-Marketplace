@@ -1,4 +1,5 @@
 import { Typography } from "@mui/material";
+import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -10,6 +11,11 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
   const [assetCards, setAssetCards] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState(undefined);
+  const { account } = useEthers();
+
+  useEffect(() => {
+    assetContractAddress && fetchData();
+  }, [assetContractAddress]);
 
   const nftsForSale = [];
   const getNftsForSale = async () => {
@@ -53,28 +59,52 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
     if (!collectionInfo) {
       // bypass openSea api rate limit
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const data = await axios
-        .get(
-          `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}&cursor=${
-            cursor ? cursor : ""
-          }`
-        )
-        .then((res) => res.data);
+      const data = cursor
+        ? await axios
+            .get(
+              `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}&cursor=${cursor}`
+            )
+            .then((res) => res.data)
+        : await axios
+            .get(
+              `https://testnets-api.opensea.io/api/v1/assets?asset_contract_address=${assetContractAddress}`
+            )
+            .then((res) => res.data);
       collectionAssets = data.assets;
       next = data.next;
     }
 
     // Mutual code in any case
+
+    // Get nfts for sale to check whether they should be shown on sale
+
+    let assetsOnSale;
+    try {
+      assetsOnSale = await axios({
+        method: "get",
+        url: "http://localhost:8000/api/nfts/nftsforsale/getall",
+        params: { tokenContractAddress: assetContractAddress },
+      }).then((res) => res.data.nftsForSale);
+    } catch (err) {
+      console.log(err);
+    }
+
     const assetCards = [];
     collectionAssets.map((nft, key) => {
+      let price;
+      assetsOnSale.forEach((asset) => {
+        if (asset.tokenId === nft.token_id) {
+          price = asset.price;
+        }
+      });
       const relevantInfo = {
         collectionName: nft.collection.name,
         assetContractAddress: nft.asset_contract.address,
         tokenId: nft.token_id,
         imageUrl: nft.image_url,
         name: nft.name,
-        description: nft.description,
-        price: undefined,
+        description: nft.description || nft.asset_contract.description,
+        price: price,
         attributes: nft.traits,
       };
 
@@ -86,14 +116,14 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
         relevantInfo.price = nftsForSale.price;
       }
 
-      relevantInfo.imageUrl &&
-        assetCards.push(
-          <AssetCard
-            key={key}
-            status={editable && "Sell"}
-            asset={relevantInfo}
-          />
-        );
+      assetCards.push(
+        <AssetCard
+          key={key}
+          status={editable && "Sell"}
+          asset={relevantInfo}
+          originalAccount={account}
+        />
+      );
     });
 
     return [assetCards, next];
@@ -108,10 +138,6 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
     }
     setCursor(next);
   };
-
-  useEffect(() => {
-    assetContractAddress && fetchData();
-  }, [assetContractAddress]);
 
   return (
     <InfiniteScroll

@@ -5,7 +5,7 @@ import Attributes from "./Attributes";
 import TabContent from "./TabContent";
 import TabNavItem from "./TabNavItem";
 
-function Tabs() {
+function Tabs({ tokenInfo }) {
   const [activeTab, setActiveTab] = useState("tab1");
 
   const props = {
@@ -27,12 +27,12 @@ function Tabs() {
 
       <div className="w-full mt-6 mb-12">
         <TabContent id="tab1" activeTab={activeTab}>
-          <Attributes attributes={location.state.attributes} />
+          <Attributes attributes={tokenInfo.attributes} />
         </TabContent>
         <TabContent id="tab2" activeTab={activeTab}>
           <ActivityTab
-            contractAddress={location.state.contractAddress}
-            tokenId={location.state.tokenId}
+            contractAddress={tokenInfo.contractAddress}
+            tokenId={tokenInfo.tokenId}
           />
         </TabContent>
       </div>

@@ -1,6 +1,5 @@
 import { Alert, Dialog, DialogContent, Snackbar } from "@mui/material";
 import { addressEqual, useEthers } from "@usedapp/core";
-import axios from "axios";
 import { utils } from "ethers";
 import { useEffect, useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
@@ -12,10 +11,8 @@ import SecondaryButton from "../SecondaryButton";
 import RemoveAssetFromSale from "./RemoveAssetFromSale";
 import Sell from "./Sell";
 
-function AssetCard({ originalAccount }) {
+function AssetCard({ tokenInfo, originalAccount }) {
   const { tokenContractAddress, tokenId } = useParams();
-
-  const [tokenInfo, setTokenInfo] = useState();
 
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 25));
@@ -29,18 +26,6 @@ function AssetCard({ originalAccount }) {
   const { account } = useEthers();
 
   useEffect(() => {
-    if (location.state) {
-      setTokenInfo(location.state);
-      setStatus(location.state.status);
-      if (location.state.seller === undefined) {
-        fetchSeller();
-      }
-    } else {
-      fetchTokenData();
-    }
-  }, []);
-
-  useEffect(() => {
     if (tokenInfo && !tokenInfo.ethUsd) {
       fetchEthPrice();
     }
@@ -50,81 +35,6 @@ function AssetCard({ originalAccount }) {
     tokenContractAddress,
     tokenId
   );
-
-  const fetchSeller = async () => {
-    let seller;
-
-    try {
-      seller = await axios({
-        method: "get",
-        url: "http://localhost:8000/api/nfts/nftsforsale/getnft",
-        params: {
-          contractAddress: tokenContractAddress,
-          tokenId: tokenId,
-        },
-      }).then((res) => res.data.nftForSale[0].seller);
-    } catch (err) {
-      console.log(err);
-    }
-    if (seller) {
-      setTokenInfo((previous) => ({ ...previous, seller: seller }));
-    } else {
-      setTokenInfo((previous) => ({ ...previous, seller: null }));
-    }
-  };
-
-  const fetchTokenData = async () => {
-    let data;
-
-    // Check if the token is on sale on the db if not get info from opensea
-    try {
-      data = await axios({
-        method: "get",
-        url: "http://localhost:8000/api/nfts/nftsforsale/getnft",
-        params: {
-          contractAddress: tokenContractAddress,
-          tokenId: tokenId,
-        },
-      }).then((res) => res.data.nftForSale[0]);
-    } catch (err) {
-      console.log(err);
-    }
-
-    if (data) {
-      setTokenInfo({
-        collectionName: data.collectionName,
-        seller: data.seller,
-        imageUrl: data.imageUrl,
-        tokenId: data.tokenId,
-        assetContractAddress: data.tokenContractAddress,
-        attributes: data.attributes,
-        name: data.name,
-        description: data.description,
-      });
-      setStatus("Buy");
-    } else {
-      try {
-        data = await axios({
-          method: "get",
-          url: `https://testnets-api.opensea.io/api/v1/asset/${tokenContractAddress}/${tokenId}/`,
-        }).then((res) => res.data);
-      } catch (err) {
-        console.log(err);
-      }
-      if (data) {
-        setTokenInfo({
-          collectionName: data.asset_contract.name,
-          imageUrl: data.image_url,
-          tokenId: data.token_id,
-          assetContractAddress: data.asset_contract.address,
-          attributes: data.traits,
-          name: data.name,
-          description: data.description,
-          owner: data.owner.address,
-        });
-      }
-    }
-  };
 
   const handleSuccessDialogClose = () => {
     setShowSuccessDialog(false);

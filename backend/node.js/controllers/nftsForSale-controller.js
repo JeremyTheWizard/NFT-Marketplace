@@ -8,20 +8,32 @@ dotenv.config();
 
 export const getNftsForSale = async (req, res, next) => {
   console.log("Initializing getNftsForSale...");
-  const { limit, page } = req.query;
+  const { limit, page, tokenContractAddress } = req.query;
 
   let nftsForSale = [];
-  try {
+  if (tokenContractAddress) {
     console.log("Fetching nfts for sale...");
+    try {
+      nftsForSale = await NftsForSale.paginate(
+        { tokenContractAddress: tokenContractAddress },
+        { limit: limit || 20, page: page || 0 }
+      ).then((res) => res.docs);
+      console.log("🚀 ~ NftsForSale", NftsForSale);
+      return res.status(200).json({ nftsForSale });
+    } catch (error) {
+      return res.status(404).json({ success: false, message: error.message });
+    }
+  }
+  try {
     nftsForSale = await NftsForSale.paginate(
       {},
       { limit: limit || 20, page: page || 0 }
     ).then((res) => res.docs);
     console.log("🚀 ~ NftsForSale", NftsForSale);
+    return res.status(200).json({ nftsForSale });
   } catch (error) {
-    return res.status(404).send(error.message);
+    return res.status(404).json({ success: false, message: error.message });
   }
-  return res.status(200).json({ nftsForSale });
 };
 
 export const getNftForSale = async (req, res, next) => {
