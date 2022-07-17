@@ -1,7 +1,12 @@
 import { ThemeProvider } from "@mui/material/styles";
 import { DAppProvider, Rinkeby } from "@usedapp/core";
 import { MoralisProvider } from "react-moralis";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Navbar from "./components/navbar/Navbar.js";
 import { alchemyApiKey, appId, serverURL } from "./config";
 import { MaterialTheme } from "./MaterialTheme";
@@ -32,6 +37,7 @@ const App = () => {
             <Navbar />
             <NetworkWarningBanner />
             <Routes>
+              <Route path="/" element={<Navigate to="/marketplace" />} />
               <Route path="/marketplace" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
               <Route
