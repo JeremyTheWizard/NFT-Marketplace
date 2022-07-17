@@ -9,15 +9,13 @@ const useSellCoordinator = (
   _tokenContractAddress,
   setLoading,
   setTransactionFailureAlert,
-  setShowSuccessDialog,
-  setStatus,
-  originalAccount,
+  owner,
   setSeller
 ) => {
   const marketplace = useGetMarketplaceContract();
   const { library, account } = useEthers();
   const tokenContract = getTokenContract(_tokenContractAddress);
-  const { value } =
+  const { value: isApproved } =
     useCall({
       contract: tokenContract,
       method: "isApprovedForAll",
@@ -33,6 +31,11 @@ const useSellCoordinator = (
   const [attributes, setAttributes] = useState();
   const [collectionName, setCollectionName] = useState();
   const [description, setDescription] = useState();
+  const [approveSaleStatus, setApproveSaleStatus] = useState(false);
+
+  const resetApproveSaleStatus = () => {
+    setApproveSaleStatus(false);
+  };
 
   const addSaleToDbFunc = async () => {
     const approveSaleStatus = await addSaleToDb(
@@ -46,13 +49,11 @@ const useSellCoordinator = (
       imageUrl,
       attributes,
       collectionName,
-      description,
-      setLoading
+      description
     );
+    setApproveSaleStatus(approveSaleStatus);
     if (approveSaleStatus === "Success") {
-      setStatus("Buy");
       setSeller(account);
-      setShowSuccessDialog(true);
     } else {
       setTransactionFailureAlert(true);
     }
@@ -79,11 +80,11 @@ const useSellCoordinator = (
     _collectionName,
     _description = null
   ) => {
-    if (originalAccount === account) {
+    if (owner === account) {
       // Avoid error where the user changed
       //account to quickly
-      if (value) {
-        if (value[0] === true) {
+      if (isApproved) {
+        if (isApproved[0] === true) {
           const approveSaleStatus = await addSaleToDb(
             library,
             _tokenContractAddress,
@@ -97,16 +98,15 @@ const useSellCoordinator = (
             _collectionName,
             _description
           );
+          setApproveSaleStatus(approveSaleStatus);
           if (approveSaleStatus === "Success") {
-            setStatus("Buy");
             setSeller(account);
-            setShowSuccessDialog(true);
           } else {
             setTransactionFailureAlert(true);
           }
           setLoading(false);
         }
-        if (value[0] === false) {
+        if (isApproved[0] === false) {
           approveCollection(marketplace.address);
           setTokenId(_tokenId);
           setPrice(_price);
@@ -123,7 +123,13 @@ const useSellCoordinator = (
     }
   };
 
-  return sellCoordinator;
+  return {
+    sellCoordinator,
+    approveSaleStatus,
+    resetApproveSaleStatus,
+    approveCollectionStatus,
+    isApproved,
+  };
 };
 
 export default useSellCoordinator;

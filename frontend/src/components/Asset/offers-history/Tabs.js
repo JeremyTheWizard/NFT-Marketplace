@@ -30,10 +30,7 @@ function Tabs({ tokenInfo }) {
           <Attributes attributes={tokenInfo.attributes} />
         </TabContent>
         <TabContent id="tab2" activeTab={activeTab}>
-          <ActivityTab
-            contractAddress={tokenInfo.contractAddress}
-            tokenId={tokenInfo.tokenId}
-          />
+          <ActivityTab />
         </TabContent>
       </div>
     </>

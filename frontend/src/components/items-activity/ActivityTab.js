@@ -43,7 +43,13 @@ function ActivityTab({ assetContractAddress, tokens }) {
       "https://api.etherscan.io/api?module=stats&action=ethprice&apikey=2TK8NI1JT3WXC7WCCFQP8V3Q22J347ZC5F"
     );
     const ethUsd = (await response.json()).result.ethusd;
-    setEthUsd(ethUsd);
+
+    // The api sometimes fails to deliver the ethPrice.
+    if (ethUsd) {
+      return setEthUsd(ethUsd);
+    } else {
+      return fetchEthPrice();
+    }
   };
 
   useEffect(() => {

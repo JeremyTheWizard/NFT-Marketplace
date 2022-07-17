@@ -12,8 +12,12 @@ export const addCollection = async (req, res) => {
     assetContractAddress,
     updateUser = true,
   } = req.body;
-  const bannerImage = req.files.bannerImage;
-  const roundedIconImage = req.files.roundedIconImage;
+  let bannerImage;
+  let roundedIconImage;
+  if (req.files) {
+    bannerImage = req.files.bannerImage;
+    roundedIconImage = req.files.roundedIconImage;
+  }
 
   console.log("Creating collection");
   let newBannerImageData = null;

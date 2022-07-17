@@ -114,7 +114,7 @@ const CollectionComboBox = ({ collectionSlug }) => {
               filtered.push({
                 inputValue,
                 name: `Create collection "${inputValue}"`,
-                description:
+                explanation:
                   "This is a quick creation. You'll be able to fill the collection's details later on your profile.",
               });
               return filtered;
@@ -158,13 +158,18 @@ const CollectionComboBox = ({ collectionSlug }) => {
               }}
             >
               <p>{option.name}</p>
-              <p className="text-sm font-normal">{option.description}</p>
+              <p className="text-sm font-normal">{option.explanation}</p>
             </li>
           );
         }}
         renderInput={(params) => (
           <ModifiedTextField
             {...params}
+            sx={{
+              "& input": {
+                boxShadow: "none !important",
+              },
+            }}
             required
             label="Collection"
             name="collection"

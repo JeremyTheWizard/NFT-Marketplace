@@ -5,7 +5,6 @@ import DeleteButton from "../DeleteButton";
 const RemoveAssetFromSale = ({
   tokenContractAddress,
   tokenId,
-  setStatus,
   setSeller,
   setRemovalSuccessAlert,
 }) => {
@@ -18,7 +17,6 @@ const RemoveAssetFromSale = ({
       url: "http://localhost:8000/api/nfts/nftsforsale/delete",
       data: { tokenContractAddress: tokenContractAddress, tokenId: tokenId },
     });
-    setStatus("Sell");
     setSeller(null);
     setLoading(false);
     setRemovalSuccessAlert(true);

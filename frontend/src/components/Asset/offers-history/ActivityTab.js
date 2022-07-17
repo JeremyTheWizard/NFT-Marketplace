@@ -1,18 +1,16 @@
 import { Typography } from "@mui/material";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useMoralisWeb3Api } from "react-moralis";
+import { useParams } from "react-router-dom";
 import ModifiedCircularProgress from "../../ModifiedMuiComponents/ModifiedCircularProgress";
 import ActivityTabItem from "./ActivityTabItem";
 
-function ActivityTab({ contractAddress, tokenId }) {
+function ActivityTab({ contractAddress }) {
   const [ethUsd, setEthUsd] = useState();
   const [transfers, setTransfers] = useState();
-  const [activity, setActivity] = useState(
-    <div className="flex flex-col items-center">
-      {" "}
-      <ModifiedCircularProgress />
-    </div>
-  );
+  const { tokenContractAddress, tokenId } = useParams();
+  const [activity, setActivity] = useState();
   const Web3Api = useMoralisWeb3Api();
 
   useEffect(() => {
@@ -22,32 +20,29 @@ function ActivityTab({ contractAddress, tokenId }) {
 
   useEffect(() => {
     if (transfers && ethUsd) {
-      const activity = transfers.map((transfer, key) => {
-        if (tokenId === transfer.token_id) {
-          return (
-            <ActivityTabItem key={key} transfer={transfer} ethUsd={ethUsd} />
-          );
-        }
-      });
-      if (activity.every((activity) => activity === "undefined" || "null")) {
-        setActivity(
-          <Typography
-            variant="h6"
-            component="paragraph"
-            color="onPrimary"
-            style={{ textAlign: "center" }}
-          >
-            This item has no recent activity.
-          </Typography>
-        );
-      } else {
-        setActivity(activity);
-      }
+      loadTokenTransfers();
     }
-  }, [transfers]);
+  }, [transfers, ethUsd]);
+
+  const loadTokenTransfers = async () => {
+    const activity = transfers.map((transfer, key) => {
+      if (
+        !["created", "bid_entered", "bid_withdrawn", "approve"].includes(
+          transfer.event_type
+        )
+      ) {
+        return (
+          <ActivityTabItem key={key} transfer={transfer} ethUsd={ethUsd} />
+        );
+      }
+    });
+    await Promise.all(activity);
+
+    setActivity(activity);
+  };
 
   const fetchContractNFTTransfers = async () => {
-    new Promise((resolve) => {
+    await new Promise((resolve) => {
       setTimeout(resolve, 1000);
     });
     const options = {
@@ -56,11 +51,18 @@ function ActivityTab({ contractAddress, tokenId }) {
     };
     let nftTransfers = [];
     try {
-      nftTransfers = await Web3Api.token.getContractNFTTransfers(options);
+      nftTransfers = await axios({
+        method: "get",
+        url: "https://testnets-api.opensea.io/api/v1/events",
+        params: {
+          asset_contract_address: tokenContractAddress,
+          token_id: tokenId,
+        },
+      }).then((res) => res.data.asset_events);
     } catch (err) {
       console.log(err);
     }
-    setTransfers(nftTransfers.result);
+    setTransfers(nftTransfers);
   };
 
   const fetchEthPrice = async () => {
@@ -87,6 +89,21 @@ function ActivityTab({ contractAddress, tokenId }) {
       </div>
       <div className="flex flex-col gap-16 md:gap-12">
         {activity && activity}
+        {activity && (
+          <Typography
+            variant="h6"
+            component="paragraph"
+            color="onPrimary"
+            style={{ textAlign: "center" }}
+          >
+            This item has no more recent activity.
+          </Typography>
+        )}
+        {!activity && (
+          <div className="flex flex-col items-center">
+            <ModifiedCircularProgress />
+          </div>
+        )}
       </div>
     </>
   );

@@ -1,9 +1,8 @@
 import { Typography } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import useGetNFTMinterContract from "../../hooks/useGetNFTMinterContract";
+import React, { useEffect, useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroller";
 import AssetCard from "../explore/AssetCard";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 
@@ -11,20 +10,33 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
   const [assetCards, setAssetCards] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState(undefined);
+  const [assetsOnSale, setAssetsOnSale] = useState();
   const { account } = useEthers();
+  const loading = useRef(false);
 
   useEffect(() => {
-    assetContractAddress && fetchData();
+    if (assetContractAddress) {
+      fetchNftsForSale();
+    }
   }, [assetContractAddress]);
 
-  const nftsForSale = [];
-  const getNftsForSale = async () => {
-    nftsForSale = await axios
-      .get("http://localhost:8000/api/nfts/nftsforsale/getall")
-      .then((res) => res.data.nftsForSale);
+  const fetchNftsForSale = async () => {
+    let assetsOnSale;
+    try {
+      assetsOnSale = await axios({
+        method: "get",
+        url: "http://localhost:8000/api/nfts/nftsforsale/getall",
+        params: { tokenContractAddress: assetContractAddress, limit: 50 },
+      }).then((res) => res.data.nftsForSale.docs);
+    } catch (err) {
+      console.log(err);
+    }
+    if (assetsOnSale) {
+      setAssetsOnSale(assetsOnSale);
+    } else {
+      setAssetsOnSale(null);
+    }
   };
-
-  const tokenMinterContractAddress = useGetNFTMinterContract().address;
 
   const createAssetCards = async () => {
     let collectionAssets = [];
@@ -78,17 +90,6 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
 
     // Get nfts for sale to check whether they should be shown on sale
 
-    let assetsOnSale;
-    try {
-      assetsOnSale = await axios({
-        method: "get",
-        url: "http://localhost:8000/api/nfts/nftsforsale/getall",
-        params: { tokenContractAddress: assetContractAddress },
-      }).then((res) => res.data.nftsForSale);
-    } catch (err) {
-      console.log(err);
-    }
-
     const assetCards = [];
     collectionAssets.map((nft, key) => {
       let price;
@@ -106,14 +107,15 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
         description: nft.description || nft.asset_contract.description,
         price: price,
         attributes: nft.traits,
+        owner: nft.owner.address,
       };
 
       if (
         relevantInfo.assetContractAddress ===
-          nftsForSale.tokenContractAddress &&
-        relevantInfo.tokenId === nftsForSale.tokenId
+          assetsOnSale.tokenContractAddress &&
+        relevantInfo.tokenId === assetsOnSale.tokenId
       ) {
-        relevantInfo.price = nftsForSale.price;
+        relevantInfo.price = assetsOnSale.price;
       }
 
       assetCards.push(
@@ -130,27 +132,39 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
   };
 
   const fetchData = async () => {
+    loading.current = true;
+
     const [newAssetCards, next] = await createAssetCards();
     setAssetCards([...assetCards, ...newAssetCards]);
 
-    if (cursor === next) {
+    if (next) {
+      setCursor(next);
+    } else {
       setHasMore(false);
     }
-    setCursor(next);
+    loading.current = false;
   };
 
   return (
-    <InfiniteScroll
-      style={{ overflow: "hidden" }}
-      dataLength={assetCards.length}
-      next={fetchData}
-      hasMore={hasMore}
-      loader={
-        <div className="flex flex-col items-center mt-6">
-          <ModifiedCircularProgress />
+    <>
+      <InfiniteScroll
+        style={{ overflow: "hidden" }}
+        loadMore={!loading.current && fetchData}
+        initialLoad={
+          assetContractAddress && assetsOnSale !== undefined ? true : false
+        }
+        hasMore={hasMore}
+        loader={
+          <div className="flex flex-col items-center mt-6">
+            <ModifiedCircularProgress />
+          </div>
+        }
+      >
+        <div className="mt-12 grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {assetCards}
         </div>
-      }
-      endMessage={
+      </InfiniteScroll>
+      {!hasMore && (
         <Typography
           variant="h6"
           component="p"
@@ -159,12 +173,8 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
         >
           This collection has no more items
         </Typography>
-      }
-    >
-      <div className="mt-12 grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        {assetCards}
-      </div>
-    </InfiniteScroll>
+      )}
+    </>
   );
 }
 

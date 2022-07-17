@@ -1,7 +1,8 @@
-import { Button, Label, Modal, TextInput } from "flowbite-react";
+import { Label, Modal, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsPlusCircleFill } from "react-icons/bs";
+import SecondaryButton from "../SecondaryButton";
 
 const Attribute = ({ index, remove, setCreateAttributesDic }) => {
   const setType = (e) => {
@@ -35,7 +36,7 @@ const Attribute = ({ index, remove, setCreateAttributesDic }) => {
   return (
     <div className="flex gap-3">
       <div className="flex items-center gap-1">
-        <div onClick={() => remove(index)}>
+        <div onClick={() => remove(index)} className="cursor-pointer">
           <AiOutlineClose size="18px" />
         </div>
         <Label htmlFor="collection" />
@@ -160,9 +161,9 @@ const AttributesModal = ({ setCreateAttributes }) => {
                   <p className="text-sm">Add attribute</p>
                 </div>
               </button>
-              <Button type="button" onClick={save}>
+              <SecondaryButton type="button" onClick={save}>
                 Save
-              </Button>
+              </SecondaryButton>
             </div>
           </form>
         </Modal.Body>

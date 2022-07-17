@@ -39,14 +39,14 @@ const Created = () => {
 
   return (
     <>
-      <ul className="flex gap-12 flex-wrap justify-evenly">
+      <ul className="flex gap-12 flex-wrap justify-center">
         {userCollectionsCreated ? (
           userCollectionsCreated.length ? (
             userCollectionsCreated.map((collection, key) => {
               return (
                 <div
                   onClick={() => handleNavigateToCollection(collection)}
-                  className="text-onPrimary text-center space-y-3 cursor-pointer"
+                  className="text-onPrimary text-center space-y-3 cursor-pointer w-24 md:w-36 overflow-hidden truncate"
                 >
                   <Typography variant="h6" component="subtitle1">
                     {collection.name}

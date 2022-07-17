@@ -17,7 +17,7 @@ export const getNftsForSale = async (req, res, next) => {
       nftsForSale = await NftsForSale.paginate(
         { tokenContractAddress: tokenContractAddress },
         { limit: limit || 20, page: page || 0 }
-      ).then((res) => res.docs);
+      ).then((res) => res);
       console.log("🚀 ~ NftsForSale", NftsForSale);
       return res.status(200).json({ nftsForSale });
     } catch (error) {
@@ -28,7 +28,7 @@ export const getNftsForSale = async (req, res, next) => {
     nftsForSale = await NftsForSale.paginate(
       {},
       { limit: limit || 20, page: page || 0 }
-    ).then((res) => res.docs);
+    ).then((res) => res);
     console.log("🚀 ~ NftsForSale", NftsForSale);
     return res.status(200).json({ nftsForSale });
   } catch (error) {
@@ -124,6 +124,10 @@ export const getNonce = async (req, res, nex) => {
 
 export const createTokenURI = async (req, res, next) => {
   const file = req.files;
+  let attributes;
+  if (req.body.attributes !== "undefined") {
+    attributes = JSON.parse(req.body.attributes);
+  }
   const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
   const data = new FormData();
   data.append("file", file.file.data, req.body.name);
@@ -148,7 +152,7 @@ export const createTokenURI = async (req, res, next) => {
     collection: req.body.collection,
     description: req.body.description,
     image: "ipfs://" + response.data.IpfsHash,
-    attributes: JSON.parse(req.body.attributes),
+    attributes: attributes,
   };
   const jsonUrl = "https://api.pinata.cloud/pinning/pinJSONToIPFS";
   try {
@@ -266,6 +270,8 @@ export const updateNftsForSale = async (req, res, next) => {
 export const deleteNftForSale = async (req, res, next) => {
   console.log("Initializing deleteNftForSale...");
   const { tokenContractAddress, tokenId } = req.body;
+  console.log("🚀 ~ tokenId", tokenId);
+  console.log("🚀 ~ tokenContractAddress", tokenContractAddress);
 
   let nft;
   try {

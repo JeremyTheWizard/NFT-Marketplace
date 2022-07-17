@@ -8,7 +8,6 @@ import { IoCart } from "react-icons/io5";
 import timeSinceCalculator from "../../../useful-scripts/TimeSinceCalculator";
 
 function ActivityTabItem({ transfer, ethUsd }) {
-  console.log("here+!");
   const [isMoreInfo, setIsMoreInfo] = useState(true);
   const [isMore, setIsMore] = useState(true);
   const [price, setPrice] = useState();
@@ -18,20 +17,28 @@ function ActivityTabItem({ transfer, ethUsd }) {
   const { account } = useEthers();
 
   useEffect(() => {
-    setPrice(utils.formatEther(transfer.value));
+    setPrice(transfer.total_price && utils.formatEther(transfer.total_price));
     setFromAddress(
-      transfer.from_address === constants.AddressZero
-        ? "NullAddress"
-        : transfer.from_address
+      transfer.from_account
+        ? transfer.from_account.address === constants.AddressZero
+          ? "NullAddress"
+          : transfer.from_account.address
+        : transfer.seller
+        ? transfer.seller.address
+        : null
     );
   }, []);
 
   useEffect(() => {
     account &&
       setToAddress(
-        transfer.to_address.toUpperCase() === account.toUpperCase()
-          ? "You"
-          : transfer.to_address
+        transfer.to_account
+          ? transfer.to_account.address.toUpperCase() === account.toUpperCase()
+            ? "You"
+            : transfer.to_account.address
+          : transfer.winner_account
+          ? transfer.winner_account.address
+          : null
       );
   }, [account]);
 
@@ -70,7 +77,7 @@ function ActivityTabItem({ transfer, ethUsd }) {
               <div className="hidden md:flex flex-col">
                 <div className="flex gap-1 items-center">
                   <FaEthereum size="17px" />
-                  <p>{parseFloat(price).toFixed(2)}</p>
+                  <p>{parseFloat(price).toFixed(2)}...</p>
                 </div>
                 <p>($ {usdPrice})</p>
               </div>
@@ -78,7 +85,7 @@ function ActivityTabItem({ transfer, ethUsd }) {
               <p className="hidden md:flex">---</p>
             )}
           </>
-        ) : transfer.value !== "0" ? (
+        ) : transfer.event_type === "successful" ? (
           <>
             <div className="flex flex-col gap-1">
               <div className="grid grid-cols-4">
@@ -101,7 +108,7 @@ function ActivityTabItem({ transfer, ethUsd }) {
             <div className="hidden md:flex flex-col">
               <div className="flex gap-1 items-center">
                 <FaEthereum size="17px" />
-                <p>{parseFloat(price).toFixed(2)}</p>
+                <p>{parseFloat(price).toFixed(2)}...</p>
               </div>
               <p>($ {usdPrice})</p>
             </div>
@@ -134,40 +141,49 @@ function ActivityTabItem({ transfer, ethUsd }) {
             ? fromAddress
             : fromAddress
             ? `${fromAddress.slice(0, 2)}...${fromAddress.slice(-4)}`
-            : ""}
+            : "---"}
         </p>
         <p className="hidden md:inline">
           {toAddress && toAddress === "You"
             ? toAddress
             : toAddress
             ? `${toAddress.slice(0, 2)}...${toAddress.slice(-4)}`
-            : ""}
+            : "---"}
         </p>
         <a
-          href={`https://rinkeby.etherscan.io/tx/${transfer.transaction_hash}`}
+          href={`https://rinkeby.etherscan.io/tx/${
+            transfer.transaction && transfer.transaction.block_hash
+          }`}
           target="_blank"
           className="hidden md:flex gap-3 items-center"
         >
-          <p>{`${timeSinceCalculator(new Date(transfer.block_timestamp))}`}</p>
+          <p>{`${timeSinceCalculator(
+            new Date(transfer.transaction && transfer.transaction.timestamp)
+          )}`}</p>
           <BsArrowUpRightSquare size="20px" />
         </a>
 
         <div className="flex flex-col gap-3 justify-self-end md:hidden text-sm">
           <div className="flex items-center ml-auto">
             <FaEthereum />
-            {transfer.value !== "0" ? (
-              <p>{parseFloat(utils.formatEther(transfer.value)).toFixed(2)}</p>
+            {transfer.total_price ? (
+              <p>
+                {parseFloat(utils.formatEther(transfer.total_price)).toFixed(2)}
+                ...
+              </p>
             ) : (
               "---"
             )}
           </div>
           <a
             className="flex gap-1 ml-auto"
-            href={`https://rinkeby.etherscan.io/tx/${transfer.transaction_hash}`}
+            href={`https://rinkeby.etherscan.io/tx/${
+              transfer.transaction && transfer.transaction.block_hash
+            }`}
             target="_blank"
           >
             <p className="whitespace-nowrap">{`${timeSinceCalculator(
-              new Date(transfer.block_timestamp)
+              new Date(transfer.transaction && transfer.transaction.timestamp)
             )}`}</p>
             <BsArrowUpRightSquare size="20px" />
           </a>
@@ -179,7 +195,7 @@ function ActivityTabItem({ transfer, ethUsd }) {
           <div className="flex flex-col place-items-center">
             <p>USD Price</p>
             <p>
-              {transfer.value !== "0"
+              {transfer.total_price
                 ? `$ ${
                     price &&
                     parseFloat(price * ethUsd)
@@ -192,25 +208,23 @@ function ActivityTabItem({ transfer, ethUsd }) {
           <div className="flex flex-col place-items-center">
             <p>From</p>
             <p>
-              {fromAddress && fromAddress === "NullAddress"
-                ? fromAddress
-                : fromAddress &&
-                  `${transfer.from_address.slice(
-                    0,
-                    2
-                  )}...${transfer.from_address.slice(-4)}`}
+              {fromAddress
+                ? fromAddress === "NullAddress"
+                  ? fromAddress
+                  : fromAddress &&
+                    `${fromAddress.slice(0, 2)}...${fromAddress.slice(-4)}`
+                : "---"}
             </p>
           </div>
           <div className="div flex flex-col place-items-center">
             <p>To</p>
             <p>
-              {toAddress && toAddress === "You"
-                ? toAddress
-                : toAddress &&
-                  `${transfer.to_address.slice(
-                    0,
-                    2
-                  )}...${transfer.to_address.slice(-4)}`}
+              {toAddress
+                ? toAddress === "You"
+                  ? toAddress
+                  : toAddress &&
+                    `${toAddress.slice(0, 2)}...${toAddress.slice(-4)}`
+                : "---"}
             </p>
           </div>
         </div>

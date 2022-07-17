@@ -12,8 +12,7 @@ const addSaleToDb = async (
   _imageUrl,
   _attributes,
   _collectionName,
-  _description,
-  setLoading
+  _description
 ) => {
   const nonce = await axios
     .get("http://localhost:8000/api/nfts/nftsforsale/getnonce/")

@@ -6,19 +6,19 @@ import useGetMarketplaceContract from "./useGetMarketplaceContract";
 const useBuyCoordinator = (tokenContractAddress, tokenId) => {
   const marketPlaceContract = useGetMarketplaceContract();
 
-  const { send: buyNft, state: buyNftState } = useContractFunction(
-    marketPlaceContract,
-    "buyNft",
-    {
-      transactionName: "buyNft",
-    }
-  );
+  const {
+    send: buyNft,
+    state: buyNftState,
+    resetState: resetBuyStatus,
+  } = useContractFunction(marketPlaceContract, "buyNft", {
+    transactionName: "buyNft",
+  });
   const buyStatus = buyNftState.status;
 
   const buyCoordinator = async () => {
     const tokenToBuy = await axios
       .get(
-        `http://localhost:8000/api/nfts/nftsforsale/getnft/${tokenContractAddress}/${tokenId}`
+        `http://localhost:8000/api/nfts/nftsforsale/getnft?contractAddress=${tokenContractAddress}&tokenId=${tokenId}`
       )
       .then((res) => {
         return res.data.nftForSale[0];
@@ -41,13 +41,13 @@ const useBuyCoordinator = (tokenContractAddress, tokenId) => {
 
   useEffect(() => {
     if (buyStatus === "Success") {
-      console.log("Deleting sale from db...");
-      axios.delete(
-        `http://localhost:8000/api/nfts/nftsforsale/delete/${tokenContractAddress}/${tokenId}`
-      );
+      console.log("deleting token from sale....");
+      axios.delete(`http://localhost:8000/api/nfts/nftsforsale/delete`, {
+        data: { tokenContractAddress: tokenContractAddress, tokenId: tokenId },
+      });
     }
   }, [buyStatus]);
-  return { buyCoordinator, buyStatus };
+  return { buyCoordinator, buyStatus, resetBuyStatus };
 };
 
 export default useBuyCoordinator;

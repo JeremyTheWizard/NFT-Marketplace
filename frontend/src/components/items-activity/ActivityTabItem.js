@@ -102,7 +102,7 @@ function ActivityTabItem({ transfer, ethUsd }) {
             <div className="hidden md:flex flex-col">
               <div className="flex gap-1 items-center">
                 <FaEthereum size="17px" />
-                <p>{parseFloat(price).toFixed(2)}</p>
+                <p>{parseFloat(price).toFixed(2)}...</p>
               </div>
               <p>($ {usdPrice})</p>
             </div>
@@ -158,7 +158,9 @@ function ActivityTabItem({ transfer, ethUsd }) {
           <div className="flex items-center ml-auto">
             <FaEthereum />
             {transfer.value !== "0" ? (
-              <p>{parseFloat(utils.formatEther(transfer.value)).toFixed(2)}</p>
+              <p>
+                {parseFloat(utils.formatEther(transfer.value)).toFixed(2)}...
+              </p>
             ) : (
               "---"
             )}

@@ -5,7 +5,7 @@ import AssetCard from "../components/Asset/AssetCard";
 import Tabs from "../components/Asset/offers-history/Tabs";
 import ModifiedCircularProgress from "../components/ModifiedMuiComponents/ModifiedCircularProgress";
 
-function Asset({ originalAccount }) {
+function Asset() {
   const [tokenInfo, setTokenInfo] = useState();
   const { tokenContractAddress, tokenId } = useParams();
   const location = useLocation();
@@ -101,9 +101,12 @@ function Asset({ originalAccount }) {
 
   return (
     <div className="w-[90vw] max-w-[1200px] mx-auto mt-12 flex flex-col justify-center items-center">
-      {tokenInfo ? (
+      {tokenInfo && tokenInfo.seller !== undefined ? (
         <>
-          <AssetCard tokenInfo={tokenInfo} originalAccount={originalAccount} />
+          <AssetCard
+            tokenInfo={tokenInfo}
+            _originalAccount={tokenInfo.seller || tokenInfo.owner}
+          />
           <Tabs tokenInfo={tokenInfo} />
         </>
       ) : (

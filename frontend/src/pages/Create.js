@@ -9,6 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import FormData from "form-data";
 import React, { useEffect, useRef, useState } from "react";
@@ -29,6 +30,7 @@ const Create = () => {
   const [file, setFile] = useState();
   const [openDialog, setOpenDialog] = useState(false);
   const [transactionFailureAlert, setTransactionFailureAlert] = useState(false);
+  const { account } = useEthers();
   const tokenName = useRef();
   const collectionName = useRef();
   const collectionSlug = useRef();
@@ -59,6 +61,12 @@ const Create = () => {
       setLoadingMessage(loadingMessages[2]);
     }
     if (mintStatus === "Success") {
+      // Update token metadata on opensea
+      axios.get(
+        `https://testnets.opensea.io/assets/rinkeby/${NFTMinterContractAddress}/${String(
+          parseInt(mintEvents[0].args[2]._hex, 16)
+        )}/?force_update=true`
+      );
       setLoadingMessage(loadingMessages[0]);
       axios.post("http://localhost:8000/api/collections/collection/token", {
         collectionSlug: collectionSlug.current,
@@ -76,15 +84,14 @@ const Create = () => {
   const routeChange = (path) => {
     navigate(path, {
       state: {
-        imagePath: URL.createObjectURL(file),
+        imageUrl: URL.createObjectURL(file),
         collectionName: collectionName.current,
-        tokenName: tokenName.current,
+        name: tokenName.current,
         tokenId: parseInt(mintEvents[0].args[2]._hex, 16),
-        //creatorImageUrl:
         creator: mintEvents[0].args[1],
-        status: "Sell",
         contractAddress: NFTMinterContractAddress,
         attributes: attributes,
+        owner: account,
       },
     });
   };
@@ -94,9 +101,16 @@ const Create = () => {
     setFile(e.target.files[0]);
   };
 
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-    resetMintState();
+  const handleDialogClose = (_, reason) => {
+    if (
+      (reason === "backdropClick" || reason === "escapeKeyDown") &&
+      mintStatus !== "Success"
+    ) {
+      return;
+    } else {
+      setOpenDialog(false);
+      resetMintState();
+    }
   };
 
   const handleTransactionFailureAlertClose = (_, reason) => {
@@ -186,6 +200,7 @@ const Create = () => {
             name="name"
             id="name"
             label="Name"
+            sx={{ "& .MuiOutlinedInput-input:focus": { boxShadow: "none" } }}
           />
 
           <div className="flex flex-col gap-1">
@@ -307,7 +322,11 @@ const Create = () => {
                 fullWidth
                 variant="contained"
                 onClick={() =>
-                  routeChange(`/collections/${collectionName}/nft`)
+                  routeChange(
+                    `/assets/${NFTMinterContractAddress}/${String(
+                      parseInt(mintEvents[0].args[2]._hex, 16)
+                    )}`
+                  )
                 }
               >
                 CHECK IT OUT!

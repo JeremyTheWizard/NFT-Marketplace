@@ -52,7 +52,10 @@ const CreateCollectionDialog = ({
           </DialogContentText>
           <TextField
             fullWidth
-            sx={{ marginTop: "0.75rem" }}
+            sx={{
+              marginTop: "0.75rem",
+              "& input": { boxShadow: "none !important" },
+            }}
             autoFocus
             margin="dense"
             id="name"
