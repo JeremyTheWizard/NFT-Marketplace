@@ -2,7 +2,6 @@ import { useEthers } from "@usedapp/core";
 import React, { useState } from "react";
 import { FaWallet } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import Logo from "../../photos/Logo.jpeg";
 import MainButton from "../MainButton";
 
 function Navbar() {
@@ -14,11 +13,6 @@ function Navbar() {
     <nav className="w-[90vw] max-w-[1200px] mx-auto py-4 bg-primary">
       <div className="w-full flex flex-wrap justify-between items-center">
         <div className="flex items-center">
-          <img
-            src={Logo}
-            className="rounded-full h-8 w-8 mr-3 sm:h-9"
-            alt="Marketplace Logo"
-          />
           <span className="text-xl font-semibold text-white">NFT PALACE</span>
         </div>
         <div className="flex md:order-2 md:hidden">

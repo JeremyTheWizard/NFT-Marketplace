@@ -10,7 +10,7 @@ const Items = () => {
   const { account } = useEthers();
   const [assetCards, setAssetCards] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const [tokensOnSale, setTokensOnSale] = useState([]);
+  const [tokensOnSale, setTokensOnSale] = useState();
   const loading = useRef(false);
   const cursor = useRef();
 
@@ -30,6 +30,8 @@ const Items = () => {
     }
     if (tokensOnSale) {
       setTokensOnSale(tokensOnSale);
+    } else {
+      setTokensOnSale([]);
     }
   };
 
@@ -105,7 +107,7 @@ const Items = () => {
         style={{ overflow: "hidden" }}
         hasMore={hasMore}
         loadMore={!loading.current && fetchData}
-        initialLoad={account ? true : false}
+        initialLoad={account && tokensOnSale !== undefined ? true : false}
         loader={
           <div className="flex flex-col items-center mt-6">
             <ModifiedCircularProgress />
