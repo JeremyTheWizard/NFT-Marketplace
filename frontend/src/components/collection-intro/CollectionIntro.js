@@ -1,5 +1,5 @@
-import { useEthers } from "@usedapp/core";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import BannerAndRoundedIcon from "../BannerAndRoundedIcon";
 import Description from "./Description";
@@ -12,7 +12,7 @@ const CollectionIntro = ({
   stats,
   creator,
 }) => {
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
   const { collectionslug } = useParams();
 
   const bannerAxiosOptions = {

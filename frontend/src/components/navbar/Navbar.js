@@ -1,13 +1,19 @@
 import { useEthers } from "@usedapp/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaWallet } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { changeAccount } from "../../features/accountSlice";
 import MainButton from "../MainButton";
 
-function Navbar() {
-  const [isMenuHidden, setIsMenuHidden] = useState("hidden");
+const Navbar = () => {
   const { account } = useEthers();
   const { activateBrowserWallet } = useEthers();
+  const dispatch = useDispatch();
+  const [isMenuHidden, setIsMenuHidden] = useState("hidden");
+  useEffect(() => {
+    dispatch(changeAccount(account));
+  }, [account]);
 
   return (
     <nav className="w-[90vw] max-w-[1200px] mx-auto py-4 bg-primary">
@@ -54,7 +60,7 @@ function Navbar() {
               <div className="md:hidden mt-3">
                 <MainButton
                   text="Connect Wallet"
-                  onClick={activateBrowserWallet()}
+                  onClick={activateBrowserWallet}
                 />
               </div>
             )}
@@ -112,15 +118,12 @@ function Navbar() {
           </div>
         ) : (
           <div className="hidden md:inline md:order-3 text-onPrimary">
-            <MainButton
-              text="Connect Wallet"
-              onClick={activateBrowserWallet()}
-            />
+            <MainButton text="Connect Wallet" onClick={activateBrowserWallet} />
           </div>
         )}
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

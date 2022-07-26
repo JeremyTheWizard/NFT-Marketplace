@@ -1,6 +1,6 @@
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import BannerAndRoundedIcon from "../components/BannerAndRoundedIcon";
 import Tabs from "../components/profile-tab/Tabs";
 import defaultProfile from "../photos/default-profile.jpeg";
@@ -10,8 +10,7 @@ const Profile = () => {
   const [roundedIcon, setRoundedIcon] = useState();
   const [bannerAxiosOptions, setBannerAxiosOptions] = useState();
   const [roundedIconAxiosOptions, setRoundedIconAxiosOptions] = useState();
-
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
 
   const updateUserData = async () => {
     const userData = await axios

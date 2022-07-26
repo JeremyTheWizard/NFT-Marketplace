@@ -1,5 +1,5 @@
-import { useEthers } from "@usedapp/core";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import ActivityTab from "./ActivityTab";
 import Items from "./Items";
 
@@ -11,7 +11,7 @@ function ItemsActivity({
   tokens,
 }) {
   const [activeTab, setActiveTab] = useState(0);
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
 
   return (
     <div className="w-full my-12">

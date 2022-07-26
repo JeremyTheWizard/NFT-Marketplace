@@ -6,9 +6,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useRef } from "react";
+import { useSelector } from "react-redux";
 
 const CreateCollectionDialog = ({
   setValue,
@@ -18,7 +18,7 @@ const CreateCollectionDialog = ({
 }) => {
   const collectionValue = useRef();
   const loading = useRef(false);
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
 
   const handleClose = () => {
     setOpenCreateCollectionDialog(false);

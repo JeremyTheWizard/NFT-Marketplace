@@ -1,13 +1,13 @@
 import { Typography } from "@mui/material";
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
+import { useSelector } from "react-redux";
 import AssetCard from "../explore/AssetCard";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 
 const Items = () => {
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
   const [assetCards, setAssetCards] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [tokensOnSale, setTokensOnSale] = useState();

@@ -1,8 +1,8 @@
 import { Typography } from "@mui/material";
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
+import { useSelector } from "react-redux";
 import AssetCard from "../explore/AssetCard";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 
@@ -11,7 +11,7 @@ function Items({ assetContractAddress, collectionSlug = null, editable }) {
   const [hasMore, setHasMore] = useState(true);
   const [cursor, setCursor] = useState(undefined);
   const [assetsOnSale, setAssetsOnSale] = useState();
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
   const loading = useRef(false);
 
   useEffect(() => {

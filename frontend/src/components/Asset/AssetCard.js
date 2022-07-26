@@ -7,12 +7,13 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import { addressEqual, useEthers } from "@usedapp/core";
+import { addressEqual } from "@usedapp/core";
 import { utils } from "ethers";
 import { useEffect, useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import { FaEthereum } from "react-icons/fa";
 import { MdCheckCircleOutline, MdHighlightOff } from "react-icons/md";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import useBuyCoordinator from "../../hooks/useBuyCoordinator";
 import useSellCoordinator from "../../hooks/useSellCoordinator";
@@ -24,7 +25,7 @@ import RemoveAssetFromSale from "./RemoveAssetFromSale";
 function AssetCard({ tokenInfo }) {
   const { tokenContractAddress, tokenId } = useParams();
 
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 25));
   const [ethUsd, setEthUsd] = useState();

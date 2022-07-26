@@ -9,11 +9,11 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import FormData from "form-data";
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Attributes from "../components/Asset/offers-history/Attributes";
 import AttributesModal from "../components/Create/AttributesModal";
@@ -30,7 +30,7 @@ const Create = () => {
   const [file, setFile] = useState();
   const [openDialog, setOpenDialog] = useState(false);
   const [transactionFailureAlert, setTransactionFailureAlert] = useState(false);
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
   const tokenName = useRef();
   const collectionName = useRef();
   const collectionSlug = useRef();

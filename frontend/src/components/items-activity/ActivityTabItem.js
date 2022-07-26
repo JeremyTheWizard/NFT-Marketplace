@@ -1,10 +1,10 @@
-import { useEthers } from "@usedapp/core";
 import { constants, utils } from "ethers";
 import React, { useEffect, useState } from "react";
 import { BiTransfer } from "react-icons/bi";
 import { BsArrowUpRightSquare } from "react-icons/bs";
 import { FaBaby, FaEthereum } from "react-icons/fa";
 import { IoCart } from "react-icons/io5";
+import { useSelector } from "react-redux";
 import timeSinceCalculator from "../../useful-scripts/TimeSinceCalculator";
 
 function ActivityTabItem({ transfer, ethUsd }) {
@@ -14,7 +14,7 @@ function ActivityTabItem({ transfer, ethUsd }) {
   const [usdPrice, setUsdPrice] = useState();
   const [fromAddress, setFromAddress] = useState();
   const [toAddress, setToAddress] = useState();
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
 
   useEffect(() => {
     setPrice(utils.formatEther(transfer.value));

@@ -1,7 +1,7 @@
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import useGetNFTMinterContract from "../../hooks/useGetNFTMinterContract";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 import ModifiedTextField from "../ModifiedTextField";
@@ -17,7 +17,7 @@ const CollectionComboBox = ({ collectionSlug }) => {
   const [userCollections, setUserCollections] = useState();
 
   const nftMinterContractAddress = useGetNFTMinterContract().address;
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
 
   const loading = openAutocompleteOptions && !userCollections;
 

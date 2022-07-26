@@ -1,8 +1,8 @@
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import FormData from "form-data";
 import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
+import { useSelector } from "react-redux";
 import useGetNFTMinterContract from "../../hooks/useGetNFTMinterContract";
 import SecondaryButton from "../SecondaryButton";
 import BannerAndRoundedIcon from "./BannerAndRoundedIcon";
@@ -11,7 +11,7 @@ const FormIntro = ({ setShowSuccessDialog }) => {
   const [bannerImage, setBannerImage] = useState();
   const [roundedIconImage, setRoundedIconImage] = useState();
   const tokenMinterAddress = useGetNFTMinterContract().address;
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {

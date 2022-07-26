@@ -1,14 +1,14 @@
 import { Typography } from "@mui/material";
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ModifiedCircularProgress from "../ModifiedMuiComponents/ModifiedCircularProgress";
 import SecondaryButton from "../SecondaryButton";
 import CreatedCollectionsBox from "./CreatedCollectionsBox";
 
 const Created = () => {
-  const { account } = useEthers();
+  const account = useSelector((state) => state.account.account);
   const [userCollectionsCreated, setUserCollectionsCreated] = useState();
 
   useEffect(() => {
