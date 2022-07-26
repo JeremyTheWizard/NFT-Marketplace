@@ -97,7 +97,7 @@ Additionally, the website facilitates the view and activity track of your accoun
 # Contact me!
 
 <p align="center">
-  <a href="whatsapp://send?phone=5491165879953" target="_blank">
-  <img alt="Whatsap - Mijail Piekarz" src="https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white"
+  <a href="https://api.whatsapp.com/send?phone=5491165879953" target="_blank">
+    <img alt="What's app - Mijail Piekarz" src="https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white"
   </a>
 <p/>
