@@ -1,17 +1,15 @@
 import { Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useMoralisWeb3Api } from "react-moralis";
 import { useParams } from "react-router-dom";
 import ModifiedCircularProgress from "../../ModifiedMuiComponents/ModifiedCircularProgress";
 import ActivityTabItem from "./ActivityTabItem";
 
-function ActivityTab({ contractAddress }) {
+function ActivityTab() {
   const [ethUsd, setEthUsd] = useState();
   const [transfers, setTransfers] = useState();
   const { tokenContractAddress, tokenId } = useParams();
   const [activity, setActivity] = useState();
-  const Web3Api = useMoralisWeb3Api();
 
   useEffect(() => {
     fetchEthPrice();
@@ -46,7 +44,7 @@ function ActivityTab({ contractAddress }) {
       setTimeout(resolve, 1000);
     });
     const options = {
-      address: contractAddress,
+      address: tokenContractAddress,
       chain: "rinkeby",
     };
     let nftTransfers = [];

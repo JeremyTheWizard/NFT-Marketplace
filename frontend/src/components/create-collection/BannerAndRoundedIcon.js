@@ -1,4 +1,3 @@
-import { useEthers } from "@usedapp/core";
 import React from "react";
 import Banner from "./Banner";
 import RoundedIcon from "./RoundedIcon";
@@ -9,17 +8,10 @@ const BannerAndRoundedIcon = ({
   setBannerImage,
   setRoundedIconImage,
 }) => {
-  const { account } = useEthers();
-
   return (
     <div className="w-full">
-      <Banner
-        account={account}
-        bannerImage={bannerImage}
-        setBannerImage={setBannerImage}
-      />
+      <Banner bannerImage={bannerImage} setBannerImage={setBannerImage} />
       <RoundedIcon
-        account={account}
         roundedIconImage={roundedIconImage}
         setRoundedIconImage={setRoundedIconImage}
       />

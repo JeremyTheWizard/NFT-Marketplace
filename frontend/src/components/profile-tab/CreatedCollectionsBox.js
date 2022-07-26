@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 
-const CreatedCollectionsBox = ({ _roundedIcon, _account }) => {
+const CreatedCollectionsBox = ({ _roundedIcon }) => {
   const [editRoundedIconImage, setEditRoundedIconImage] = useState(false);
 
   return (
